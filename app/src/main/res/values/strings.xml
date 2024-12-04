@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Day Flow</string>
+    <string name="daily">Daily</string>
+    <string name="yearly">Yearly</string>
 </resources>
