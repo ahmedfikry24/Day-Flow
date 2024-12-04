@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.dayflow.navigation.AppDestination
+import com.example.dayflow.ui.composable.BottomNavBar
 import com.example.dayflow.ui.theme.DayFlowTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,14 +26,16 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         setContent {
             DayFlowTheme {
-                Scaffold { innerPadding ->
+                val navController = rememberNavController()
+                Scaffold(
+                    bottomBar = { BottomNavBar(navController) }
+                ) { innerPadding ->
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(MaterialTheme.colorScheme.background)
                             .padding(innerPadding)
                     ) {
-                        val navController = rememberNavController()
                         NavHost(navController, startDestination = AppDestination.DailyTasks) {
                             composable<AppDestination.DailyTasks> { }
                             composable<AppDestination.YearlyGoals> { }
