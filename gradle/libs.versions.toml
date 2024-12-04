@@ -13,6 +13,7 @@ navigationCompose = "2.8.4"
 roomRuntime = "2.6.1"
 hiltVersion = "2.51.1"
 hiltNavigationCompose = "1.2.0"
+serializationJson = "1.7.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,10 +37,12 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltVersion" }
+kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationJson" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-serialization =  { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
