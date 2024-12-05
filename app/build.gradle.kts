@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.ksp)
     kotlin("kapt")
+    alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.serialization)
 }
 

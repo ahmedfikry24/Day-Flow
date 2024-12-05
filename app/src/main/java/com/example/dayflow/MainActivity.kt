@@ -17,8 +17,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.dayflow.navigation.AppDestination
 import com.example.dayflow.ui.composable.BottomNavBar
+import com.example.dayflow.ui.daily_tasks.DailyTasksScreen
 import com.example.dayflow.ui.theme.DayFlowTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +40,7 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding)
                     ) {
                         NavHost(navController, startDestination = AppDestination.DailyTasks) {
-                            composable<AppDestination.DailyTasks> { }
+                            composable<AppDestination.DailyTasks> { DailyTasksScreen(navController) }
                             composable<AppDestination.YearlyGoals> { }
                         }
                     }
