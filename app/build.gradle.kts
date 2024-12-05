@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.kotlin.serialization.json )
     implementation(libs.androidx.splashscreen)
+    implementation(libs.android.lottie.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
