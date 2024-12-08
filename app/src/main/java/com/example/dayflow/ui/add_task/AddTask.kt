@@ -64,7 +64,7 @@ fun AddTask(
             )
             val descriptionHeight = (LocalConfiguration.current.screenHeightDp / 3).dp
             PrimaryTextField(
-                modifier = Modifier,
+                modifier = Modifier.height(descriptionHeight),
                 value = state.description,
                 isError = false,
                 hint = stringResource(R.string.description),

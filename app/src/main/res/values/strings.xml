@@ -4,4 +4,11 @@
     <string name="yearly">Yearly</string>
     <string name="something_went_wrong">something went wrong</string>
     <string name="try_again">try again</string>
+    <string name="this_filed_required">this field required</string>
+    <string name="cancel">Cancel</string>
+    <string name="headline">headline</string>
+    <string name="description">description</string>
+    <string name="schedule_task">Schedule Task</string>
+    <string name="ok">Ok</string>
+    <string name="add_task">Add Task</string>
 </resources>
