@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import com.example.dayflow.R
 import com.example.dayflow.ui.theme.green
 import com.example.dayflow.ui.theme.spacing
 
@@ -25,6 +23,7 @@ import com.example.dayflow.ui.theme.spacing
 fun SwipeTaskBackground(
     modifier: Modifier = Modifier,
     state: SwipeToDismissBoxValue,
+    iconsRes: List<Int>,
 ) {
     val containerColor = when (state) {
         SwipeToDismissBoxValue.StartToEnd -> green
@@ -43,17 +42,13 @@ fun SwipeTaskBackground(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_check_right),
-                contentDescription = "done",
-                tint = MaterialTheme.colorScheme.onError
-            )
-            Spacer(modifier = Modifier)
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_trash),
-                contentDescription = "delete",
-                tint = MaterialTheme.colorScheme.onError
-            )
+            iconsRes.forEach { res ->
+                Icon(
+                    imageVector = ImageVector.vectorResource(res),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onError
+                )
+            }
         }
     }
 }
