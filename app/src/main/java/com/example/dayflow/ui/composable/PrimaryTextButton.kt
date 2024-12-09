@@ -10,6 +10,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import com.example.dayflow.ui.theme.spacing
 
 
@@ -19,6 +20,7 @@ fun PrimaryTextButton(
     text: String,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
+    shape: Shape = RoundedCornerShape(MaterialTheme.spacing.space4),
     border: BorderStroke? = null,
     isEnabled: Boolean = true,
     onClick: () -> Unit,
@@ -31,7 +33,7 @@ fun PrimaryTextButton(
             disabledContainerColor = MaterialTheme.colorScheme.outline,
             disabledContentColor = MaterialTheme.colorScheme.outlineVariant
         ),
-        shape = RoundedCornerShape(MaterialTheme.spacing.space4),
+        shape = shape,
         contentPadding = PaddingValues(MaterialTheme.spacing.space16),
         border = border,
         enabled = isEnabled,
