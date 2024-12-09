@@ -5,7 +5,6 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -53,8 +52,7 @@ fun AddDailyTask(
                                 rememberSharedContentState(key = "bounds"),
                                 animatedVisibilityScope = this@AnimatedContent,
                                 resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
-                            )
-                            .padding(MaterialTheme.spacing.space16),
+                            ),
                         shape = RoundedCornerShape(MaterialTheme.spacing.space8),
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,

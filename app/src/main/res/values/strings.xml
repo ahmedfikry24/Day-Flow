@@ -11,4 +11,5 @@
     <string name="schedule_task">Schedule Task</string>
     <string name="ok">Ok</string>
     <string name="add_task">Add Task</string>
+    <string name="done">Done</string>
 </resources>
