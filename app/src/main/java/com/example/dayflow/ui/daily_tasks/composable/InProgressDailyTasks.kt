@@ -40,7 +40,8 @@ fun InProgressDailyTasks(
                     state = task,
                     containerColor = containerColor[index % containerColor.size],
                     onSwipeDone = {},
-                    onSwipeDelete = {}
+                    onSwipeDelete = {},
+                    onClickTask = {}
                 )
             }
         }

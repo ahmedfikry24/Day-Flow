@@ -24,12 +24,15 @@ fun TaskItem(
     modifier: Modifier = Modifier,
     state: TaskUiState,
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
+    onClick: (TaskUiState) -> Unit = {},
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(MaterialTheme.spacing.space4),
         color = containerColor,
-        border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.outlineVariant)
+        border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.outlineVariant),
+        enabled = !state.isDone,
+        onClick = { onClick(state) }
     ) {
         Row(
             modifier = Modifier

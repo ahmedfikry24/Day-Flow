@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dayflow.R
 import com.example.dayflow.ui.theme.spacing
@@ -26,6 +25,7 @@ fun SwipeDailyTask(
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     onSwipeDone: (TaskUiState) -> Unit,
     onSwipeDelete: (TaskUiState) -> Unit,
+    onClickTask: (TaskUiState) -> Unit,
 ) {
     val swipeState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
@@ -57,7 +57,8 @@ fun SwipeDailyTask(
         ) {
             TaskItem(
                 state = state,
-                containerColor = containerColor
+                containerColor = containerColor,
+                onClick = onClickTask
             )
         }
         if (state.isDone)
@@ -67,14 +68,4 @@ fun SwipeDailyTask(
                 color = MaterialTheme.colorScheme.onBackground
             )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun TaskItemPreview() {
-    SwipeDailyTask(
-        state = TaskUiState(),
-        onSwipeDone = {},
-        onSwipeDelete = {}
-    )
 }

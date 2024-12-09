@@ -64,7 +64,7 @@ private fun DailyTasksContent(
                 label = "transition"
             ) { targetValue ->
                 when (targetValue) {
-                    true -> DoneDailyTasks(state = state, interactions = interactions)
+                    true -> DoneDailyTasks(state = state)
                     false -> InProgressDailyTasks(state = state, interactions = interactions)
                 }
             }
