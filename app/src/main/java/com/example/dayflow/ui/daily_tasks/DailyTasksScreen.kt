@@ -69,7 +69,7 @@ private fun DailyTasksContent(
                     )
                 }
             }
-            AddDailyTask(state = state.addTask, interaction = interactions)
+            AddDailyTask(state = state, interaction = interactions)
         }
     }
     ErrorContent(
