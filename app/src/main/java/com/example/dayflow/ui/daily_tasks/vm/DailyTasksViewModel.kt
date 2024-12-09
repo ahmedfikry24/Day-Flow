@@ -28,7 +28,8 @@ class DailyTasksViewModel @Inject constructor(
         _state.update { value ->
             value.copy(
                 contentStatus = ContentStatus.VISIBLE,
-                tasks = tasks.map { it.toUiState() }
+                doneTasks = tasks.filter { it.status }.map { it.toUiState() },
+                inProgressTasks = tasks.filter { !it.status }.map { it.toUiState() },
             )
         }
     }
