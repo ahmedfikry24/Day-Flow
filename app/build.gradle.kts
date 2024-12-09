@@ -64,6 +64,9 @@ dependencies {
     implementation(libs.kotlin.serialization.json )
     implementation(libs.androidx.splashscreen)
     implementation(libs.android.lottie.compose)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.hilt.work)
+    kapt(libs.androidx.hilt.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
