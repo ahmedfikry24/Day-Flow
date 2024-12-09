@@ -1,5 +1,8 @@
 package com.example.dayflow.ui.daily_tasks.vm
 
-interface DailyTasksInteractions {
+import com.example.dayflow.ui.utils.interaction.AddTaskInteraction
+
+interface DailyTasksInteractions : AddTaskInteraction {
     fun initData()
+    fun controlAddTaskVisibility()
 }
