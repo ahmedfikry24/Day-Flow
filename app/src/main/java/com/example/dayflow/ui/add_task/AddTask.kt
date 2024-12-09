@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,7 +45,7 @@ fun AddTask(
     Column(modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
                 .padding(MaterialTheme.spacing.space16),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space16)
         ) {
@@ -63,13 +65,28 @@ fun AddTask(
                 onChangeValue = interaction::onTitleChange
             )
             val descriptionHeight = (LocalConfiguration.current.screenHeightDp / 3).dp
-            PrimaryTextField(
-                modifier = Modifier.height(descriptionHeight),
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(descriptionHeight),
                 value = state.description,
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.description),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                },
+                singleLine = false,
                 isError = false,
-                hint = stringResource(R.string.description),
-                isSingleLine = false,
-                onChangeValue = interaction::onDescriptionChange
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    errorBorderColor = MaterialTheme.colorScheme.error,
+                ),
+                textStyle = MaterialTheme.typography.titleMedium,
+                shape = RoundedCornerShape(MaterialTheme.spacing.space4),
+                onValueChange = interaction::onDescriptionChange
             )
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -101,7 +118,10 @@ fun AddTask(
             }
         }
         PrimaryTextButton(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = MaterialTheme.spacing.space16)
+                .padding(bottom = MaterialTheme.spacing.space16),
             text = stringResource(R.string.add_task),
             onClick = interaction::addTask
         )

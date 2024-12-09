@@ -74,6 +74,7 @@ fun PrimaryTextField(
                 unfocusedBorderColor = MaterialTheme.colorScheme.outline,
                 errorBorderColor = MaterialTheme.colorScheme.error,
             ),
+            textStyle = MaterialTheme.typography.titleMedium,
             shape = RoundedCornerShape(MaterialTheme.spacing.space4),
             onValueChange = onChangeValue
         )
