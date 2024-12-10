@@ -1,6 +1,5 @@
 [versions]
 agp = "8.7.3"
-
 splashscreen = "1.0.1"
 kotlin = "2.0.21"
 coreKtx = "1.15.0"
@@ -19,6 +18,7 @@ serializationJson = "1.7.3"
 lottieComposeVersion = "6.6.1"
 workRuntimeKtx = "2.10.0"
 hiltWork = "1.2.0"
+accompanistPermissions = "0.35.2-beta"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +49,7 @@ android-lottie-compose = { module = "com.airbnb.android:lottie-compose", version
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltWork" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltWork" }
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
