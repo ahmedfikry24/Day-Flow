@@ -2,6 +2,7 @@ package com.example.dayflow.ui.utils.ui_state
 
 import com.example.dayflow.data.local.entity.TaskEntity
 import com.example.dayflow.ui.utils.convertLongToDate
+import com.example.dayflow.ui.utils.convertLongToTime
 
 data class TaskUiState(
     val id: Int = 0,
@@ -18,6 +19,7 @@ fun TaskEntity.toUiState(): TaskUiState {
         title = this.title,
         description = this.description,
         date = this.date?.convertLongToDate() ?: "",
+        time = this.time?.convertLongToTime() ?: "",
         isDone = this.status
     )
 }
