@@ -4,6 +4,7 @@ import com.example.dayflow.data.local.entity.TaskEntity
 import com.example.dayflow.data.usecase.GetAllTasksUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
+import com.example.dayflow.ui.utils.convertTimeToLong
 import com.example.dayflow.ui.utils.ui_state.toUiState
 import com.example.dayflow.ui.utils.validateRequireField
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,6 +55,14 @@ class DailyTasksViewModel @Inject constructor(
     override fun onDateChange(date: String) {
         _state.update { it.copy(addTask = it.addTask.copy(date = date)) }
 
+    }
+
+    override fun onTimeChange(time: String) {
+        _state.update { it.copy(addTask = it.addTask.copy(time = time)) }
+    }
+
+    override fun controlAlarmDialogVisibility() {
+        _state.update { it.copy(addTask = it.addTask.copy(isAlarmDialogVisible = !it.addTask.isAlarmDialogVisible)) }
     }
 
     override fun addTask() {
