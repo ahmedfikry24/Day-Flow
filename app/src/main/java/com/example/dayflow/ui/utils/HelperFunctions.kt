@@ -11,8 +11,12 @@ import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import androidx.core.content.getSystemService
 import com.example.dayflow.data.utils.TaskPriority
 import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 fun String.validateRequireField(): Boolean {
     return this.isNotBlank()
@@ -62,4 +66,19 @@ fun Activity.goToSettings() {
         Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
         Uri.fromParts("package", this.packageName, null)
     ).also(::startActivity)
+}
+
+fun String.convertTimeToLong(): Long {
+    val formatter = DateTimeFormatter.ofPattern("H:m")
+    val time = LocalTime.parse(this, formatter)
+    val currentDate = ZonedDateTime.now(ZoneId.systemDefault()).toLocalDate()
+    val dateTime = ZonedDateTime.of(currentDate, time, ZoneId.systemDefault())
+    return dateTime.toInstant().toEpochMilli()
+}
+
+fun Long.convertLongToTime(): String {
+    val time = Instant.ofEpochMilli(this)
+        .atZone(ZoneId.systemDefault())
+        .toLocalTime()
+    return time.format(DateTimeFormatter.ofPattern("H:m"))
 }
