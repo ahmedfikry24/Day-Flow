@@ -1,15 +1,13 @@
 package com.example.dayflow.ui.add_task
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -21,23 +19,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.dayflow.R
 import com.example.dayflow.ui.composable.DatePickerModal
+import com.example.dayflow.ui.composable.PrimaryDialog
 import com.example.dayflow.ui.composable.PrimaryTextButton
 import com.example.dayflow.ui.composable.PrimaryTextField
-import com.example.dayflow.ui.composable.rememberScheduleExactAlarm
+import com.example.dayflow.ui.composable.TimePickerModal
 import com.example.dayflow.ui.theme.spacing
+import com.example.dayflow.ui.utils.checkScheduleAlarmPermission
 import com.example.dayflow.ui.utils.interaction.AddTaskInteraction
+import com.example.dayflow.ui.utils.requestScheduleAlarmPermission
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
 
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTask(
     modifier: Modifier = Modifier,
@@ -46,8 +45,9 @@ fun AddTask(
     isScheduleRequire: Boolean = true,
     onCancel: () -> Unit,
 ) {
-    val scheduleAlarmPermission = rememberScheduleExactAlarm()
+    val context = LocalContext.current
     var isDateVisible by remember { mutableStateOf(false) }
+    var isTimeVisible by remember { mutableStateOf(false) }
 
     Column(modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
         Column(
@@ -96,36 +96,20 @@ fun AddTask(
                 onValueChange = interaction::onDescriptionChange
             )
             if (isScheduleRequire)
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space8)
-                ) {
-                    Text(
-                        stringResource(R.string.schedule_task),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                            .border(1.dp, color = MaterialTheme.colorScheme.outlineVariant)
-                            .clip(RoundedCornerShape(MaterialTheme.spacing.space4))
-                            .clickable {
-                                if (scheduleAlarmPermission?.status?.isGranted == true)
-                                    isDateVisible = true
-                                else scheduleAlarmPermission?.launchPermissionRequest()
-                            },
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(start = MaterialTheme.spacing.space8),
-                            text = state.date,
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
+                ScheduleTaskDate(
+                    date = state.date,
+                    time = state.time,
+                    onClickDate = {
+                        if (context.checkScheduleAlarmPermission()) {
+                            isDateVisible = true
+                        } else interaction.controlAlarmDialogVisibility()
+                    },
+                    onClickTime = {
+                        if (context.checkScheduleAlarmPermission()) {
+                            isTimeVisible = true
+                        } else interaction.controlAlarmDialogVisibility()
                     }
-                }
+                )
         }
         PrimaryTextButton(
             modifier = Modifier
@@ -136,9 +120,30 @@ fun AddTask(
             onClick = interaction::addTask
         )
     }
+
+    if (state.isAlarmDialogVisible)
+        PrimaryDialog(
+            title = stringResource(R.string.permission),
+            text = stringResource(R.string.app_you_must_give_app_a_permission_to_schedule_your_tasks_to_give_you_full_app_functionality_go_to_settings_and_give_us_the_permission),
+            onConfirm = {
+                interaction.controlAlarmDialogVisibility()
+                context.requestScheduleAlarmPermission()
+            },
+            onCancel = interaction::controlAlarmDialogVisibility,
+            onDismiss = interaction::controlAlarmDialogVisibility
+        )
+
     if (isDateVisible)
         DatePickerModal(
             onDismiss = { isDateVisible = false },
             onDateSelected = interaction::onDateChange
+        )
+    if (isTimeVisible)
+        TimePickerModal(
+            onConfirm = {
+                interaction.onTimeChange("${it.hour}:${it.minute}")
+                isTimeVisible = false
+            },
+            onDismiss = { isTimeVisible = false }
         )
 }
