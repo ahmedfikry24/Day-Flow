@@ -10,6 +10,8 @@ data class AddTaskUiState(
     val titleError: Boolean = false,
     val description: String = "",
     val date: String = INITIAL_DATE,
+    val time: String = INITIAL_DATE,
+    val isAlarmDialogVisible: Boolean = false,
 )
 
 fun AddTaskUiState.toEntity(): TaskEntity {

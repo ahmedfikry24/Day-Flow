@@ -11,6 +11,7 @@ data class TaskEntity(
     @ColumnInfo val title: String,
     @ColumnInfo val description: String,
     @ColumnInfo val date: Long? = null,
+    @ColumnInfo val time: Long? = null,
     @ColumnInfo val createdAt: Long = System.currentTimeMillis(),
     @ColumnInfo val status: Boolean,
 )
