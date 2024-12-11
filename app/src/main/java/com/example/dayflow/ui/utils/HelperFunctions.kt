@@ -1,5 +1,9 @@
 package com.example.dayflow.ui.utils
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import com.example.dayflow.data.utils.TaskPriority
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -32,4 +36,11 @@ fun String.convertDateToLong(): Long {
 fun Long.convertLongToDate(): String {
     val localDate = LocalDate.ofEpochDay(this / (24 * 60 * 60 * 1000))
     return localDate.toString()
+}
+
+fun Activity.goToSettings() {
+    Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", this.packageName, null)
+    ).also(::startActivity)
 }

@@ -12,4 +12,7 @@
     <string name="ok">Ok</string>
     <string name="add_task">Add Task</string>
     <string name="done">Done</string>
+    <string name="permission">Permission</string>
+    <string name="you_must_give_app_a_permission_to_schedule_your_tasks">you must give app a permission to schedule your tasks.</string>
+    <string name="app_you_must_give_app_a_permission_to_schedule_your_tasks_to_give_you_full_app_functionality_go_to_settings_and_give_us_the_permission">app you must give app a permission to schedule your tasks to give you full app functionality \n go to settings and give us the permission.</string>
 </resources>

@@ -30,18 +30,25 @@ import com.example.dayflow.R
 import com.example.dayflow.ui.composable.DatePickerModal
 import com.example.dayflow.ui.composable.PrimaryTextButton
 import com.example.dayflow.ui.composable.PrimaryTextField
+import com.example.dayflow.ui.composable.rememberScheduleExactAlarm
 import com.example.dayflow.ui.theme.spacing
 import com.example.dayflow.ui.utils.interaction.AddTaskInteraction
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun AddTask(
     modifier: Modifier = Modifier,
     state: AddTaskUiState,
     interaction: AddTaskInteraction,
+    isScheduleRequire: Boolean = true,
     onCancel: () -> Unit,
 ) {
+    val scheduleAlarmPermission = rememberScheduleExactAlarm()
     var isDateVisible by remember { mutableStateOf(false) }
+
     Column(modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
         Column(
             modifier = Modifier
@@ -88,34 +95,37 @@ fun AddTask(
                 shape = RoundedCornerShape(MaterialTheme.spacing.space4),
                 onValueChange = interaction::onDescriptionChange
             )
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space8)
-            ) {
-                Text(
-                    stringResource(R.string.schedule_task),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .border(1.dp, color = MaterialTheme.colorScheme.outlineVariant)
-                        .clip(
-                            RoundedCornerShape(MaterialTheme.spacing.space4)
-                        )
-                        .clickable { isDateVisible = true },
-                    contentAlignment = Alignment.CenterStart
+            if (isScheduleRequire)
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space8)
                 ) {
                     Text(
-                        modifier = Modifier.padding(start = MaterialTheme.spacing.space8),
-                        text = state.date,
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.secondary
+                        stringResource(R.string.schedule_task),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .border(1.dp, color = MaterialTheme.colorScheme.outlineVariant)
+                            .clip(RoundedCornerShape(MaterialTheme.spacing.space4))
+                            .clickable {
+                                if (scheduleAlarmPermission?.status?.isGranted == true)
+                                    isDateVisible = true
+                                else scheduleAlarmPermission?.launchPermissionRequest()
+                            },
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(start = MaterialTheme.spacing.space8),
+                            text = state.date,
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
                 }
-            }
         }
         PrimaryTextButton(
             modifier = Modifier
