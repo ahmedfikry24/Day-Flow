@@ -8,9 +8,9 @@ class GetAllTasksInSpecificDateUseCase @Inject constructor(
     private val repository: Repository,
 ) {
 
-    suspend operator fun invoke(date: LongRange): List<TaskEntity> {
+    suspend operator fun invoke(dateRange: LongRange): List<TaskEntity> {
         return repository.getAllTasks().filter {
-            it.date != null && !it.status && it.date in date
+            it.date != null && it.time != null && !it.status && it.date in dateRange
         }
     }
 }
