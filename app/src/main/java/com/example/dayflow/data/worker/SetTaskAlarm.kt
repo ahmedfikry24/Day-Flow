@@ -10,7 +10,6 @@ import com.example.dayflow.data.local.entity.TaskEntity
 fun setTaskAlarm(context: Context, alarmManager: AlarmManager,task: TaskEntity,time:Long) {
 
     val intent = Intent(context, AlarmReceiver::class.java).apply {
-        putExtra(TASK_ID, task.id)
         putExtra(TASK_TITLE, task.title)
     }
 

@@ -12,7 +12,6 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 
-const val TASK_ID = "taskId"
 const val TASK_TITLE = "taskTitle"
 
 @HiltWorker
