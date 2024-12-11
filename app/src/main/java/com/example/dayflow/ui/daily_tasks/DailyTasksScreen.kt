@@ -20,6 +20,7 @@ import com.example.dayflow.ui.composable.VisibleContent
 import com.example.dayflow.ui.daily_tasks.composable.DailyTaskTabs
 import com.example.dayflow.ui.daily_tasks.composable.DoneDailyTasks
 import com.example.dayflow.ui.daily_tasks.composable.InProgressDailyTasks
+import com.example.dayflow.ui.daily_tasks.composable.RememberNotificationPermission
 import com.example.dayflow.ui.daily_tasks.vm.DailyTasksInteractions
 import com.example.dayflow.ui.daily_tasks.vm.DailyTasksUiState
 import com.example.dayflow.ui.daily_tasks.vm.DailyTasksViewModel
@@ -46,6 +47,7 @@ private fun DailyTasksContent(
 ) {
     LoadingContent(isVisible = state.contentStatus == ContentStatus.LOADING)
     VisibleContent(isVisible = state.contentStatus == ContentStatus.VISIBLE) {
+        RememberNotificationPermission()
         Column(
             modifier = Modifier
                 .fillMaxSize()
