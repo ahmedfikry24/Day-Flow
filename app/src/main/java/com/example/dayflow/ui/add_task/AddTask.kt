@@ -102,12 +102,12 @@ fun AddTask(
                     onClickDate = {
                         if (context.checkScheduleAlarmPermission()) {
                             isDateVisible = true
-                        } else interaction.controlAlarmDialogVisibility()
+                        } else interaction.controlScheduleAlarmDialogVisibility()
                     },
                     onClickTime = {
                         if (context.checkScheduleAlarmPermission()) {
                             isTimeVisible = true
-                        } else interaction.controlAlarmDialogVisibility()
+                        } else interaction.controlScheduleAlarmDialogVisibility()
                     }
                 )
         }
@@ -121,16 +121,16 @@ fun AddTask(
         )
     }
 
-    if (state.isAlarmDialogVisible)
+    if (state.canScheduleAlarmDialogVisibility)
         PrimaryDialog(
             title = stringResource(R.string.permission),
             text = stringResource(R.string.app_you_must_give_app_a_permission_to_schedule_your_tasks_to_give_you_full_app_functionality_go_to_settings_and_give_us_the_permission),
             onConfirm = {
-                interaction.controlAlarmDialogVisibility()
+                interaction.controlScheduleAlarmDialogVisibility()
                 context.requestScheduleAlarmPermission()
             },
-            onCancel = interaction::controlAlarmDialogVisibility,
-            onDismiss = interaction::controlAlarmDialogVisibility
+            onCancel = interaction::controlScheduleAlarmDialogVisibility,
+            onDismiss = interaction::controlScheduleAlarmDialogVisibility
         )
 
     if (isDateVisible)
@@ -145,5 +145,13 @@ fun AddTask(
                 isTimeVisible = false
             },
             onDismiss = { isTimeVisible = false }
+        )
+
+    if (state.isSchedulingEmptyDialogVisibility)
+        PrimaryDialog(
+            title = stringResource(R.string.not_complete),
+            text = stringResource(R.string.if_scheduling_task_you_must_select_date_and_time),
+            onConfirm = interaction::controlEmptySchedulingDialogVisibility,
+            onDismiss = interaction::controlEmptySchedulingDialogVisibility
         )
 }

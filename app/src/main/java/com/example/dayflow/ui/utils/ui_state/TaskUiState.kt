@@ -18,8 +18,8 @@ fun TaskEntity.toUiState(): TaskUiState {
         id = this.id,
         title = this.title,
         description = this.description,
-        date = this.date?.convertLongToDate() ?: "",
-        time = this.time?.convertLongToTime() ?: "",
+        date = this.date?.convertLongToDate() ?: INITIAL_DATE,
+        time = this.time?.convertLongToTime() ?: INITIAL_TIME,
         isDone = this.status
     )
 }

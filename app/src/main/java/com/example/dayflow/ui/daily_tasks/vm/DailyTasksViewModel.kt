@@ -4,7 +4,8 @@ import com.example.dayflow.data.local.entity.TaskEntity
 import com.example.dayflow.data.usecase.GetAllTasksUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
-import com.example.dayflow.ui.utils.convertTimeToLong
+import com.example.dayflow.ui.utils.ui_state.INITIAL_DATE
+import com.example.dayflow.ui.utils.ui_state.INITIAL_TIME
 import com.example.dayflow.ui.utils.ui_state.toUiState
 import com.example.dayflow.ui.utils.validateRequireField
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,8 +62,12 @@ class DailyTasksViewModel @Inject constructor(
         _state.update { it.copy(addTask = it.addTask.copy(time = time)) }
     }
 
-    override fun controlAlarmDialogVisibility() {
-        _state.update { it.copy(addTask = it.addTask.copy(isAlarmDialogVisible = !it.addTask.isAlarmDialogVisible)) }
+    override fun controlScheduleAlarmDialogVisibility() {
+        _state.update { it.copy(addTask = it.addTask.copy(canScheduleAlarmDialogVisibility = !it.addTask.canScheduleAlarmDialogVisibility)) }
+    }
+
+    override fun controlEmptySchedulingDialogVisibility() {
+        _state.update { it.copy(addTask = it.addTask.copy(isSchedulingEmptyDialogVisibility = !it.addTask.isSchedulingEmptyDialogVisibility)) }
     }
 
     override fun addTask() {
@@ -72,9 +77,22 @@ class DailyTasksViewModel @Inject constructor(
     }
 
     private fun validateAddTask(): Boolean {
-        val validateTitle = state.value.addTask.title.validateRequireField()
-        _state.update { it.copy(addTask = it.addTask.copy(titleError = !validateTitle)) }
-        return validateTitle
+        val value = state.value.addTask
+        val validateTitle = value.title.validateRequireField()
+        val validateDate = value.date != INITIAL_DATE && value.time == INITIAL_TIME
+        val validateTime = value.time != INITIAL_TIME && value.date == INITIAL_DATE
+
+        val isHasError = listOf(validateTitle, !validateDate, !validateTime).any { !it }
+
+        _state.update {
+            it.copy(
+                addTask = it.addTask.copy(
+                    titleError = !validateTitle,
+                    isSchedulingEmptyDialogVisibility = validateDate || validateTime
+                )
+            )
+        }
+        return !isHasError
     }
 
 }
