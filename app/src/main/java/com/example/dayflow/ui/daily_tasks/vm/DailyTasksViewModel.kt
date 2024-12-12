@@ -1,11 +1,14 @@
 package com.example.dayflow.ui.daily_tasks.vm
 
 import com.example.dayflow.data.local.entity.TaskEntity
+import com.example.dayflow.data.usecase.AddDailyTaskUseCase
 import com.example.dayflow.data.usecase.GetAllTasksUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
+import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
 import com.example.dayflow.ui.utils.ui_state.INITIAL_DATE
 import com.example.dayflow.ui.utils.ui_state.INITIAL_TIME
+import com.example.dayflow.ui.utils.ui_state.toEntity
 import com.example.dayflow.ui.utils.ui_state.toUiState
 import com.example.dayflow.ui.utils.validateRequireField
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DailyTasksViewModel @Inject constructor(
     private val getAllTasksUseCase: GetAllTasksUseCase,
+    private val addDailyTaskUseCase: AddDailyTaskUseCase,
 ) : BaseViewModel<DailyTasksUiState, DailyTasksEvents>(DailyTasksUiState()),
     DailyTasksInteractions {
 
@@ -55,7 +59,6 @@ class DailyTasksViewModel @Inject constructor(
 
     override fun onDateChange(date: String) {
         _state.update { it.copy(addTask = it.addTask.copy(date = date)) }
-
     }
 
     override fun onTimeChange(time: String) {
@@ -68,12 +71,6 @@ class DailyTasksViewModel @Inject constructor(
 
     override fun controlEmptySchedulingDialogVisibility() {
         _state.update { it.copy(addTask = it.addTask.copy(isSchedulingEmptyDialogVisibility = !it.addTask.isSchedulingEmptyDialogVisibility)) }
-    }
-
-    override fun addTask() {
-        if (validateAddTask()) {
-
-        }
     }
 
     private fun validateAddTask(): Boolean {
@@ -95,4 +92,35 @@ class DailyTasksViewModel @Inject constructor(
         return !isHasError
     }
 
+    override fun addTask() {
+        if (validateAddTask()) {
+            _state.update { it.copy(contentStatus = ContentStatus.LOADING) }
+            tryExecute(
+                { addDailyTaskUseCase(state.value.addTask.toEntity()) },
+                { addTaskSuccess() },
+                ::addTaskError
+            )
+        }
+    }
+
+    private fun generateRandomId(): Int {
+        return (Int.MIN_VALUE..Int.MAX_VALUE).random()
+    }
+
+    private fun addTaskSuccess() {
+        _state.update {
+            it.copy(
+                contentStatus = ContentStatus.VISIBLE,
+                inProgressTasks = it.inProgressTasks.toMutableList().apply {
+                    add(it.addTask.toUiState().copy(id = generateRandomId()))
+                },
+                addTask = AddTaskUiState(),
+                isAddTaskVisible = !it.isAddTaskVisible
+            )
+        }
+    }
+
+    private fun addTaskError() {
+        _state.update { it.copy(contentStatus = ContentStatus.FAILURE) }
+    }
 }

@@ -26,3 +26,13 @@ fun AddTaskUiState.toEntity(): TaskEntity {
         status = false,
     )
 }
+
+fun AddTaskUiState.toUiState(): TaskUiState {
+    return TaskUiState(
+        title = this.title,
+        description = this.description,
+        date = this.date,
+        time = this.time,
+        isDone = false,
+    )
+}
