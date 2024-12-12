@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -95,7 +97,10 @@ fun TaskItem(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.End
                     ) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space4)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space4)
+                        ) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(R.drawable.ic_clock),
                                 contentDescription = null,
@@ -107,7 +112,11 @@ fun TaskItem(
                                 color = MaterialTheme.colorScheme.outline,
                             )
                         }
-                        Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space4)) {
+                        Spacer(modifier = Modifier.width(MaterialTheme.spacing.space8))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space4)
+                        ) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(R.drawable.ic_calendar),
                                 contentDescription = null,

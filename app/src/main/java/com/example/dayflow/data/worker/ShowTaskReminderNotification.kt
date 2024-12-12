@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.example.dayflow.R
 
 private const val CHANNEL_ID = "channelId"
 private const val CHANNEL_NAME = "channelName"
@@ -32,7 +33,7 @@ fun showTaskReminderNotification(context: Context, title: String) {
 
 
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(0)
+            .setSmallIcon(R.drawable.logo)
             .setContentTitle(title)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDefaults(NotificationCompat.DEFAULT_ALL)

@@ -59,8 +59,8 @@ fun AddTask(
             PrimaryTextButton(
                 modifier = Modifier.align(Alignment.End),
                 text = stringResource(R.string.cancel),
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                containerColor = MaterialTheme.colorScheme.outlineVariant,
+                contentColor = MaterialTheme.colorScheme.outline,
                 onClick = onCancel
             )
 
