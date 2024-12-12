@@ -19,4 +19,8 @@ class RepositoryImpl @Inject constructor(
     override suspend fun deleteTask(id: Int) {
         localDataBase.taskDao().deleteTask(id)
     }
+
+    override suspend fun updateTaskStatus(id: Int, status: Boolean) {
+        localDataBase.taskDao().updateTaskStatus(id, status)
+    }
 }
