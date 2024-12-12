@@ -1,6 +1,11 @@
 package com.example.dayflow.ui.daily_tasks.composable
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -26,7 +31,9 @@ fun DailyTaskTabs(
 ) {
     AnimatedVisibility(
         modifier = modifier,
-        visible = isTabsVisible
+        visible = isTabsVisible,
+        enter = fadeIn(tween(200)) + expandVertically(tween(200)),
+        exit = fadeOut(tween(200)) + shrinkVertically(tween(200))
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

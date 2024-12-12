@@ -1,6 +1,7 @@
 package com.example.dayflow.ui.daily_tasks
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -51,7 +52,8 @@ private fun DailyTasksContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(MaterialTheme.spacing.space16)
+                .padding(MaterialTheme.spacing.space16),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space16)
         ) {
             var isDoneVisible by remember { mutableStateOf(false) }
             DailyTaskTabs(
