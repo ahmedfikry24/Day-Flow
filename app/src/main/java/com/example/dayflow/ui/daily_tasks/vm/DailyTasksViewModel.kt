@@ -2,6 +2,7 @@ package com.example.dayflow.ui.daily_tasks.vm
 
 import com.example.dayflow.data.local.entity.TaskEntity
 import com.example.dayflow.data.usecase.AddDailyTaskUseCase
+import com.example.dayflow.data.usecase.DeleteDailyTaskUseCase
 import com.example.dayflow.data.usecase.GetAllTasksUseCase
 import com.example.dayflow.data.usecase.UpdateTaskStatusUseCase
 import com.example.dayflow.ui.base.BaseViewModel
@@ -9,6 +10,7 @@ import com.example.dayflow.ui.utils.ContentStatus
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
 import com.example.dayflow.ui.utils.ui_state.INITIAL_DATE
 import com.example.dayflow.ui.utils.ui_state.INITIAL_TIME
+import com.example.dayflow.ui.utils.ui_state.TaskUiState
 import com.example.dayflow.ui.utils.ui_state.toEntity
 import com.example.dayflow.ui.utils.ui_state.toUiState
 import com.example.dayflow.ui.utils.validateRequireField
@@ -21,6 +23,7 @@ class DailyTasksViewModel @Inject constructor(
     private val getAllTasksUseCase: GetAllTasksUseCase,
     private val addDailyTaskUseCase: AddDailyTaskUseCase,
     private val updateTaskStatusUseCase: UpdateTaskStatusUseCase,
+    private val deleteDailyTaskUseCase: DeleteDailyTaskUseCase,
 ) : BaseViewModel<DailyTasksUiState, DailyTasksEvents>(DailyTasksUiState()),
     DailyTasksInteractions {
 
@@ -122,13 +125,15 @@ class DailyTasksViewModel @Inject constructor(
         }
     }
 
-    override fun onSwipeDoneTask(id: Int) {
+    override fun onSwipeDoneTask(task: TaskUiState) {
         tryExecute(
-            { updateTaskStatusUseCase(id) },
+            { updateTaskStatusUseCase(task.id) },
             {
                 _state.update { value ->
                     value.copy(
-                        inProgressTasks = value.inProgressTasks.filterNot { it.id == id }
+                        inProgressTasks = value.inProgressTasks.filterNot { it.id == task.id },
+                        doneTasks = value.doneTasks.toMutableList()
+                            .apply { add(task.copy(isDone = true)) }
                     )
                 }
             },
@@ -136,7 +141,17 @@ class DailyTasksViewModel @Inject constructor(
         )
     }
 
-    override fun onSwipeDeleteTask(id: Int) {
-
+    override fun onSwipeDeleteTask(task: TaskUiState) {
+        tryExecute(
+            { deleteDailyTaskUseCase(task.toEntity()) },
+            {
+                _state.update { value ->
+                    value.copy(
+                        inProgressTasks = value.inProgressTasks.filterNot { it.id == task.id }
+                    )
+                }
+            },
+            ::setFailureContent
+        )
     }
 }

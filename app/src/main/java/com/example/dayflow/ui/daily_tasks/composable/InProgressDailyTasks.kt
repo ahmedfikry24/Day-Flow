@@ -2,7 +2,6 @@ package com.example.dayflow.ui.daily_tasks.composable
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -39,8 +38,8 @@ fun InProgressDailyTasks(
                 SwipeDailyTask(
                     state = task,
                     containerColor = containerColor[index % containerColor.size],
-                    onSwipeDone = {},
-                    onSwipeDelete = {},
+                    onSwipeDone = { interactions.onSwipeDoneTask(it) },
+                    onSwipeDelete = { interactions.onSwipeDeleteTask(it) },
                     onClickTask = {}
                 )
             }

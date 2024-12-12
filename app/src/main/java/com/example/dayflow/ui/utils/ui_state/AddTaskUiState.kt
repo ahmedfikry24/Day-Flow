@@ -22,7 +22,7 @@ fun AddTaskUiState.toEntity(): TaskEntity {
         title = this.title,
         description = this.description,
         date = if (this.date == INITIAL_DATE) null else this.date.convertDateToLong(),
-        time = if (this.title == INITIAL_TIME) null else this.time.convertTimeToLong(),
+        time = if (this.time == INITIAL_TIME) null else this.time.convertTimeToLong(),
         status = false,
     )
 }
