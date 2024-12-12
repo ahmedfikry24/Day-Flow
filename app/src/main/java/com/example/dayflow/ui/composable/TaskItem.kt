@@ -5,18 +5,25 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.dayflow.R
 import com.example.dayflow.ui.theme.spacing
+import com.example.dayflow.ui.utils.ui_state.INITIAL_DATE
 import com.example.dayflow.ui.utils.ui_state.TaskUiState
 
 @Composable
@@ -34,38 +41,74 @@ fun TaskItem(
         enabled = !state.isDone,
         onClick = { onClick(state) }
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(MaterialTheme.spacing.space8),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space8)
         ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space8)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(
+                    MaterialTheme.spacing.space8
+                )
             ) {
-                Text(
-                    state.title,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+                VerticalDivider(
+                    modifier = Modifier.height(50.dp),
+                    thickness = 2.dp,
+                    color = MaterialTheme.colorScheme.tertiary
                 )
-                Text(
-                    state.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space8)
+                ) {
+                    Text(
+                        state.title,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(
+                        state.description,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
-            if (state.date.isNotBlank())
-                Text(
-                    state.date,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.outline,
-                )
+            if (state.date != INITIAL_DATE)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space4)) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_clock),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.outline
+                        )
+                        Text(
+                            state.time,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.outline,
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space4)) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_calendar),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.outline
+                        )
+                        Text(
+                            state.date,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.outline,
+                        )
+                    }
+                }
         }
     }
 }
