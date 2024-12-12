@@ -18,4 +18,5 @@
     <string name="this_app_require_to_receive_tasks_notification_please_allow_access_in_the_settings">This app require to receive tasks notification, Please allow access in the settings.</string>
     <string name="not_complete">Not Complete</string>
     <string name="if_scheduling_task_you_must_select_date_and_time">if scheduling task you must select date and time.</string>
+    <string name="add">Add</string>
 </resources>
