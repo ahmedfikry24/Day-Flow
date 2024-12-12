@@ -9,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.dayflow.ui.composable.SwipeDailyTask
 import com.example.dayflow.ui.daily_tasks.vm.DailyTasksInteractions
 import com.example.dayflow.ui.daily_tasks.vm.DailyTasksUiState
 import com.example.dayflow.ui.theme.spacing
