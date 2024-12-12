@@ -3,6 +3,7 @@ package com.example.dayflow.ui.daily_tasks.vm
 import com.example.dayflow.data.local.entity.TaskEntity
 import com.example.dayflow.data.usecase.AddDailyTaskUseCase
 import com.example.dayflow.data.usecase.GetAllTasksUseCase
+import com.example.dayflow.data.usecase.UpdateTaskStatusUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class DailyTasksViewModel @Inject constructor(
     private val getAllTasksUseCase: GetAllTasksUseCase,
     private val addDailyTaskUseCase: AddDailyTaskUseCase,
+    private val updateTaskStatusUseCase: UpdateTaskStatusUseCase,
 ) : BaseViewModel<DailyTasksUiState, DailyTasksEvents>(DailyTasksUiState()),
     DailyTasksInteractions {
 
@@ -26,7 +28,7 @@ class DailyTasksViewModel @Inject constructor(
         tryExecute(
             { getAllTasksUseCase() },
             ::allTasksSuccess,
-            ::allTasksError
+            ::setFailureContent
         )
     }
 
@@ -40,7 +42,7 @@ class DailyTasksViewModel @Inject constructor(
         }
     }
 
-    private fun allTasksError() {
+    private fun setFailureContent() {
         _state.update { it.copy(contentStatus = ContentStatus.FAILURE) }
     }
 
@@ -98,7 +100,7 @@ class DailyTasksViewModel @Inject constructor(
             tryExecute(
                 { addDailyTaskUseCase(state.value.addTask.toEntity()) },
                 { addTaskSuccess() },
-                ::addTaskError
+                ::setFailureContent
             )
         }
     }
@@ -120,7 +122,21 @@ class DailyTasksViewModel @Inject constructor(
         }
     }
 
-    private fun addTaskError() {
-        _state.update { it.copy(contentStatus = ContentStatus.FAILURE) }
+    override fun onSwipeDoneTask(id: Int) {
+        tryExecute(
+            { updateTaskStatusUseCase(id) },
+            {
+                _state.update { value ->
+                    value.copy(
+                        inProgressTasks = value.inProgressTasks.filterNot { it.id == id }
+                    )
+                }
+            },
+            ::setFailureContent
+        )
+    }
+
+    override fun onSwipeDeleteTask(id: Int) {
+
     }
 }
