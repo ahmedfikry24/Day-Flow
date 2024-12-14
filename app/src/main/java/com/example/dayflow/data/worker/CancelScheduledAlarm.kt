@@ -5,13 +5,14 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import com.example.dayflow.data.utils.DataConstants
+import com.example.dayflow.data.worker.alarm.AlarmReceiver
 
-const val TASK_ID = "taskId"
 
 fun cancelScheduledAlarm(context: Context, taskId: Int) {
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val intent = Intent(context, AlarmReceiver::class.java).apply {
-        putExtra(TASK_ID, taskId)
+        putExtra(DataConstants.TASK_ID, taskId)
     }
     val pendingIntent = PendingIntent.getBroadcast(
         context,
