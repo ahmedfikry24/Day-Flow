@@ -43,7 +43,8 @@ fun String.convertDateToLong(): Long {
 }
 
 fun Long.convertLongToDate(): String {
-    val localDate = LocalDate.ofEpochDay(this / (24 * 60 * 60 * 1000))
+    val instant = Instant.ofEpochMilli(this)
+    val localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate()
     return localDate.toString()
 }
 
