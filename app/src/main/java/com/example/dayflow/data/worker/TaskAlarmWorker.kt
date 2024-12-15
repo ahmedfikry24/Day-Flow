@@ -6,13 +6,13 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.dayflow.data.usecase.GetAllTasksInSpecificDateUseCase
+import com.example.dayflow.data.worker.alarm.setTaskAlarm
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 
-const val TASK_TITLE = "taskTitle"
 
 @HiltWorker
 class TaskAlarmWorker @AssistedInject constructor(
@@ -37,15 +37,12 @@ class TaskAlarmWorker @AssistedInject constructor(
             .toInstant()
             .toEpochMilli()
 
-        val currentTimeMillis = System.currentTimeMillis()
-
         val tasks = getAllTasksInSpecificDate(startOfToday..endOfToday)
+        val currentTime = System.currentTimeMillis()
 
         for (task in tasks) {
-            val taskScheduledTime = task.date!! + task.time!!
-            if (taskScheduledTime >= currentTimeMillis) {
-                setTaskAlarm(applicationContext, alarmManager, task, taskScheduledTime)
-            }
+            if (task.time!! > currentTime)
+                setTaskAlarm(applicationContext, alarmManager, task)
         }
 
         return Result.success()
