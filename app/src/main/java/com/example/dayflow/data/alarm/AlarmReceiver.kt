@@ -1,4 +1,4 @@
-package com.example.dayflow.data.worker.alarm
+package com.example.dayflow.data.alarm
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.RingtoneManager
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.dayflow.R
@@ -30,11 +31,7 @@ class AlarmReceiver : BroadcastReceiver() {
                         taskId
                     )
 
-                    DataConstants.ALARM_STOP_ACTION -> {
-                        val notificationManager =
-                            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                        notificationManager.cancel(taskId)
-                    }
+                    DataConstants.ALARM_STOP_ACTION -> cancelScheduledAlarm(context, taskId)
 
                     else -> Unit
                 }
@@ -62,6 +59,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
             val stopIntent = Intent(context, AlarmReceiver::class.java).apply {
                 action = DataConstants.ALARM_STOP_ACTION
+                putExtra(DataConstants.TASK_ID, taskId)
             }
             val stopPendingIntent = PendingIntent.getBroadcast(
                 context,
@@ -69,9 +67,9 @@ class AlarmReceiver : BroadcastReceiver() {
                 stopIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
-            val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+            var alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
             if (alarmUri == null)
-                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
             val notificationBuilder =
                 NotificationCompat.Builder(context, DataConstants.NOTIFICATION_CHANNEL_ID)
@@ -83,7 +81,7 @@ class AlarmReceiver : BroadcastReceiver() {
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setDefaults(NotificationCompat.DEFAULT_ALL)
 
-            notificationManager.notify(0, notificationBuilder.build())
+            notificationManager.notify(taskId, notificationBuilder.build())
         }
     }
 }
