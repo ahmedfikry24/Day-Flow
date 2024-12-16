@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.dayflow.data.local.LocalDataBase
 import com.example.dayflow.data.repository.Repository
+import com.example.dayflow.data.usecase.AddDailyTaskUseCase
 import com.example.dayflow.data.usecase.DeleteDailyTaskUseCase
 import dagger.Module
 import dagger.Provides
@@ -32,5 +33,13 @@ object LocalModule {
         repository: Repository,
         @ApplicationContext context: Context,
     ) = DeleteDailyTaskUseCase(repository, context)
+
+
+    @Provides
+    @Singleton
+    fun provideAddDailyTaskUseCase(
+        repository: Repository,
+        @ApplicationContext context: Context,
+    ) = AddDailyTaskUseCase(repository, context)
 
 }
