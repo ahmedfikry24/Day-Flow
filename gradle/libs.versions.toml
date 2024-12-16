@@ -8,16 +8,14 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2024.11.00"
+composeBom = "2024.12.01"
 ksp = "2.0.21-1.0.27"
-navigationCompose = "2.8.4"
+navigationCompose = "2.8.5"
 room = "2.6.1"
 hiltVersion = "2.51.1"
 hiltNavigationCompose = "1.2.0"
 serializationJson = "1.7.3"
 lottieComposeVersion = "6.6.1"
-workRuntimeKtx = "2.10.0"
-hiltWork = "1.2.0"
 accompanistPermissions = "0.35.2-beta"
 
 [libraries]
@@ -46,9 +44,6 @@ dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref
 kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationJson" }
 androidx-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashscreen" }
 android-lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieComposeVersion" }
-androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltWork" }
-androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltWork" }
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 
 [plugins]
