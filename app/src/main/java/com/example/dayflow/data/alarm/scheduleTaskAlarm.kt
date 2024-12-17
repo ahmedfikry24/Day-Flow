@@ -5,10 +5,14 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import com.example.dayflow.data.local.entity.TaskEntity
 import com.example.dayflow.data.utils.DataConstants
-import java.time.LocalDate
-import java.time.ZoneId
+import com.example.dayflow.ui.utils.convertDateToLong
+import com.example.dayflow.ui.utils.convertTimeToLong
+import com.example.dayflow.ui.utils.ui_state.toEntity
+import java.util.Calendar
+import java.util.TimeZone
 
 fun scheduleTaskAlarm(context: Context, task: TaskEntity) {
 
@@ -22,10 +26,7 @@ fun scheduleTaskAlarm(context: Context, task: TaskEntity) {
         putExtra(DataConstants.TASK_TITLE, task.title)
     }
 
-    val alarmTime = task.date + task.time - LocalDate.now()
-        .atStartOfDay(ZoneId.systemDefault())
-        .toInstant()
-        .toEpochMilli()
+    val alarmTime = getAlarmTime(task.date, task.time)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         if (alarmManager.canScheduleExactAlarms()) {
@@ -55,4 +56,11 @@ fun scheduleTaskAlarm(context: Context, task: TaskEntity) {
             pendingIntent
         )
     }
+}
+
+private fun getAlarmTime(date: Long, time: Long): Long {
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = date + (time % 86400000)
+    val timeZone = TimeZone.getDefault()
+    return calendar.timeInMillis + timeZone.rawOffset
 }
