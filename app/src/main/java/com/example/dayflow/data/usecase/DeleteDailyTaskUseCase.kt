@@ -1,9 +1,10 @@
 package com.example.dayflow.data.usecase
 
 import android.content.Context
-import com.example.dayflow.data.alarm.cancelScheduledAlarm
+import com.example.dayflow.data.alarm.DefaultAlarmManager
 import com.example.dayflow.data.local.entity.TaskEntity
 import com.example.dayflow.data.repository.Repository
+import com.example.dayflow.data.utils.DefaultNotificationManager
 import javax.inject.Inject
 
 class DeleteDailyTaskUseCase @Inject constructor(
@@ -12,7 +13,9 @@ class DeleteDailyTaskUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(task: TaskEntity) {
         repository.deleteTask(task.id)
-        if (task.date != null && task.time != null)
-            cancelScheduledAlarm(context, task.id)
+        if (task.date != null && task.time != null) {
+            DefaultAlarmManager.cancelAlarm(context, task.id)
+            DefaultNotificationManager.cancelNotification(context, task.id)
+        }
     }
 }

@@ -154,4 +154,11 @@ fun AddTask(
             onConfirm = interaction::controlEmptySchedulingDialogVisibility,
             onDismiss = interaction::controlEmptySchedulingDialogVisibility
         )
+    if (state.isScheduledUnValid)
+        PrimaryDialog(
+            title = stringResource(R.string.unvalid),
+            text = stringResource(R.string.you_select_a_date_or_time_already_gone_please_choose_correct_date),
+            onConfirm = interaction::controlUnValidScheduledDialogVisibility,
+            onDismiss = interaction::controlUnValidScheduledDialogVisibility,
+        )
 }
