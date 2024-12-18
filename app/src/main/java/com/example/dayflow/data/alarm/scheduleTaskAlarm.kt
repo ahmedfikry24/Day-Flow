@@ -5,13 +5,13 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import com.example.dayflow.data.local.entity.TaskEntity
 import com.example.dayflow.data.utils.DataConstants
-import com.example.dayflow.ui.utils.convertDateToLong
-import com.example.dayflow.ui.utils.convertTimeToLong
-import com.example.dayflow.ui.utils.ui_state.toEntity
+import com.example.dayflow.ui.utils.convertLongToDate
+import com.example.dayflow.ui.utils.convertLongToTime
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 import java.util.TimeZone
 
 fun scheduleTaskAlarm(context: Context, task: TaskEntity) {
@@ -26,7 +26,7 @@ fun scheduleTaskAlarm(context: Context, task: TaskEntity) {
         putExtra(DataConstants.TASK_TITLE, task.title)
     }
 
-    val alarmTime = getAlarmTime(task.date, task.time)
+    val alarmTime = getAlarmTime(task.date.convertLongToDate(), task.time.convertLongToTime())
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         if (alarmManager.canScheduleExactAlarms()) {
@@ -58,9 +58,24 @@ fun scheduleTaskAlarm(context: Context, task: TaskEntity) {
     }
 }
 
-private fun getAlarmTime(date: Long, time: Long): Long {
+private fun getAlarmTime(dateString: String, timeString: String): Long {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("H:m", Locale.getDefault())
+
+    val date = dateFormat.parse(dateString)
+    val time = timeFormat.parse(timeString)
+
     val calendar = Calendar.getInstance()
-    calendar.timeInMillis = date + (time % 86400000)
-    val timeZone = TimeZone.getDefault()
-    return calendar.timeInMillis + timeZone.rawOffset
+    calendar.timeZone = TimeZone.getDefault()
+    calendar.time = date
+    val timeCalendar = Calendar.getInstance()
+    timeCalendar.time = time
+
+    calendar.set(Calendar.HOUR_OF_DAY, timeCalendar.get(Calendar.HOUR_OF_DAY))
+    calendar.set(Calendar.MINUTE, timeCalendar.get(Calendar.MINUTE))
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+
+
+    return calendar.timeInMillis
 }

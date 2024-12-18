@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-import android.util.Log
 import androidx.core.content.getSystemService
 import com.example.dayflow.data.utils.TaskPriority
 import java.text.SimpleDateFormat
@@ -17,9 +16,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 import java.util.Locale
-import java.util.TimeZone
 
 fun String.validateRequireField(): Boolean {
     return this.isNotBlank()
@@ -42,7 +39,6 @@ fun Long?.getTaskPriority(): TaskPriority {
 
 fun String.convertDateToLong(): Long {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    dateFormat.timeZone = TimeZone.getDefault()
     val date = dateFormat.parse(this)
     return date?.time ?: 0L
 }
@@ -76,7 +72,6 @@ fun Activity.goToSettings() {
 
 fun String.convertTimeToLong(): Long {
     val timeFormat = SimpleDateFormat("H:m", Locale.getDefault())
-    timeFormat.timeZone = TimeZone.getDefault()
     val time = timeFormat.parse(this)
     return time?.time ?: 0L
 }
