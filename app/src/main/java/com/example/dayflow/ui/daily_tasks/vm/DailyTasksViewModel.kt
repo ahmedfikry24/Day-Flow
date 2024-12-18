@@ -7,6 +7,7 @@ import com.example.dayflow.data.usecase.GetAllTasksUseCase
 import com.example.dayflow.data.usecase.UpdateTaskStatusUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
+import com.example.dayflow.ui.utils.getAlarmTime
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
 import com.example.dayflow.ui.utils.ui_state.INITIAL_DATE
 import com.example.dayflow.ui.utils.ui_state.INITIAL_TIME
@@ -78,19 +79,25 @@ class DailyTasksViewModel @Inject constructor(
         _state.update { it.copy(addTask = it.addTask.copy(isSchedulingEmptyDialogVisibility = !it.addTask.isSchedulingEmptyDialogVisibility)) }
     }
 
+    override fun controlUnValidScheduledDialogVisibility() {
+        _state.update { it.copy(addTask = it.addTask.copy(isScheduledUnValid = !it.addTask.isScheduledUnValid)) }
+    }
+
     private fun validateAddTask(): Boolean {
         val value = state.value.addTask
         val validateTitle = value.title.validateRequireField()
         val validateDate = value.date != INITIAL_DATE && value.time == INITIAL_TIME
         val validateTime = value.time != INITIAL_TIME && value.date == INITIAL_DATE
-
-        val isHasError = listOf(validateTitle, !validateDate, !validateTime).any { !it }
+        val isSelectedDateValid = getAlarmTime(value.date, value.time) > System.currentTimeMillis()
+        val isHasError =
+            listOf(validateTitle, !validateDate, !validateTime, isSelectedDateValid).any { !it }
 
         _state.update {
             it.copy(
                 addTask = it.addTask.copy(
                     titleError = !validateTitle,
-                    isSchedulingEmptyDialogVisibility = validateDate || validateTime
+                    isSchedulingEmptyDialogVisibility = validateDate || validateTime,
+                    isScheduledUnValid = !isSelectedDateValid
                 )
             )
         }

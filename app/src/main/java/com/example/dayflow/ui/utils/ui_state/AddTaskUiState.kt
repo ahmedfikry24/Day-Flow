@@ -15,6 +15,7 @@ data class AddTaskUiState(
     val time: String = INITIAL_TIME,
     val canScheduleAlarmDialogVisibility: Boolean = false,
     val isSchedulingEmptyDialogVisibility: Boolean = false,
+    val isScheduledUnValid: Boolean = false
 )
 
 fun AddTaskUiState.toEntity(): TaskEntity {

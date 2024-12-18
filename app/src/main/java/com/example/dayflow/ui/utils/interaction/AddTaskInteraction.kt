@@ -7,5 +7,6 @@ interface AddTaskInteraction {
     fun onTimeChange(time: String)
     fun controlScheduleAlarmDialogVisibility()
     fun controlEmptySchedulingDialogVisibility()
+    fun controlUnValidScheduledDialogVisibility()
     fun addTask()
 }
