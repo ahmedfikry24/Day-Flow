@@ -13,7 +13,7 @@ import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
 import com.example.dayflow.ui.utils.ui_state.INITIAL_DATE
 import com.example.dayflow.ui.utils.ui_state.INITIAL_TIME
 import com.example.dayflow.ui.utils.ui_state.TaskUiState
-import com.example.dayflow.ui.utils.ui_state.toEntity
+import com.example.dayflow.ui.utils.ui_state.toDailyEntity
 import com.example.dayflow.ui.utils.ui_state.toUiState
 import com.example.dayflow.ui.utils.validateRequireField
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -109,7 +109,7 @@ class DailyTasksViewModel @Inject constructor(
         if (validateAddTask()) {
             _state.update { it.copy(contentStatus = ContentStatus.LOADING) }
             tryExecute(
-                { addDailyTaskUseCase(state.value.addTask.toEntity()) },
+                { addDailyTaskUseCase(state.value.addTask.toDailyEntity()) },
                 { addTaskSuccess() },
                 ::setFailureContent
             )
@@ -147,7 +147,7 @@ class DailyTasksViewModel @Inject constructor(
 
     override fun onSwipeDeleteTask(task: TaskUiState) {
         tryExecute(
-            { deleteDailyTaskUseCase(task.toEntity()) },
+            { deleteDailyTaskUseCase(task.toDailyEntity()) },
             {
                 _state.update { value ->
                     value.copy(

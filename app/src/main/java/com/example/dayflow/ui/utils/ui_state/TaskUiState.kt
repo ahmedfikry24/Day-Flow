@@ -27,7 +27,7 @@ fun DailyTaskEntity.toUiState(): TaskUiState {
     )
 }
 
-fun TaskUiState.toEntity(): DailyTaskEntity {
+fun TaskUiState.toDailyEntity(): DailyTaskEntity {
     return DailyTaskEntity(
         id = this.id,
         title = this.title,
