@@ -3,13 +3,11 @@ package com.example.dayflow.ui.yearly_tasks.composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.dayflow.R
+import com.example.dayflow.ui.composable.SwipeItemToDismiss
 import com.example.dayflow.ui.composable.SwipeTaskBackground
 import com.example.dayflow.ui.composable.TaskItem
 import com.example.dayflow.ui.utils.ui_state.TaskUiState
@@ -22,29 +20,16 @@ fun SwipeYearlyTask(
     onSwipeDelete: (TaskUiState) -> Unit,
     onClickTask: (TaskUiState) -> Unit,
 ) {
-    val swipeState = rememberSwipeToDismissBoxState(
-        confirmValueChange = {
-            when (it) {
-                SwipeToDismissBoxValue.StartToEnd -> return@rememberSwipeToDismissBoxState false
-                SwipeToDismissBoxValue.EndToStart -> onSwipeDelete(state)
-                SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState false
-            }
-            return@rememberSwipeToDismissBoxState true
-        },
-        positionalThreshold = { it * .25f }
-    )
-    SwipeToDismissBox(
+    SwipeItemToDismiss(
         modifier = modifier.fillMaxWidth(),
-        state = swipeState,
+        enableSwipeStartToEnd = false,
+        onSwipeLeft = { onSwipeDelete(state) },
         backgroundContent = {
             SwipeTaskBackground(
-                state = swipeState.dismissDirection,
                 iconsRes = listOf(R.drawable.ic_trash),
                 iconsArrangement = Arrangement.End
             )
         },
-        gesturesEnabled = !state.isDone,
-        enableDismissFromStartToEnd = false
     ) {
         TaskItem(
             state = state,
