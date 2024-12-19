@@ -11,8 +11,8 @@ data class TaskUiState(
     val id: Int = 0,
     val title: String = "",
     val description: String = "",
-    val date: String = "",
-    val time: String = "",
+    val date: String = INITIAL_DATE,
+    val time: String = INITIAL_TIME,
     val isDone: Boolean = false,
 )
 
