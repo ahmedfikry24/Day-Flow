@@ -3,10 +3,13 @@ package com.example.dayflow.data.utils
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.example.dayflow.MainActivity
 import com.example.dayflow.R
 
 object DefaultNotificationManager {
@@ -28,11 +31,20 @@ object DefaultNotificationManager {
             channel.enableVibration(true)
             notificationManager.createNotificationChannel(channel)
 
+            val activity = Intent(context, MainActivity::class.java)
+            val activityPendingIntent = PendingIntent.getActivity(
+                context,
+                DataConstants.ACTIVITY_PENDING_ID,
+                activity,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
             val notificationBuilder =
                 NotificationCompat.Builder(context, DataConstants.NOTIFICATION_CHANNEL_ID)
                     .setSmallIcon(R.drawable.logo)
                     .setContentTitle(notificationArgs.title)
                     .setSound(notificationArgs.ringtone)
+                    .setContentIntent(activityPendingIntent)
                     .setAutoCancel(true)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setDefaults(NotificationCompat.DEFAULT_ALL)
