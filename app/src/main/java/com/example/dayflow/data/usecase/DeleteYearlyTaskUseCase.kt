@@ -3,10 +3,9 @@ package com.example.dayflow.data.usecase
 import com.example.dayflow.data.repository.Repository
 import javax.inject.Inject
 
-class UpdateTaskStatusUseCase @Inject
-constructor(private val repository: Repository) {
+class DeleteYearlyTaskUseCase @Inject constructor(private val repository: Repository) {
 
     suspend operator fun invoke(id: Int) {
-        repository.updateTaskStatus(id, true)
+        repository.deleteYearlyTask(id)
     }
 }

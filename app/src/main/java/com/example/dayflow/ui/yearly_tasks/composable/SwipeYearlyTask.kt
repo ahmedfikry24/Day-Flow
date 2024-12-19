@@ -1,5 +1,6 @@
-package com.example.dayflow.ui.daily_tasks.composable
+package com.example.dayflow.ui.yearly_tasks.composable
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -12,25 +13,21 @@ import com.example.dayflow.ui.composable.TaskItem
 import com.example.dayflow.ui.utils.ui_state.TaskUiState
 
 @Composable
-fun SwipeDailyTask(
+fun SwipeYearlyTask(
     modifier: Modifier = Modifier,
     state: TaskUiState,
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
-    onSwipeDone: (TaskUiState) -> Unit,
     onSwipeDelete: (TaskUiState) -> Unit,
     onClickTask: (TaskUiState) -> Unit,
 ) {
     SwipeItemToDismiss(
         modifier = modifier.fillMaxWidth(),
-        enableGesture = !state.isDone,
+        enableSwipeStartToEnd = false,
         onSwipeLeft = { onSwipeDelete(state) },
-        onSwipeRight = { onSwipeDone(state) },
         backgroundContent = {
             SwipeTaskBackground(
-                iconsRes = listOf(
-                    R.drawable.ic_check_right,
-                    R.drawable.ic_trash
-                )
+                iconsRes = listOf(R.drawable.ic_trash),
+                iconsArrangement = Arrangement.End
             )
         },
     ) {

@@ -8,4 +8,6 @@ interface DailyTasksInteractions : AddTaskInteraction {
     fun controlAddTaskVisibility()
     fun onSwipeDoneTask(task: TaskUiState)
     fun onSwipeDeleteTask(task: TaskUiState)
+    fun controlDeleteItemDialogVisibility()
+    fun deleteTask()
 }

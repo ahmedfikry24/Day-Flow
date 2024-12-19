@@ -19,6 +19,7 @@ import com.example.dayflow.navigation.AppDestination
 import com.example.dayflow.ui.composable.BottomNavBar
 import com.example.dayflow.ui.daily_tasks.DailyTasksScreen
 import com.example.dayflow.ui.theme.DayFlowTheme
+import com.example.dayflow.ui.yearly_tasks.YearlyTasksScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         NavHost(navController, startDestination = AppDestination.DailyTasks) {
                             composable<AppDestination.DailyTasks> { DailyTasksScreen(navController) }
-                            composable<AppDestination.YearlyGoals> { }
+                            composable<AppDestination.YearlyGoals> { YearlyTasksScreen(navController) }
                         }
                     }
                 }

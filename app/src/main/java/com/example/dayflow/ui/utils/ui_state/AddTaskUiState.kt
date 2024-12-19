@@ -1,6 +1,7 @@
 package com.example.dayflow.ui.utils.ui_state
 
-import com.example.dayflow.data.local.entity.TaskEntity
+import com.example.dayflow.data.local.entity.DailyTaskEntity
+import com.example.dayflow.data.local.entity.YearlyTaskEntity
 import com.example.dayflow.ui.utils.convertDateToLong
 import com.example.dayflow.ui.utils.convertTimeToLong
 
@@ -18,8 +19,8 @@ data class AddTaskUiState(
     val isScheduledUnValid: Boolean = false
 )
 
-fun AddTaskUiState.toEntity(): TaskEntity {
-    return TaskEntity(
+fun AddTaskUiState.toDailyEntity(): DailyTaskEntity {
+    return DailyTaskEntity(
         title = this.title,
         description = this.description,
         date = if (this.date == INITIAL_DATE) null else this.date.convertDateToLong(),
@@ -35,5 +36,12 @@ fun AddTaskUiState.toUiState(): TaskUiState {
         date = this.date,
         time = this.time,
         isDone = false,
+    )
+}
+
+fun AddTaskUiState.toYearlyEntity(): YearlyTaskEntity {
+    return YearlyTaskEntity(
+        title = this.title,
+        description = this.description,
     )
 }

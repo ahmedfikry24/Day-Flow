@@ -1,18 +1,19 @@
 package com.example.dayflow.ui.daily_tasks.vm
 
-import com.example.dayflow.data.local.entity.TaskEntity
+import com.example.dayflow.data.local.entity.DailyTaskEntity
 import com.example.dayflow.data.usecase.AddDailyTaskUseCase
 import com.example.dayflow.data.usecase.DeleteDailyTaskUseCase
-import com.example.dayflow.data.usecase.GetAllTasksUseCase
-import com.example.dayflow.data.usecase.UpdateTaskStatusUseCase
+import com.example.dayflow.data.usecase.GetAllDailyTasksUseCase
+import com.example.dayflow.data.usecase.UpdateDailyTaskStatusUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
+import com.example.dayflow.ui.utils.generateRandomId
 import com.example.dayflow.ui.utils.getAlarmTime
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
 import com.example.dayflow.ui.utils.ui_state.INITIAL_DATE
 import com.example.dayflow.ui.utils.ui_state.INITIAL_TIME
 import com.example.dayflow.ui.utils.ui_state.TaskUiState
-import com.example.dayflow.ui.utils.ui_state.toEntity
+import com.example.dayflow.ui.utils.ui_state.toDailyEntity
 import com.example.dayflow.ui.utils.ui_state.toUiState
 import com.example.dayflow.ui.utils.validateRequireField
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,9 +22,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DailyTasksViewModel @Inject constructor(
-    private val getAllTasksUseCase: GetAllTasksUseCase,
+    private val getAllTasksUseCase: GetAllDailyTasksUseCase,
     private val addDailyTaskUseCase: AddDailyTaskUseCase,
-    private val updateTaskStatusUseCase: UpdateTaskStatusUseCase,
+    private val updateTaskStatusUseCase: UpdateDailyTaskStatusUseCase,
     private val deleteDailyTaskUseCase: DeleteDailyTaskUseCase,
 ) : BaseViewModel<DailyTasksUiState, DailyTasksEvents>(DailyTasksUiState()),
     DailyTasksInteractions {
@@ -36,7 +37,7 @@ class DailyTasksViewModel @Inject constructor(
         )
     }
 
-    private fun allTasksSuccess(tasks: List<TaskEntity>) {
+    private fun allTasksSuccess(tasks: List<DailyTaskEntity>) {
         _state.update { value ->
             value.copy(
                 contentStatus = ContentStatus.VISIBLE,
@@ -88,9 +89,15 @@ class DailyTasksViewModel @Inject constructor(
         val validateTitle = value.title.validateRequireField()
         val validateDate = value.date != INITIAL_DATE && value.time == INITIAL_TIME
         val validateTime = value.time != INITIAL_TIME && value.date == INITIAL_DATE
-        val isSelectedDateValid = getAlarmTime(value.date, value.time) > System.currentTimeMillis()
-        val isHasError =
-            listOf(validateTitle, !validateDate, !validateTime, isSelectedDateValid).any { !it }
+        var isSelectedDateValid = true
+        val isHasError = mutableListOf(
+            validateTitle,
+            !validateDate,
+            !validateTime,
+        ).any { !it }
+
+        if (value.date != INITIAL_DATE && value.time != INITIAL_TIME)
+            isSelectedDateValid = getAlarmTime(value.date, value.time) > System.currentTimeMillis()
 
         _state.update {
             it.copy(
@@ -108,15 +115,11 @@ class DailyTasksViewModel @Inject constructor(
         if (validateAddTask()) {
             _state.update { it.copy(contentStatus = ContentStatus.LOADING) }
             tryExecute(
-                { addDailyTaskUseCase(state.value.addTask.toEntity()) },
+                { addDailyTaskUseCase(state.value.addTask.toDailyEntity()) },
                 { addTaskSuccess() },
                 ::setFailureContent
             )
         }
-    }
-
-    private fun generateRandomId(): Int {
-        return (Int.MIN_VALUE..Int.MAX_VALUE).random()
     }
 
     private fun addTaskSuccess() {
@@ -149,12 +152,20 @@ class DailyTasksViewModel @Inject constructor(
     }
 
     override fun onSwipeDeleteTask(task: TaskUiState) {
+        _state.update { it.copy(selectedDeleteItem = task) }
+    }
+
+    override fun controlDeleteItemDialogVisibility() {
+        _state.update { it.copy(isDeleteTaskDialogVisible = !it.isDeleteTaskDialogVisible) }
+    }
+
+    override fun deleteTask() {
         tryExecute(
-            { deleteDailyTaskUseCase(task.toEntity()) },
+            { deleteDailyTaskUseCase(state.value.selectedDeleteItem.toDailyEntity()) },
             {
                 _state.update { value ->
                     value.copy(
-                        inProgressTasks = value.inProgressTasks.filterNot { it.id == task.id }
+                        inProgressTasks = value.inProgressTasks.filterNot { it.id == state.value.selectedDeleteItem.id }
                     )
                 }
             },
