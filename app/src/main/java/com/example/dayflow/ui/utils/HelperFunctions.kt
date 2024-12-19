@@ -106,3 +106,7 @@ fun getAlarmTime(dateString: String, timeString: String): Long {
 
     return calendar.timeInMillis
 }
+
+fun generateRandomId(): Int {
+    return (Int.MIN_VALUE..Int.MAX_VALUE).random()
+}
