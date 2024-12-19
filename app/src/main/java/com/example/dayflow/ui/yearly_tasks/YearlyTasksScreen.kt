@@ -54,7 +54,7 @@ private fun YearlyTasksContent(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = MaterialTheme.spacing.space16),
+                .padding(MaterialTheme.spacing.space16),
             contentAlignment = Alignment.BottomEnd
         ) {
             Column(Modifier.fillMaxSize()) {

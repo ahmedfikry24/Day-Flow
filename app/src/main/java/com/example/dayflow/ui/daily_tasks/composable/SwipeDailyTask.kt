@@ -23,8 +23,8 @@ fun SwipeDailyTask(
     SwipeItemToDismiss(
         modifier = modifier.fillMaxWidth(),
         enableGesture = !state.isDone,
-        onSwipeLeft = { onSwipeDone(state) },
-        onSwipeRight = { onSwipeDelete(state) },
+        onSwipeLeft = { onSwipeDelete(state) },
+        onSwipeRight = { onSwipeDone(state) },
         backgroundContent = {
             SwipeTaskBackground(
                 iconsRes = listOf(

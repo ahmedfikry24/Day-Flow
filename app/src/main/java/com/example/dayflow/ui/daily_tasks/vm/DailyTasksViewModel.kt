@@ -152,12 +152,20 @@ class DailyTasksViewModel @Inject constructor(
     }
 
     override fun onSwipeDeleteTask(task: TaskUiState) {
+        _state.update { it.copy(selectedDeleteItem = task) }
+    }
+
+    override fun controlDeleteItemDialogVisibility() {
+        _state.update { it.copy(isDeleteTaskDialogVisible = !it.isDeleteTaskDialogVisible) }
+    }
+
+    override fun deleteTask() {
         tryExecute(
-            { deleteDailyTaskUseCase(task.toDailyEntity()) },
+            { deleteDailyTaskUseCase(state.value.selectedDeleteItem.toDailyEntity()) },
             {
                 _state.update { value ->
                     value.copy(
-                        inProgressTasks = value.inProgressTasks.filterNot { it.id == task.id }
+                        inProgressTasks = value.inProgressTasks.filterNot { it.id == state.value.selectedDeleteItem.id }
                     )
                 }
             },

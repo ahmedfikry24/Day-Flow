@@ -10,4 +10,6 @@ data class DailyTasksUiState(
     val inProgressTasks: List<TaskUiState> = listOf(),
     val isAddTaskVisible: Boolean = false,
     val addTask: AddTaskUiState = AddTaskUiState(),
+    val isDeleteTaskDialogVisible: Boolean = false,
+    val selectedDeleteItem: TaskUiState = TaskUiState(),
 ) 
