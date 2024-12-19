@@ -1,4 +1,4 @@
-package com.example.dayflow.ui.composable
+package com.example.dayflow.ui.yearly_tasks.composable
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.dayflow.R
+import com.example.dayflow.ui.composable.SwipeTaskBackground
+import com.example.dayflow.ui.composable.TaskItem
 import com.example.dayflow.ui.utils.ui_state.TaskUiState
 
 @Composable
