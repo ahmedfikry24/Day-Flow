@@ -89,9 +89,15 @@ class DailyTasksViewModel @Inject constructor(
         val validateTitle = value.title.validateRequireField()
         val validateDate = value.date != INITIAL_DATE && value.time == INITIAL_TIME
         val validateTime = value.time != INITIAL_TIME && value.date == INITIAL_DATE
-        val isSelectedDateValid = getAlarmTime(value.date, value.time) > System.currentTimeMillis()
-        val isHasError =
-            listOf(validateTitle, !validateDate, !validateTime, isSelectedDateValid).any { !it }
+        var isSelectedDateValid = true
+        val isHasError = mutableListOf(
+            validateTitle,
+            !validateDate,
+            !validateTime,
+        ).any { !it }
+
+        if (value.date != INITIAL_DATE && value.time != INITIAL_TIME)
+            isSelectedDateValid = getAlarmTime(value.date, value.time) > System.currentTimeMillis()
 
         _state.update {
             it.copy(
