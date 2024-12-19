@@ -27,8 +27,11 @@ object DefaultNotificationManager {
                 DataConstants.NOTIFICATION_CHANNEL_ID,
                 DataConstants.NOTIFICATION_CHANNEL_NAME,
                 NotificationManager.IMPORTANCE_HIGH
-            )
-            channel.enableVibration(true)
+            ).apply {
+                enableVibration(true)
+                notificationArgs.ringtone?.let { setSound(it, null) }
+            }
+
             notificationManager.createNotificationChannel(channel)
 
             val activity = Intent(context, MainActivity::class.java)
@@ -43,18 +46,19 @@ object DefaultNotificationManager {
                 NotificationCompat.Builder(context, DataConstants.NOTIFICATION_CHANNEL_ID)
                     .setSmallIcon(R.drawable.logo)
                     .setContentTitle(notificationArgs.title)
-                    .setSound(notificationArgs.ringtone)
                     .setContentIntent(activityPendingIntent)
-                    .setAutoCancel(true)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setDefaults(NotificationCompat.DEFAULT_ALL)
+                    .setAutoCancel(notificationArgs.actionPendingIntent == null)
+                    .setOngoing(true)
 
-            if (notificationArgs.actionPendingIntent != null)
+            notificationArgs.actionPendingIntent?.let {
                 notificationBuilder.addAction(
                     R.drawable.ic_check_false,
                     notificationArgs.actionText,
                     notificationArgs.actionPendingIntent
                 )
+            }
+            notificationArgs.category?.let { notificationBuilder.setCategory(it) }
 
             notificationManager.notify(notificationArgs.id, notificationBuilder.build())
         }
