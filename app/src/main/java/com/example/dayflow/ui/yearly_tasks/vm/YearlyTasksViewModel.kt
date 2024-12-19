@@ -1,17 +1,23 @@
 package com.example.dayflow.ui.yearly_tasks.vm
 
 import com.example.dayflow.data.local.entity.YearlyTaskEntity
+import com.example.dayflow.data.usecase.AddYearlyTaskUseCase
 import com.example.dayflow.data.usecase.GetAllYearlyTasksUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
+import com.example.dayflow.ui.utils.generateRandomId
+import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
 import com.example.dayflow.ui.utils.ui_state.toUiState
+import com.example.dayflow.ui.utils.ui_state.toYearlyEntity
+import com.example.dayflow.ui.utils.validateRequireField
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class YearlyTasksViewModel @Inject constructor(
-    private val getAllTasksUseCase: GetAllYearlyTasksUseCase
+    private val getAllTasksUseCase: GetAllYearlyTasksUseCase,
+    private val addTaskUseCase: AddYearlyTaskUseCase
 ) : BaseViewModel<YearlyTasksUiState, YearlyTasksEvents>(YearlyTasksUiState()),
     YearlyTasksInteractions {
 
@@ -37,5 +43,58 @@ class YearlyTasksViewModel @Inject constructor(
         _state.update { it.copy(contentStatus = ContentStatus.FAILURE) }
     }
 
+
+    override fun controlAddTaskVisibility() {
+        _state.update { it.copy(isAddTaskVisible = !it.isAddTaskVisible) }
+    }
+
+    override fun onTitleChange(title: String) {
+        _state.update { it.copy(addTask = it.addTask.copy(title = title)) }
+    }
+
+    override fun onDescriptionChange(description: String) {
+        _state.update { it.copy(addTask = it.addTask.copy(description = description)) }
+    }
+
+    override fun onDateChange(date: String) {}
+
+    override fun onTimeChange(time: String) {}
+
+    override fun controlScheduleAlarmDialogVisibility() {}
+
+    override fun controlEmptySchedulingDialogVisibility() {}
+
+    override fun controlUnValidScheduledDialogVisibility() {}
+
+    private fun validateAddTask(): Boolean {
+        val value = state.value.addTask
+        val validateTitle = value.title.validateRequireField()
+        _state.update { it.copy(addTask = it.addTask.copy(titleError = !validateTitle)) }
+        return validateTitle
+    }
+
+    override fun addTask() {
+        if (validateAddTask()) {
+            _state.update { it.copy(contentStatus = ContentStatus.LOADING) }
+            tryExecute(
+                { addTaskUseCase(state.value.addTask.toYearlyEntity()) },
+                { addTaskSuccess() },
+                ::setFailureContent
+            )
+        }
+    }
+
+    private fun addTaskSuccess() {
+        _state.update {
+            it.copy(
+                contentStatus = ContentStatus.VISIBLE,
+                tasks = it.tasks.toMutableList().apply {
+                    add(it.addTask.toUiState().copy(id = generateRandomId()))
+                },
+                addTask = AddTaskUiState(),
+                isAddTaskVisible = !it.isAddTaskVisible
+            )
+        }
+    }
 
 }

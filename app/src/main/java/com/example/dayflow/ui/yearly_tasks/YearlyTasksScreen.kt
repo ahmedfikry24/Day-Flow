@@ -57,7 +57,10 @@ private fun YearlyTasksContent(
                 contentPadding = PaddingValues(vertical = MaterialTheme.spacing.space16),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space16)
             ) {
-                items(state.tasks) { task ->
+                items(
+                    items = state.tasks,
+                    key = { it.id }
+                ) { task ->
                     SwipeYearlyTask(
                         state = task,
                         onSwipeDelete = {},
