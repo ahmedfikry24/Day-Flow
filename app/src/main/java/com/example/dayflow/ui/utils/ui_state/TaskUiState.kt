@@ -1,6 +1,7 @@
 package com.example.dayflow.ui.utils.ui_state
 
 import com.example.dayflow.data.local.entity.DailyTaskEntity
+import com.example.dayflow.data.local.entity.YearlyTaskEntity
 import com.example.dayflow.ui.utils.convertDateToLong
 import com.example.dayflow.ui.utils.convertLongToDate
 import com.example.dayflow.ui.utils.convertLongToTime
@@ -37,3 +38,10 @@ fun TaskUiState.toEntity(): DailyTaskEntity {
     )
 }
 
+fun YearlyTaskEntity.toUiState(): TaskUiState {
+    return TaskUiState(
+        id = this.id,
+        title = this.title,
+        description = this.description,
+    )
+}
