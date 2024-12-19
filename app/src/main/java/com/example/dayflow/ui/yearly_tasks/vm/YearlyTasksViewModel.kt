@@ -2,6 +2,7 @@ package com.example.dayflow.ui.yearly_tasks.vm
 
 import com.example.dayflow.data.local.entity.YearlyTaskEntity
 import com.example.dayflow.data.usecase.AddYearlyTaskUseCase
+import com.example.dayflow.data.usecase.DeleteYearlyTaskUseCase
 import com.example.dayflow.data.usecase.GetAllYearlyTasksUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class YearlyTasksViewModel @Inject constructor(
     private val getAllTasksUseCase: GetAllYearlyTasksUseCase,
-    private val addTaskUseCase: AddYearlyTaskUseCase
+    private val addTaskUseCase: AddYearlyTaskUseCase,
+    private val deleteTaskUseCase: DeleteYearlyTaskUseCase
 ) : BaseViewModel<YearlyTasksUiState, YearlyTasksEvents>(YearlyTasksUiState()),
     YearlyTasksInteractions {
 
@@ -95,6 +97,20 @@ class YearlyTasksViewModel @Inject constructor(
                 isAddTaskVisible = !it.isAddTaskVisible
             )
         }
+    }
+
+    override fun onSwipeDeleteTask(id: Int) {
+        tryExecute(
+            { deleteTaskUseCase(id) },
+            {
+                _state.update { value ->
+                    value.copy(
+                        tasks = value.tasks.filterNot { it.id == id }
+                    )
+                }
+            },
+            ::setFailureContent
+        )
     }
 
 }

@@ -63,7 +63,7 @@ private fun YearlyTasksContent(
                 ) { task ->
                     SwipeYearlyTask(
                         state = task,
-                        onSwipeDelete = {},
+                        onSwipeDelete = { interactions.onSwipeDeleteTask(it.id) },
                         onClickTask = {}
                     )
                 }
