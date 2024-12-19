@@ -24,6 +24,7 @@ fun SwipeTaskBackground(
     modifier: Modifier = Modifier,
     state: SwipeToDismissBoxValue,
     iconsRes: List<Int>,
+    iconsArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween
 ) {
     val containerColor = when (state) {
         SwipeToDismissBoxValue.StartToEnd -> green
@@ -39,7 +40,7 @@ fun SwipeTaskBackground(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = iconsArrangement,
             verticalAlignment = Alignment.CenterVertically
         ) {
             iconsRes.forEach { res ->

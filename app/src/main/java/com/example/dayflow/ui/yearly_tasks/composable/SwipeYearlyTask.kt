@@ -1,5 +1,6 @@
 package com.example.dayflow.ui.yearly_tasks.composable
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
@@ -38,10 +39,12 @@ fun SwipeYearlyTask(
         backgroundContent = {
             SwipeTaskBackground(
                 state = swipeState.dismissDirection,
-                iconsRes = listOf(R.drawable.ic_trash)
+                iconsRes = listOf(R.drawable.ic_trash),
+                iconsArrangement = Arrangement.End
             )
         },
-        gesturesEnabled = !state.isDone
+        gesturesEnabled = !state.isDone,
+        enableDismissFromStartToEnd = false
     ) {
         TaskItem(
             state = state,
