@@ -1,6 +1,6 @@
 package com.example.dayflow.ui.utils.ui_state
 
-import com.example.dayflow.data.local.entity.TaskEntity
+import com.example.dayflow.data.local.entity.DailyTaskEntity
 import com.example.dayflow.ui.utils.convertDateToLong
 import com.example.dayflow.ui.utils.convertLongToDate
 import com.example.dayflow.ui.utils.convertLongToTime
@@ -15,7 +15,7 @@ data class TaskUiState(
     val isDone: Boolean = false,
 )
 
-fun TaskEntity.toUiState(): TaskUiState {
+fun DailyTaskEntity.toUiState(): TaskUiState {
     return TaskUiState(
         id = this.id,
         title = this.title,
@@ -26,8 +26,8 @@ fun TaskEntity.toUiState(): TaskUiState {
     )
 }
 
-fun TaskUiState.toEntity(): TaskEntity {
-    return TaskEntity(
+fun TaskUiState.toEntity(): DailyTaskEntity {
+    return DailyTaskEntity(
         id = this.id,
         title = this.title,
         description = this.description,

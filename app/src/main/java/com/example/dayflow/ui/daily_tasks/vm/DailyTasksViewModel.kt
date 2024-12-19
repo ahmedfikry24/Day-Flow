@@ -1,10 +1,10 @@
 package com.example.dayflow.ui.daily_tasks.vm
 
-import com.example.dayflow.data.local.entity.TaskEntity
+import com.example.dayflow.data.local.entity.DailyTaskEntity
 import com.example.dayflow.data.usecase.AddDailyTaskUseCase
 import com.example.dayflow.data.usecase.DeleteDailyTaskUseCase
-import com.example.dayflow.data.usecase.GetAllTasksUseCase
-import com.example.dayflow.data.usecase.UpdateTaskStatusUseCase
+import com.example.dayflow.data.usecase.GetAllDailyTasksUseCase
+import com.example.dayflow.data.usecase.UpdateDailyTaskStatusUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
 import com.example.dayflow.ui.utils.getAlarmTime
@@ -21,9 +21,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DailyTasksViewModel @Inject constructor(
-    private val getAllTasksUseCase: GetAllTasksUseCase,
+    private val getAllTasksUseCase: GetAllDailyTasksUseCase,
     private val addDailyTaskUseCase: AddDailyTaskUseCase,
-    private val updateTaskStatusUseCase: UpdateTaskStatusUseCase,
+    private val updateTaskStatusUseCase: UpdateDailyTaskStatusUseCase,
     private val deleteDailyTaskUseCase: DeleteDailyTaskUseCase,
 ) : BaseViewModel<DailyTasksUiState, DailyTasksEvents>(DailyTasksUiState()),
     DailyTasksInteractions {
@@ -36,7 +36,7 @@ class DailyTasksViewModel @Inject constructor(
         )
     }
 
-    private fun allTasksSuccess(tasks: List<TaskEntity>) {
+    private fun allTasksSuccess(tasks: List<DailyTaskEntity>) {
         _state.update { value ->
             value.copy(
                 contentStatus = ContentStatus.VISIBLE,
