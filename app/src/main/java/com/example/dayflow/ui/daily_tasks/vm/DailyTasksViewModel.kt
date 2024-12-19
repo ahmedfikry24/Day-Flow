@@ -7,6 +7,7 @@ import com.example.dayflow.data.usecase.GetAllDailyTasksUseCase
 import com.example.dayflow.data.usecase.UpdateDailyTaskStatusUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
+import com.example.dayflow.ui.utils.generateRandomId
 import com.example.dayflow.ui.utils.getAlarmTime
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
 import com.example.dayflow.ui.utils.ui_state.INITIAL_DATE
@@ -113,10 +114,6 @@ class DailyTasksViewModel @Inject constructor(
                 ::setFailureContent
             )
         }
-    }
-
-    private fun generateRandomId(): Int {
-        return (Int.MIN_VALUE..Int.MAX_VALUE).random()
     }
 
     private fun addTaskSuccess() {
