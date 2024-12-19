@@ -7,6 +7,6 @@ class UpdateDailyTaskStatusUseCase @Inject
 constructor(private val repository: Repository) {
 
     suspend operator fun invoke(id: Int) {
-        repository.updateTaskStatus(id, true)
+        repository.updateDailyTaskStatus(id, true)
     }
 }

@@ -11,7 +11,7 @@ class DeleteDailyTaskUseCase @Inject constructor(
     private val context: Context,
 ) {
     suspend operator fun invoke(task: DailyTaskEntity) {
-        repository.deleteTask(task.id)
+        repository.deleteDailyTask(task.id)
         if (task.date != null && task.time != null)
             DefaultAlarmManager.cancelAlarm(context, task.id)
     }

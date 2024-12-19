@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetAllDailyTasksUseCase @Inject constructor(private val repository: Repository) {
 
     suspend operator fun invoke(): List<DailyTaskEntity> {
-        val tasks = repository.getAllTasks()
+        val tasks = repository.getAllDailyTasks()
         tasks.sortedByDescending { task ->
             when (task.date.getTaskPriority()) {
                 TaskPriority.HIGH -> 2

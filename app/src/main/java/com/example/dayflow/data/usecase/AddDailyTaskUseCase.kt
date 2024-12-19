@@ -12,6 +12,6 @@ class AddDailyTaskUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(task: DailyTaskEntity) {
         scheduleTaskAlarm(context, task)
-        repository.addTask(task)
+        repository.addDailyTask(task)
     }
 }
