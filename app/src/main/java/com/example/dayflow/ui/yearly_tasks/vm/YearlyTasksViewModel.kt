@@ -100,12 +100,20 @@ class YearlyTasksViewModel @Inject constructor(
     }
 
     override fun onSwipeDeleteTask(id: Int) {
+        _state.update { it.copy(selectedDeleteItemId = id) }
+    }
+
+    override fun controlDeleteItemDialogVisibility() {
+        _state.update { it.copy(isDeleteTaskDialogVisible = !it.isDeleteTaskDialogVisible) }
+    }
+
+    override fun deleteTask() {
         tryExecute(
-            { deleteTaskUseCase(id) },
+            { deleteTaskUseCase(state.value.selectedDeleteItemId) },
             {
                 _state.update { value ->
                     value.copy(
-                        tasks = value.tasks.filterNot { it.id == id }
+                        tasks = value.tasks.filterNot { it.id == state.value.selectedDeleteItemId }
                     )
                 }
             },

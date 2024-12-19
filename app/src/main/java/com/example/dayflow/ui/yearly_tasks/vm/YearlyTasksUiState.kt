@@ -10,4 +10,5 @@ data class YearlyTasksUiState(
     val isDeleteTaskDialogVisible: Boolean = false,
     val isAddTaskVisible: Boolean = false,
     val addTask: AddTaskUiState = AddTaskUiState(),
+    val selectedDeleteItemId: Int = -1,
 ) 

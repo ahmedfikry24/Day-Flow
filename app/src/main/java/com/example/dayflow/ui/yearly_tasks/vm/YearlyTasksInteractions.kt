@@ -6,4 +6,6 @@ interface YearlyTasksInteractions : AddTaskInteraction {
     fun initData()
     fun controlAddTaskVisibility()
     fun onSwipeDeleteTask(id: Int)
+    fun controlDeleteItemDialogVisibility()
+    fun deleteTask()
 }
