@@ -7,11 +7,9 @@ import com.example.dayflow.data.usecase.GetAllDailyTasksUseCase
 import com.example.dayflow.data.usecase.UpdateDailyTaskStatusUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
-import com.example.dayflow.ui.utils.generateRandomId
+import com.example.dayflow.ui.utils.UiConstants
 import com.example.dayflow.ui.utils.getAlarmTime
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
-import com.example.dayflow.ui.utils.ui_state.INITIAL_DATE
-import com.example.dayflow.ui.utils.ui_state.INITIAL_TIME
 import com.example.dayflow.ui.utils.ui_state.TaskUiState
 import com.example.dayflow.ui.utils.ui_state.toDailyEntity
 import com.example.dayflow.ui.utils.ui_state.toUiState
@@ -38,6 +36,7 @@ class DailyTasksViewModel @Inject constructor(
     }
 
     private fun allTasksSuccess(tasks: List<DailyTaskEntity>) {
+        updateAddTaskId(tasks)
         _state.update { value ->
             value.copy(
                 contentStatus = ContentStatus.VISIBLE,
@@ -50,6 +49,12 @@ class DailyTasksViewModel @Inject constructor(
     private fun setFailureContent() {
         _state.update { it.copy(contentStatus = ContentStatus.FAILURE) }
     }
+
+    private fun updateAddTaskId(tasks: List<DailyTaskEntity>) {
+        if (tasks.isEmpty()) return
+        tasks.maxBy { it.id }.also { UiConstants.lastDailyTaskId = it.id + 1 }
+    }
+
 
     override fun controlAddTaskVisibility() {
         _state.update { it.copy(isAddTaskVisible = !it.isAddTaskVisible) }
@@ -87,8 +92,10 @@ class DailyTasksViewModel @Inject constructor(
     private fun validateAddTask(): Boolean {
         val value = state.value.addTask
         val validateTitle = value.title.validateRequireField()
-        val validateDate = value.date != INITIAL_DATE && value.time == INITIAL_TIME
-        val validateTime = value.time != INITIAL_TIME && value.date == INITIAL_DATE
+        val validateDate =
+            value.date != UiConstants.INITIAL_DATE && value.time == UiConstants.INITIAL_TIME
+        val validateTime =
+            value.time != UiConstants.INITIAL_TIME && value.date == UiConstants.INITIAL_DATE
         var isSelectedDateValid = true
         val isHasError = mutableListOf(
             validateTitle,
@@ -96,7 +103,7 @@ class DailyTasksViewModel @Inject constructor(
             !validateTime,
         ).any { !it }
 
-        if (value.date != INITIAL_DATE && value.time != INITIAL_TIME)
+        if (value.date != UiConstants.INITIAL_DATE && value.time != UiConstants.INITIAL_TIME)
             isSelectedDateValid = getAlarmTime(value.date, value.time) > System.currentTimeMillis()
 
         _state.update {
@@ -127,12 +134,13 @@ class DailyTasksViewModel @Inject constructor(
             it.copy(
                 contentStatus = ContentStatus.VISIBLE,
                 inProgressTasks = it.inProgressTasks.toMutableList().apply {
-                    add(it.addTask.toUiState().copy(id = generateRandomId()))
+                    add(it.addTask.toUiState())
                 },
                 addTask = AddTaskUiState(),
                 isAddTaskVisible = !it.isAddTaskVisible
             )
         }
+        UiConstants.lastDailyTaskId++
     }
 
     override fun onSwipeDoneTask(task: TaskUiState) {

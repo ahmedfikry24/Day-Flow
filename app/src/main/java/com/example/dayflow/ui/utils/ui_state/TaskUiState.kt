@@ -2,6 +2,7 @@ package com.example.dayflow.ui.utils.ui_state
 
 import com.example.dayflow.data.local.entity.DailyTaskEntity
 import com.example.dayflow.data.local.entity.YearlyTaskEntity
+import com.example.dayflow.ui.utils.UiConstants
 import com.example.dayflow.ui.utils.convertDateToLong
 import com.example.dayflow.ui.utils.convertLongToDate
 import com.example.dayflow.ui.utils.convertLongToTime
@@ -11,8 +12,8 @@ data class TaskUiState(
     val id: Int = 0,
     val title: String = "",
     val description: String = "",
-    val date: String = INITIAL_DATE,
-    val time: String = INITIAL_TIME,
+    val date: String = UiConstants.INITIAL_DATE,
+    val time: String = UiConstants.INITIAL_TIME,
     val isDone: Boolean = false,
 )
 
@@ -21,8 +22,8 @@ fun DailyTaskEntity.toUiState(): TaskUiState {
         id = this.id,
         title = this.title,
         description = this.description,
-        date = this.date?.convertLongToDate() ?: INITIAL_DATE,
-        time = this.time?.convertLongToTime() ?: INITIAL_TIME,
+        date = this.date?.convertLongToDate() ?: UiConstants.INITIAL_DATE,
+        time = this.time?.convertLongToTime() ?: UiConstants.INITIAL_TIME,
         isDone = this.status
     )
 }
@@ -32,8 +33,8 @@ fun TaskUiState.toDailyEntity(): DailyTaskEntity {
         id = this.id,
         title = this.title,
         description = this.description,
-        date = if (this.date == INITIAL_DATE) null else this.date.convertDateToLong(),
-        time = if (this.time == INITIAL_TIME) null else this.time.convertTimeToLong(),
+        date = if (this.date == UiConstants.INITIAL_DATE) null else this.date.convertDateToLong(),
+        time = if (this.time == UiConstants.INITIAL_TIME) null else this.time.convertTimeToLong(),
         status = false,
     )
 }
