@@ -28,8 +28,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.dayflow.R
 import com.example.dayflow.ui.theme.spacing
+import com.example.dayflow.ui.utils.UiConstants
 import com.example.dayflow.ui.utils.applyPadding
-import com.example.dayflow.ui.utils.ui_state.INITIAL_DATE
 import com.example.dayflow.ui.utils.ui_state.TaskUiState
 
 @Composable
@@ -91,7 +91,7 @@ fun TaskItem(
                         )
                     }
                 }
-                if (state.date != INITIAL_DATE)
+                if (state.date != UiConstants.INITIAL_DATE)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,

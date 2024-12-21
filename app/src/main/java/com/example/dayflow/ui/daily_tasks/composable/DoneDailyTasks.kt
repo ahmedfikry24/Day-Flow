@@ -31,7 +31,10 @@ fun DoneDailyTasks(
                 items = state.doneTasks,
                 key = { it.id }
             ) { task ->
-                TaskItem(state = task)
+                TaskItem(
+                    modifier = Modifier.animateItem(),
+                    state = task
+                )
             }
         }
     }

@@ -72,6 +72,7 @@ private fun YearlyTasksContent(
                         key = { it.id }
                     ) { task ->
                         SwipeYearlyTask(
+                            modifier = Modifier.animateItem(),
                             state = task,
                             onSwipeDelete = {
                                 interactions.onSwipeDeleteTask(it.id)
