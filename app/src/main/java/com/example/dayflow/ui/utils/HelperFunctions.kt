@@ -18,7 +18,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
-import java.util.TimeZone
 
 fun String.validateRequireField(): Boolean {
     return this.isNotBlank()
@@ -85,25 +84,11 @@ fun Long.convertLongToTime(): String {
     return time.format(DateTimeFormatter.ofPattern("H:m"))
 }
 
-fun getAlarmTime(dateString: String, timeString: String): Long {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    val timeFormat = SimpleDateFormat("H:m", Locale.getDefault())
-
-    val date = dateFormat.parse(dateString)
-    val time = timeFormat.parse(timeString)
-
+fun getAlarmTime(date: String, timeString: String): Long {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd H:m", Locale.getDefault())
+    val parsedDate = dateFormat.parse("$date $timeString")
     val calendar = Calendar.getInstance()
-    calendar.timeZone = TimeZone.getDefault()
-    calendar.time = date
-    val timeCalendar = Calendar.getInstance()
-    timeCalendar.time = time
-
-    calendar.set(Calendar.HOUR_OF_DAY, timeCalendar.get(Calendar.HOUR_OF_DAY))
-    calendar.set(Calendar.MINUTE, timeCalendar.get(Calendar.MINUTE))
-    calendar.set(Calendar.SECOND, 0)
-    calendar.set(Calendar.MILLISECOND, 0)
-
-
+    calendar.time = parsedDate
     return calendar.timeInMillis
 }
 

@@ -17,28 +17,21 @@ object DefaultAlarmManager {
             putExtra(DataConstants.TASK_TITLE, title)
         }
 
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            id,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (alarmManager.canScheduleExactAlarms()) {
-                val pendingIntent = PendingIntent.getBroadcast(
-                    context,
-                    id,
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-                )
+            if (alarmManager.canScheduleExactAlarms())
                 alarmManager.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
                     time,
                     pendingIntent
                 )
-            }
-
         } else {
-            val pendingIntent = PendingIntent.getBroadcast(
-                context,
-                id,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 time,
@@ -51,7 +44,9 @@ object DefaultAlarmManager {
     fun cancelAlarm(context: Context, id: Int) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        val intent = Intent(context, AlarmReceiver::class.java)
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
+            action = DataConstants.TRIGGER_NOTIFICATION_ACTION
+        }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             id,

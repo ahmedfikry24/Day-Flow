@@ -45,6 +45,7 @@ fun InProgressDailyTasks(
                         MaterialTheme.colorScheme.tertiaryContainer
                     )
                     SwipeDailyTask(
+                        modifier = Modifier.animateItem(),
                         state = task,
                         containerColor = containerColor[index % containerColor.size],
                         onSwipeDone = { interactions.onSwipeDoneTask(it) },
