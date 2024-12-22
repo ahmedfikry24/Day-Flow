@@ -24,4 +24,5 @@
     <string name="warning">Warning</string>
     <string name="are_you_sure_to_delete_this_item_we_cannot_get_it_back">Are you sure to delete this item?\n we cannot get it back.</string>
     <string name="delete">Delete</string>
+    <string name="session">Session</string>
 </resources>
