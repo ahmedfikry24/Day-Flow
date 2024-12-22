@@ -6,6 +6,10 @@ sealed interface AppDestination {
 
     @Serializable
     data object DailyTasks : AppDestination
+
     @Serializable
     data object YearlyGoals : AppDestination
+
+    @Serializable
+    data object WorkSessions : AppDestination
 }
