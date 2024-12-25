@@ -25,4 +25,8 @@
     <string name="are_you_sure_to_delete_this_item_we_cannot_get_it_back">Are you sure to delete this item?\n we cannot get it back.</string>
     <string name="delete">Delete</string>
     <string name="session">Session</string>
+    <string name="get_ready_to_focus">Get ready to focus</string>
+    <string name="set_your_session_time_and_start_then_in_the_end_of_session_will_notify_you">set your session time and start then in the end of session will notify you.</string>
+    <string name="minutes">Minutes</string>
+    <string name="start_session">Start Session</string>
 </resources>
