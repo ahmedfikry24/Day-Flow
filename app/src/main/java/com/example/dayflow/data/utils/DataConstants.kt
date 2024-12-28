@@ -8,4 +8,6 @@ object DataConstants {
     const val NOTIFICATION_CHANNEL_NAME = "channelName"
     const val ALARM_STOP_ACTION = "ALARM STOP ACTION"
     const val ACTIVITY_PENDING_ID = 10
+    const val SESSION_DURATION_KEY = "sessionDurationKey"
+    const val SESSION_NOTIFICATION_ID = 15
 }
