@@ -44,9 +44,7 @@ class MainActivity : ComponentActivity() {
                         NavHost(navController, startDestination = AppDestination.DailyTasks) {
                             composable<AppDestination.DailyTasks> { DailyTasksScreen(navController) }
                             composable<AppDestination.YearlyGoals> { YearlyTasksScreen(navController) }
-                            composable<AppDestination.WorkSessions> {
-                                WorkSessionScreen(navController)
-                            }
+                            composable<AppDestination.WorkSessions> { WorkSessionScreen() }
                         }
                     }
                 }
