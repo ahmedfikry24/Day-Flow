@@ -11,6 +11,7 @@ import com.example.dayflow.ui.composable.LoadingContent
 import com.example.dayflow.ui.composable.VisibleContent
 import com.example.dayflow.ui.utils.ContentStatus
 import com.example.dayflow.ui.utils.EventHandler
+import com.example.dayflow.ui.work_session.composable.SessionCountDown
 import com.example.dayflow.ui.work_session.composable.SessionInfo
 import com.example.dayflow.ui.work_session.vm.WorkSessionInteractions
 import com.example.dayflow.ui.work_session.vm.WorkSessionUiState
@@ -41,7 +42,7 @@ private fun WorkSessionContent(
         ) { targetState ->
             when (targetState) {
                 true -> SessionInfo(state = state, interactions = interactions)
-                false -> Unit
+                false -> SessionCountDown(state = state, interactions = interactions)
             }
         }
     }

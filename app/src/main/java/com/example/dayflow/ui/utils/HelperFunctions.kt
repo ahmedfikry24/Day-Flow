@@ -95,3 +95,15 @@ fun getAlarmTime(date: String, timeString: String): Long {
 fun generateRandomId(): Int {
     return (Int.MIN_VALUE..Int.MAX_VALUE).random()
 }
+
+
+fun Int.convertSessionTimeToLong(): Long {
+    return this * 60 * 1000L
+}
+
+fun Long.formatSessionTime(): String {
+    val seconds = (this / 1000) % 60
+    val minutes = (this / 1000) / 60
+    val hours = (this / 1000) / 60 / 60
+    return String.format(Locale("en", "us"), "%02d:%02d:%02d", hours, minutes, seconds)
+}
