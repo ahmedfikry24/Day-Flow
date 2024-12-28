@@ -44,43 +44,53 @@ fun BottomNavBar(navController: NavController) {
             AppDestination.YearlyGoals,
             R.drawable.yearly_goals
         ),
+        BottomNavItem(
+            stringResource(R.string.session),
+            AppDestination.WorkSessions,
+            R.drawable.ic_stop_watch
+        ),
     )
 
-    NavigationBar(
-        modifier = Modifier.fillMaxWidth(),
-        containerColor = MaterialTheme.colorScheme.background
-    ) {
-        screens.forEach { screen ->
-            val isSelected =
-                currentDestination?.hierarchy?.any { it.hasRoute(screen.route::class) } == true
-            val contentColor =
-                if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
-            this.NavigationBarItem(
-                selected = isSelected,
-                onClick = {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+    val isBottomNavVisible = currentDestination?.hierarchy?.any { nav ->
+        screens.any { nav.hasRoute(it.route::class) }
+    } == true
+
+    if (isBottomNavVisible)
+        NavigationBar(
+            modifier = Modifier.fillMaxWidth(),
+            containerColor = MaterialTheme.colorScheme.background
+        ) {
+            screens.forEach { screen ->
+                val isSelected =
+                    currentDestination?.hierarchy?.any { it.hasRoute(screen.route::class) } == true
+                val contentColor =
+                    if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+                this.NavigationBarItem(
+                    selected = isSelected,
+                    onClick = {
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-                icon = {
-                    Icon(
-                        ImageVector.vectorResource(screen.icon),
-                        contentDescription = null,
-                        tint = contentColor
-                    )
-                },
-                label = {
-                    Text(
-                        screen.name,
-                        style = MaterialTheme.typography.titleSmall,
-                        color = contentColor
-                    )
-                },
-            )
+                    },
+                    icon = {
+                        Icon(
+                            ImageVector.vectorResource(screen.icon),
+                            contentDescription = null,
+                            tint = contentColor
+                        )
+                    },
+                    label = {
+                        Text(
+                            screen.name,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = contentColor
+                        )
+                    },
+                )
+            }
         }
-    }
 }
