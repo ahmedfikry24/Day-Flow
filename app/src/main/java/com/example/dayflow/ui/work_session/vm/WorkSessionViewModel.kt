@@ -42,24 +42,29 @@ class WorkSessionViewModel @Inject constructor(
                 sessionRemainingTime = it.sessionDurationMin.convertSessionTimeToLong(),
             )
         }
-        DefaultServiceManager.createSessionService(application, state.value.sessionDurationMin)
-        controlSessionRunning()
+        resumeSession()
     }
 
-
-    override fun controlSessionRunning() {
-        _state.update { it.copy(isRunning = !it.isRunning) }
-        if (state.value.isRunning) {
-            job = viewModelScope.launch {
-                while (state.value.sessionRemainingTime > 0) {
-                    delay(1000L)
-                    _state.update { it.copy(sessionRemainingTime = it.sessionRemainingTime - 1000L) }
-                }
-                finishSession()
+    override fun resumeSession() {
+        _state.update { it.copy(isRunning = true) }
+        job = viewModelScope.launch {
+            DefaultServiceManager.createSessionService(
+                application,
+                state.value.sessionRemainingTime
+            )
+            while (state.value.sessionRemainingTime > 0) {
+                delay(1000L)
+                _state.update { it.copy(sessionRemainingTime = it.sessionRemainingTime - 1000L) }
             }
-        } else job?.cancel()
+            finishSession()
+        }
     }
 
+    override fun pauseSession() {
+        job?.cancel()
+        _state.update { it.copy(isRunning = false) }
+        DefaultServiceManager.cancelSessionService(application)
+    }
 
     override fun finishSession() {
         job?.cancel()

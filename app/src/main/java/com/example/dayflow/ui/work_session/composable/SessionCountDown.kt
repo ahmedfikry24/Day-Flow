@@ -74,7 +74,7 @@ fun SessionCountDown(
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 shape = CircleShape,
-                onClick = interactions::controlSessionRunning
+                onClick = {if (state.isRunning) interactions.pauseSession() else interactions.resumeSession()}
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(if (state.isRunning) R.drawable.ic_stop_watch_pause else R.drawable.ic_stop_watch_play),

@@ -6,9 +6,9 @@ import com.example.dayflow.data.utils.DataConstants
 
 object DefaultServiceManager {
 
-    fun createSessionService(context: Context, duration: Int) {
+    fun createSessionService(context: Context, duration: Long) {
         val intent = Intent(context, WorkSessionService::class.java).apply {
-            putExtra(DataConstants.SESSION_DURATION_KEY, duration * 60 * 1000L)
+            putExtra(DataConstants.SESSION_DURATION_KEY, duration)
         }
         context.startForegroundService(intent)
     }
