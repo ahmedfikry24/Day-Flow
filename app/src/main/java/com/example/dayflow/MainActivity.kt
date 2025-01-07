@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                             composable<AppDestination.DailyTasks> { DailyTasksScreen(navController) }
                             composable<AppDestination.YearlyGoals> { YearlyTasksScreen(navController) }
                             composable<AppDestination.WorkSessions> { WorkSessionScreen() }
-                            composable<AppDestination.WorkSessions> { SettingsScreen(navController) }
+                            composable<AppDestination.Settings> { SettingsScreen(navController) }
                         }
                     }
                 }

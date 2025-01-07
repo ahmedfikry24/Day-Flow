@@ -49,6 +49,11 @@ fun BottomNavBar(navController: NavController) {
             AppDestination.WorkSessions,
             R.drawable.ic_stop_watch
         ),
+        BottomNavItem(
+            stringResource(R.string.settings),
+            AppDestination.Settings,
+            R.drawable.ic_settings
+        ),
     )
 
     val isBottomNavVisible = currentDestination?.hierarchy?.any { nav ->
