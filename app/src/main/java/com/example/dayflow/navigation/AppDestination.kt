@@ -12,4 +12,7 @@ sealed interface AppDestination {
 
     @Serializable
     data object WorkSessions : AppDestination
+
+    @Serializable
+    data object Settings : AppDestination
 }
