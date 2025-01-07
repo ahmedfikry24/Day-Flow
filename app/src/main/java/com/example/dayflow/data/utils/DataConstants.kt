@@ -10,4 +10,6 @@ object DataConstants {
     const val ACTIVITY_PENDING_ID = 10
     const val SESSION_DURATION_KEY = "sessionDurationKey"
     const val SESSION_NOTIFICATION_ID = 15
+    const val DATA_STORE_NAME = "dataStoreName"
+    const val THEME_STATUS_KEY = "themeStatusKey"
 }
