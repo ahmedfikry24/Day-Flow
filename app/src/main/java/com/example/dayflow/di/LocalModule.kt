@@ -3,6 +3,7 @@ package com.example.dayflow.di
 import android.content.Context
 import androidx.room.Room
 import com.example.dayflow.data.local.LocalDataBase
+import com.example.dayflow.data.local.data_store.DataStoreManager
 import com.example.dayflow.data.repository.Repository
 import com.example.dayflow.data.usecase.AddDailyTaskUseCase
 import com.example.dayflow.data.usecase.DeleteDailyTaskUseCase
@@ -50,4 +51,10 @@ object LocalModule {
         @ApplicationContext context: Context,
     ) = UpdateDailyTaskStatusUseCase(repository, context)
 
+
+    @Provides
+    @Singleton
+    fun provideDataStoreManager(
+        @ApplicationContext context: Context,
+    ) = DataStoreManager(context)
 }

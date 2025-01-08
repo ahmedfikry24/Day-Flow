@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.splashscreen)
     implementation(libs.android.lottie.compose)
     implementation(libs.accompanist.permissions)
+    implementation(libs.androidx.datastore.preferences)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
