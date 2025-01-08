@@ -22,6 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.dayflow.navigation.AppDestination
+import com.example.dayflow.ui.block_apps_notification.BlockAppsNotificationScreen
 import com.example.dayflow.ui.composable.BottomNavBar
 import com.example.dayflow.ui.daily_tasks.DailyTasksScreen
 import com.example.dayflow.ui.settings.SettingsScreen
@@ -66,6 +67,9 @@ class MainActivity : ComponentActivity() {
                             composable<AppDestination.YearlyGoals> { YearlyTasksScreen(navController) }
                             composable<AppDestination.WorkSessions> { WorkSessionScreen() }
                             composable<AppDestination.Settings> { SettingsScreen(navController) }
+                            composable<AppDestination.BlockAppsNotification> {
+                                BlockAppsNotificationScreen(navController)
+                            }
                         }
                     }
                 }

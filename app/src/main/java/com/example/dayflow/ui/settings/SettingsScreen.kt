@@ -17,10 +17,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.dayflow.R
+import com.example.dayflow.navigation.AppDestination
 import com.example.dayflow.ui.composable.ErrorContent
 import com.example.dayflow.ui.composable.LoadingContent
 import com.example.dayflow.ui.composable.VisibleContent
 import com.example.dayflow.ui.settings.composable.SettingMenuItem
+import com.example.dayflow.ui.settings.vm.SettingsEvents
 import com.example.dayflow.ui.settings.vm.SettingsInteractions
 import com.example.dayflow.ui.settings.vm.SettingsUiState
 import com.example.dayflow.ui.settings.vm.SettingsViewModel
@@ -35,7 +37,9 @@ fun SettingsScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     EventHandler(effects = viewModel.events) { event, _ ->
-
+        when (event) {
+            SettingsEvents.NavigateToBlockApps -> navController.navigate(AppDestination.BlockAppsNotification)
+        }
     }
     SettingsContent(state = state, interactions = viewModel)
 }
