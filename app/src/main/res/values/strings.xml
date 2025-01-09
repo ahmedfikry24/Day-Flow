@@ -32,4 +32,6 @@
     <string name="settings">Settings</string>
     <string name="block_apps_notifications">Block Apps Notifications</string>
     <string name="dark_theme">Dark Theme</string>
+    <string name="apps_notification">Apps Notification</string>
+    <string name="block_app_notification_until_session">block app notification until session</string>
 </resources>
