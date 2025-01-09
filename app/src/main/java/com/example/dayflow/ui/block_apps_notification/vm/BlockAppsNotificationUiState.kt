@@ -24,3 +24,13 @@ fun BlockAppInfoEntity.toUiState(): BlockAppsNotificationUiState.BlockAppInfoUiS
         isBlock = this.isBlock
     )
 }
+
+
+fun BlockAppsNotificationUiState.BlockAppInfoUiState.toEntity(): BlockAppInfoEntity {
+    return BlockAppInfoEntity(
+        id = this.id,
+        name = this.name,
+        icon = this.icon,
+        isBlock = this.isBlock
+    )
+}

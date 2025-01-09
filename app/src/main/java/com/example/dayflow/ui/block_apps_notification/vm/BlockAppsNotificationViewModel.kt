@@ -1,6 +1,7 @@
 package com.example.dayflow.ui.block_apps_notification.vm
 
 import com.example.dayflow.data.local.entity.BlockAppInfoEntity
+import com.example.dayflow.data.repository.Repository
 import com.example.dayflow.data.usecase.GetAllInstalledAppsUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
@@ -10,7 +11,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BlockAppsNotificationViewModel @Inject constructor(
-    private val getAllInstalledAppsUseCase: GetAllInstalledAppsUseCase
+    private val getAllInstalledAppsUseCase: GetAllInstalledAppsUseCase,
+    private val repository: Repository
 ) : BaseViewModel<BlockAppsNotificationUiState, BlockAppsNotificationEvents>(
     BlockAppsNotificationUiState()
 ), BlockAppsNotificationInteractions {
@@ -37,4 +39,42 @@ class BlockAppsNotificationViewModel @Inject constructor(
         _state.update { it.copy(contentStatus = ContentStatus.FAILURE) }
     }
 
+
+    override fun onClickBack() {
+
+    }
+
+    override fun onBlockApp(app: BlockAppsNotificationUiState.BlockAppInfoUiState) {
+        tryExecute(
+            { repository.addBlockedApp(app.toEntity().copy(isBlock = true)) },
+            {
+                val appIndex = state.value.appsInfo.indexOf(app)
+                _state.update {
+                    it.copy(
+                        appsInfo = it.appsInfo.toMutableList().apply {
+                            this[appIndex] = this[appIndex].copy(isBlock = !this[appIndex].isBlock)
+                        }
+                    )
+                }
+            },
+            ::setFailureContent
+        )
+    }
+
+    override fun onRemoveBlockedApp(app: BlockAppsNotificationUiState.BlockAppInfoUiState) {
+        tryExecute(
+            { repository.removeBlockedApp(app.toEntity().id) },
+            {
+                val appIndex = state.value.appsInfo.indexOf(app)
+                _state.update {
+                    it.copy(
+                        appsInfo = it.appsInfo.toMutableList().apply {
+                            this[appIndex] = this[appIndex].copy(isBlock = !this[appIndex].isBlock)
+                        }
+                    )
+                }
+            },
+            ::setFailureContent
+        )
+    }
 }
