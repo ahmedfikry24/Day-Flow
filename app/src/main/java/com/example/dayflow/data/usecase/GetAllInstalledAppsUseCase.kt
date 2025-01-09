@@ -15,25 +15,25 @@ import javax.inject.Inject
 
 class GetAllInstalledAppsUseCase @Inject constructor(
     private val repository: Repository,
-    context: Context
+    private val context: Context
 ) {
     private val packageManager = context.packageManager
 
     suspend operator fun invoke(): List<BlockAppInfoEntity> {
-        val installedApps = getAllInstalledApps().map { it.toEntity() }
+        val installedApps = getAllInstalledApps()
+            .filterNot { it.packageName == context.packageName }
+            .map { it.toEntity() }
+            .toMutableList()
+
         val blockedApps = repository.getAllBlockedApps()
-        installedApps.forEach { app ->
-            blockedApps.forEach { blockedApp ->
-                val indexOfBlockApp = blockedApps.indexOfFirst { blockedApp.id == app.id }
-                val indexOfInstalledApp = installedApps.indexOfFirst { blockedApp.id == app.id }
-                if (indexOfBlockApp != -1 && indexOfInstalledApp != -1) {
-                    val blockedAppItem = blockedApps[indexOfBlockApp]
-                    installedApps.toMutableList()[indexOfInstalledApp] = blockedAppItem
-                }
+
+        for (app in blockedApps) {
+            val index = installedApps.indexOfFirst { it.id == app.id }
+            if (index != -1) {
+                installedApps[index] = app
             }
         }
-
-        return listOf()
+        return installedApps
     }
 
     private fun getAllInstalledApps(): List<ApplicationInfo> {
