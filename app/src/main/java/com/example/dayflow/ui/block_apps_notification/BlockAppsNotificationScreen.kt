@@ -17,6 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.dayflow.R
 import com.example.dayflow.ui.block_apps_notification.composable.BlockAppInfoItem
+import com.example.dayflow.ui.block_apps_notification.vm.BlockAppsNotificationEvents
 import com.example.dayflow.ui.block_apps_notification.vm.BlockAppsNotificationInteractions
 import com.example.dayflow.ui.block_apps_notification.vm.BlockAppsNotificationUiState
 import com.example.dayflow.ui.block_apps_notification.vm.BlockAppsNotificationViewModel
@@ -35,7 +36,9 @@ fun BlockAppsNotificationScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     EventHandler(effects = viewModel.events) { event, _ ->
-
+        when (event) {
+            BlockAppsNotificationEvents.NavigateToBack -> navController.popBackStack()
+        }
     }
     BlockAppsNotificationContent(state = state, interactions = viewModel)
 }

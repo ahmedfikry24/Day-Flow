@@ -41,7 +41,7 @@ class BlockAppsNotificationViewModel @Inject constructor(
 
 
     override fun onClickBack() {
-
+        sendEvent(BlockAppsNotificationEvents.NavigateToBack)
     }
 
     override fun onBlockApp(app: BlockAppsNotificationUiState.BlockAppInfoUiState) {
