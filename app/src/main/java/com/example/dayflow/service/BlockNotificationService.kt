@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-var isBlockNotificationListenerActive = true
+var isBlockNotificationListenerActive = false
 
 @AndroidEntryPoint
 class BlockNotificationService : NotificationListenerService() {

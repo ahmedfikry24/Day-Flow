@@ -13,8 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -59,7 +57,6 @@ private fun BlockAppsNotificationContent(
     val context = LocalContext.current
     LoadingContent(isVisible = state.contentStatus == ContentStatus.LOADING)
     VisibleContent(isVisible = state.contentStatus == ContentStatus.VISIBLE) {
-        val isNotificationAccessPermit by remember { mutableStateOf(checkNotificationAccess(context)) }
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(MaterialTheme.spacing.space16),
@@ -84,7 +81,7 @@ private fun BlockAppsNotificationContent(
                 BlockAppInfoItem(
                     state = app,
                     onChangeState = {
-                        if (isNotificationAccessPermit) {
+                        if (checkNotificationAccess(context)) {
                             if (it) interactions.onBlockApp(app)
                             else interactions.onRemoveBlockedApp(app)
                         } else interactions.controlNotificationAccessDialogVisibility()
