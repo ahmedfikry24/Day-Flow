@@ -11,6 +11,7 @@ data class BlockAppsNotificationUiState(
     data class BlockAppInfoUiState(
         val id: Int = 0,
         val name: String = "",
+        val packageName: String = "",
         val icon: Bitmap? = null,
         val isBlock: Boolean = false
     )
@@ -20,6 +21,7 @@ fun BlockAppInfoEntity.toUiState(): BlockAppsNotificationUiState.BlockAppInfoUiS
     return BlockAppsNotificationUiState.BlockAppInfoUiState(
         id = this.id,
         name = this.name,
+        packageName = this.packageName,
         icon = this.icon,
         isBlock = this.isBlock
     )
@@ -30,6 +32,7 @@ fun BlockAppsNotificationUiState.BlockAppInfoUiState.toEntity(): BlockAppInfoEnt
     return BlockAppInfoEntity(
         id = this.id,
         name = this.name,
+        packageName = this.packageName,
         icon = this.icon,
         isBlock = this.isBlock
     )

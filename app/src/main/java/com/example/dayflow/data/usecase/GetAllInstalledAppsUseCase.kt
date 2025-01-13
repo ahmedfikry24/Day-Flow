@@ -45,6 +45,7 @@ class GetAllInstalledAppsUseCase @Inject constructor(
         return BlockAppInfoEntity(
             id = this.uid,
             name = this.loadLabel(packageManager).toString(),
+            packageName = this.packageName,
             icon = this.loadIcon(packageManager).convertToBitmap(),
             isBlock = false
         )

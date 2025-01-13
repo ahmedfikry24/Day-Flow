@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey
 data class BlockAppInfoEntity(
     @PrimaryKey val id: Int,
     @ColumnInfo val name: String,
+    @ColumnInfo val packageName: String,
     @ColumnInfo val icon: Bitmap?,
     @ColumnInfo val isBlock: Boolean
 )
