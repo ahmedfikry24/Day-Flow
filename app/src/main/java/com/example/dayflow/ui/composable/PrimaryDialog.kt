@@ -28,21 +28,21 @@ fun PrimaryDialog(
 ) {
     AlertDialog(
         modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.onPrimary,
+        containerColor = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(MaterialTheme.spacing.space8),
         onDismissRequest = onDismiss,
         title = {
             Text(
                 text = title,
                 style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
         text = {
             Text(
                 text = text,
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSurface
             )
         },
         confirmButton = {
