@@ -44,6 +44,10 @@ class BlockAppsNotificationViewModel @Inject constructor(
         sendEvent(BlockAppsNotificationEvents.NavigateToBack)
     }
 
+    override fun controlNotificationAccessDialogVisibility() {
+        _state.update { it.copy(isNotificationAccessDialogVisible = !it.isNotificationAccessDialogVisible) }
+    }
+
     override fun onBlockApp(app: BlockAppsNotificationUiState.BlockAppInfoUiState) {
         tryExecute(
             { repository.addBlockedApp(app.toEntity().copy(isBlock = true)) },

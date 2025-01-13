@@ -34,4 +34,5 @@
     <string name="dark_theme">Dark Theme</string>
     <string name="apps_notification">Apps Notification</string>
     <string name="block_app_notification_until_session">block app notification until session</string>
+    <string name="app_need_a_permission_to_access_your_notification_to_control_your_notification_until_focus_sessions">app need a permission to access your notification to control your notification until focus sessions.</string>
 </resources>

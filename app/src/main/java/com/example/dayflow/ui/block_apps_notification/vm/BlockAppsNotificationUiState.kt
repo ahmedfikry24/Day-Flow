@@ -6,8 +6,9 @@ import com.example.dayflow.ui.utils.ContentStatus
 
 data class BlockAppsNotificationUiState(
     val contentStatus: ContentStatus = ContentStatus.LOADING,
-    val appsInfo: List<BlockAppInfoUiState> = listOf()
-) {
+    val isNotificationAccessDialogVisible: Boolean = false,
+    val appsInfo: List<BlockAppInfoUiState> = listOf(),
+    ) {
     data class BlockAppInfoUiState(
         val id: Int = 0,
         val name: String = "",
