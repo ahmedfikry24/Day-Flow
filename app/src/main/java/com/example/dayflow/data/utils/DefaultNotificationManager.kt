@@ -67,6 +67,12 @@ object DefaultNotificationManager {
             )
         }
         notificationArgs.category?.let { notificationBuilder.setCategory(it) }
+
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channel = createChannel(notificationArgs.ringtone)
+        notificationManager.createNotificationChannel(channel)
+
         return notificationBuilder.build()
     }
 
