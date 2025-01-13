@@ -7,6 +7,7 @@ import com.example.dayflow.data.local.data_store.DataStoreManager
 import com.example.dayflow.data.repository.Repository
 import com.example.dayflow.data.usecase.AddDailyTaskUseCase
 import com.example.dayflow.data.usecase.DeleteDailyTaskUseCase
+import com.example.dayflow.data.usecase.GetAllInstalledAppsUseCase
 import com.example.dayflow.data.usecase.UpdateDailyTaskStatusUseCase
 import dagger.Module
 import dagger.Provides
@@ -57,4 +58,11 @@ object LocalModule {
     fun provideDataStoreManager(
         @ApplicationContext context: Context,
     ) = DataStoreManager(context)
+
+    @Provides
+    @Singleton
+    fun provideGetAllInstalledAppsUseCase(
+        repository: Repository,
+        @ApplicationContext context: Context,
+    ) = GetAllInstalledAppsUseCase(repository, context)
 }

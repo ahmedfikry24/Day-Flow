@@ -3,6 +3,7 @@ package com.example.dayflow.ui.work_session.vm
 import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.example.dayflow.service.DefaultServiceManager
+import com.example.dayflow.service.isBlockNotificationListenerActive
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.convertSessionTimeToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,6 +53,7 @@ class WorkSessionViewModel @Inject constructor(
                 application,
                 state.value.sessionRemainingTime
             )
+            isBlockNotificationListenerActive = true
             while (state.value.sessionRemainingTime > 0) {
                 delay(1000L)
                 _state.update { it.copy(sessionRemainingTime = it.sessionRemainingTime - 1000L) }
@@ -64,6 +66,7 @@ class WorkSessionViewModel @Inject constructor(
         job?.cancel()
         _state.update { it.copy(isRunning = false) }
         DefaultServiceManager.cancelSessionService(application)
+        isBlockNotificationListenerActive = false
     }
 
     override fun finishSession() {
@@ -77,11 +80,13 @@ class WorkSessionViewModel @Inject constructor(
             )
         }
         DefaultServiceManager.cancelSessionService(application)
+        isBlockNotificationListenerActive = false
     }
 
     override fun onCleared() {
         job = null
         DefaultServiceManager.cancelSessionService(application)
+        isBlockNotificationListenerActive = false
         super.onCleared()
     }
 }

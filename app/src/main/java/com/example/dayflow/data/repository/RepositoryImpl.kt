@@ -1,6 +1,7 @@
 package com.example.dayflow.data.repository
 
 import com.example.dayflow.data.local.LocalDataBase
+import com.example.dayflow.data.local.entity.BlockAppInfoEntity
 import com.example.dayflow.data.local.entity.DailyTaskEntity
 import com.example.dayflow.data.local.entity.YearlyTaskEntity
 import javax.inject.Inject
@@ -35,5 +36,17 @@ class RepositoryImpl @Inject constructor(
 
     override suspend fun deleteYearlyTask(id: Int) {
         localDataBase.yearlyTaskDao().deleteTask(id)
+    }
+
+    override suspend fun getAllBlockedApps(): List<BlockAppInfoEntity> {
+        return localDataBase.blockAppsDao().getAllBlockedApps()
+    }
+
+    override suspend fun addBlockedApp(info: BlockAppInfoEntity) {
+        localDataBase.blockAppsDao().addBlockedApp(info)
+    }
+
+    override suspend fun removeBlockedApp(id: Int) {
+        localDataBase.blockAppsDao().removeBlockedApp(id)
     }
 }
