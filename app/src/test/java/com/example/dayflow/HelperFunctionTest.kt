@@ -5,6 +5,7 @@ import com.example.dayflow.data.utils.TaskPriority
 import com.example.dayflow.ui.utils.convertDateToLong
 import com.example.dayflow.ui.utils.convertLongToDate
 import com.example.dayflow.ui.utils.convertLongToTime
+import com.example.dayflow.ui.utils.convertSessionTimeToLong
 import com.example.dayflow.ui.utils.convertTimeToLong
 import com.example.dayflow.ui.utils.generateRandomId
 import com.example.dayflow.ui.utils.getAlarmTime
@@ -125,5 +126,12 @@ class HelperFunctionTest {
     fun `given integer value when get random value then return true`() {
         val randomValue = generateRandomId()
         Assert.assertTrue(randomValue in 1..Int.MAX_VALUE)
+    }
+
+    @Test
+    fun `given integer value when get session time then return right value`() {
+        val value = 30
+        val expectedValue = 1800000L
+        Assert.assertEquals(expectedValue, value.convertSessionTimeToLong())
     }
 }
