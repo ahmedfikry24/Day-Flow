@@ -7,6 +7,7 @@ import com.example.dayflow.ui.utils.convertLongToDate
 import com.example.dayflow.ui.utils.convertLongToTime
 import com.example.dayflow.ui.utils.convertSessionTimeToLong
 import com.example.dayflow.ui.utils.convertTimeToLong
+import com.example.dayflow.ui.utils.formatSessionTime
 import com.example.dayflow.ui.utils.generateRandomId
 import com.example.dayflow.ui.utils.getAlarmTime
 import com.example.dayflow.ui.utils.getTaskPriority
@@ -44,7 +45,7 @@ class HelperFunctionTest {
     }
 
     @Test
-    fun `given task lit with valid date when sorting then return list sorted descending in order of week`() {
+    fun `given task list with valid date when sorting then return list sorted descending in order of week`() {
         val unSortedTasks = listOf(
             DailyTaskEntity(
                 id = 0,
@@ -133,5 +134,13 @@ class HelperFunctionTest {
         val value = 30
         val expectedValue = 1800000L
         Assert.assertEquals(expectedValue, value.convertSessionTimeToLong())
+    }
+
+    @Test
+    fun `given long value when convert session time then return valid format`() {
+        val time = 1800000L
+        val expectedFormat = "00:30:00"
+        val formattedValue = time.formatSessionTime()
+        Assert.assertEquals(expectedFormat, formattedValue)
     }
 }
