@@ -93,7 +93,7 @@ fun getAlarmTime(date: String, timeString: String): Long {
 }
 
 fun generateRandomId(): Int {
-    return (Int.MIN_VALUE..Int.MAX_VALUE).random()
+    return (1..Int.MAX_VALUE).random()
 }
 
 

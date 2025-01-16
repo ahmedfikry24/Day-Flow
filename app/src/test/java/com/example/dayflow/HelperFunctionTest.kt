@@ -6,6 +6,7 @@ import com.example.dayflow.ui.utils.convertDateToLong
 import com.example.dayflow.ui.utils.convertLongToDate
 import com.example.dayflow.ui.utils.convertLongToTime
 import com.example.dayflow.ui.utils.convertTimeToLong
+import com.example.dayflow.ui.utils.generateRandomId
 import com.example.dayflow.ui.utils.getAlarmTime
 import com.example.dayflow.ui.utils.getTaskPriority
 import com.example.dayflow.ui.utils.validateRequireField
@@ -118,5 +119,11 @@ class HelperFunctionTest {
         val alarmTime = getAlarmTime(date, time)
         val expectedTime = 1689514200000L
         Assert.assertEquals(expectedTime, alarmTime)
+    }
+
+    @Test
+    fun `given integer value when get random value then return true`() {
+        val randomValue = generateRandomId()
+        Assert.assertTrue(randomValue in 1..Int.MAX_VALUE)
     }
 }
