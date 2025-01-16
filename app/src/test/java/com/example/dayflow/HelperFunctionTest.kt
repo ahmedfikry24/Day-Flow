@@ -6,6 +6,7 @@ import com.example.dayflow.ui.utils.convertDateToLong
 import com.example.dayflow.ui.utils.convertLongToDate
 import com.example.dayflow.ui.utils.convertLongToTime
 import com.example.dayflow.ui.utils.convertTimeToLong
+import com.example.dayflow.ui.utils.getAlarmTime
 import com.example.dayflow.ui.utils.getTaskPriority
 import com.example.dayflow.ui.utils.validateRequireField
 import org.junit.Assert
@@ -108,5 +109,14 @@ class HelperFunctionTest {
         val timeLong = 52200000L
         val formatedTime = currentTime.convertTimeToLong()
         Assert.assertEquals(timeLong, formatedTime)
+    }
+
+    @Test
+    fun `given date and time when get alarm time then return right value`() {
+        val time = "16:30"
+        val date = "2023-07-16"
+        val alarmTime = getAlarmTime(date, time)
+        val expectedTime = 1689514200000L
+        Assert.assertEquals(expectedTime, alarmTime)
     }
 }
