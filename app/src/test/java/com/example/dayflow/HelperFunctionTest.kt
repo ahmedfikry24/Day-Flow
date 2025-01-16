@@ -2,6 +2,8 @@ package com.example.dayflow
 
 import com.example.dayflow.data.local.entity.DailyTaskEntity
 import com.example.dayflow.data.utils.TaskPriority
+import com.example.dayflow.ui.utils.convertDateToLong
+import com.example.dayflow.ui.utils.convertLongToDate
 import com.example.dayflow.ui.utils.getTaskPriority
 import com.example.dayflow.ui.utils.validateRequireField
 import org.junit.Assert
@@ -71,6 +73,23 @@ class HelperFunctionTest {
             }
         }
         Assert.assertEquals(sortedTasks, unSortedTasks)
+    }
+
+    @Test
+    fun `given long data type when format date long to string then return valid format`() {
+        val currentDate = 1689458400000L
+        val dateString = "2023-07-16"
+        val formatedDate = currentDate.convertLongToDate()
+        Assert.assertEquals(dateString, formatedDate)
+    }
+
+
+    @Test
+    fun `given string data type when format date string to long then return right value`() {
+        val currentDate = "2023-07-16"
+        val dateLong = 1689454800000L
+        val formatedDate = currentDate.convertDateToLong()
+        Assert.assertEquals(dateLong, formatedDate)
     }
 
 }
