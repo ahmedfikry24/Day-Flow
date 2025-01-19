@@ -1,4 +1,4 @@
-package com.example.dayflow
+package com.example.dayflow.utils
 
 import com.example.dayflow.data.local.entity.DailyTaskEntity
 import com.example.dayflow.data.utils.TaskPriority
