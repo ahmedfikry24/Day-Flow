@@ -63,7 +63,8 @@ class AlarmReceiver : BroadcastReceiver() {
 
     private fun cancelScheduledAlarm(context: Context, id: Int) {
         val notificationManager = DefaultNotificationManager(context)
-        DefaultAlarmManager.cancelAlarm(context, id)
+        val alarmManager = DefaultAlarmManager(context)
+        alarmManager.cancelAlarm(id)
         notificationManager.cancelNotification(id)
         MediaPlayerManager.stopAlarmRingtone()
     }

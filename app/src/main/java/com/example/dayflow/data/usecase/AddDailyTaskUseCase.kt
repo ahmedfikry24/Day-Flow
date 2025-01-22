@@ -1,17 +1,22 @@
 package com.example.dayflow.data.usecase
 
-import android.content.Context
-import com.example.dayflow.data.alarm.scheduleTaskAlarm
+import com.example.dayflow.data.alarm.DefaultAlarmManager
 import com.example.dayflow.data.local.entity.DailyTaskEntity
 import com.example.dayflow.data.repository.Repository
+import com.example.dayflow.ui.utils.convertLongToDate
+import com.example.dayflow.ui.utils.convertLongToTime
+import com.example.dayflow.ui.utils.getAlarmTime
 import javax.inject.Inject
 
 class AddDailyTaskUseCase @Inject constructor(
     private val repository: Repository,
-    private val context: Context,
+    private val alarmManager: DefaultAlarmManager,
 ) {
     suspend operator fun invoke(task: DailyTaskEntity) {
-        scheduleTaskAlarm(context, task)
+        if (task.date != null && task.time != null) {
+            val time = getAlarmTime(task.date.convertLongToDate(), task.time.convertLongToTime())
+            alarmManager.setAlarm(task.id, task.title, time)
+        }
         repository.addDailyTask(task)
     }
 }

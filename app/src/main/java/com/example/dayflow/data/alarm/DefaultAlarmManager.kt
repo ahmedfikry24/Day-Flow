@@ -7,9 +7,9 @@ import android.content.Intent
 import android.os.Build
 import com.example.dayflow.data.utils.DataConstants
 
-object DefaultAlarmManager {
+class DefaultAlarmManager(private val context: Context) {
 
-    fun setAlarm(context: Context, id: Int, title: String, time: Long) {
+    fun setAlarm(id: Int, title: String, time: Long) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             action = DataConstants.TRIGGER_NOTIFICATION_ACTION
@@ -41,7 +41,7 @@ object DefaultAlarmManager {
     }
 
 
-    fun cancelAlarm(context: Context, id: Int) {
+    fun cancelAlarm(id: Int) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val intent = Intent(context, AlarmReceiver::class.java).apply {
