@@ -2,13 +2,13 @@ package com.example.dayflow.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.dayflow.data.alarm.DefaultAlarmManager
 import com.example.dayflow.data.local.LocalDataBase
 import com.example.dayflow.data.local.data_store.DataStoreManager
 import com.example.dayflow.data.repository.Repository
-import com.example.dayflow.data.usecase.AddDailyTaskUseCase
-import com.example.dayflow.data.usecase.DeleteDailyTaskUseCase
 import com.example.dayflow.data.usecase.GetAllInstalledAppsUseCase
-import com.example.dayflow.data.usecase.UpdateDailyTaskStatusUseCase
+import com.example.dayflow.data.utils.DefaultNotificationManager
+import com.example.dayflow.service.DefaultServiceManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,25 +32,22 @@ object LocalModule {
 
     @Provides
     @Singleton
-    fun provideDeleteDailyTaskUseCase(
-        repository: Repository,
-        @ApplicationContext context: Context,
-    ) = DeleteDailyTaskUseCase(repository, context)
+    fun provideDefaultNotificationManager(
+        @ApplicationContext context: Context
+    ) = DefaultNotificationManager(context)
 
 
     @Provides
     @Singleton
-    fun provideAddDailyTaskUseCase(
-        repository: Repository,
-        @ApplicationContext context: Context,
-    ) = AddDailyTaskUseCase(repository, context)
+    fun provideDefaultAlarmManager(
+        @ApplicationContext context: Context
+    ) = DefaultAlarmManager(context)
 
     @Provides
     @Singleton
-    fun provideUpdateDailyTaskStatusUseCase(
-        repository: Repository,
-        @ApplicationContext context: Context,
-    ) = UpdateDailyTaskStatusUseCase(repository, context)
+    fun provideDefaultServiceManager(
+        @ApplicationContext context: Context
+    ) = DefaultServiceManager(context)
 
 
     @Provides
