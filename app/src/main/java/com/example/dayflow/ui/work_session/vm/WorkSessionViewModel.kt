@@ -1,6 +1,5 @@
 package com.example.dayflow.ui.work_session.vm
 
-import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.example.dayflow.service.DefaultServiceManager
 import com.example.dayflow.service.isBlockNotificationListenerActive
@@ -15,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WorkSessionViewModel @Inject constructor(
-    private val application: Application
+    private val serviceManager: DefaultServiceManager,
 ) : BaseViewModel<WorkSessionUiState, WorkSessionEvents>(WorkSessionUiState()),
     WorkSessionInteractions {
 
@@ -49,10 +48,7 @@ class WorkSessionViewModel @Inject constructor(
     override fun resumeSession() {
         _state.update { it.copy(isRunning = true) }
         job = viewModelScope.launch {
-            DefaultServiceManager.createSessionService(
-                application,
-                state.value.sessionRemainingTime
-            )
+            serviceManager.createSessionService(state.value.sessionRemainingTime)
             isBlockNotificationListenerActive = true
             while (state.value.sessionRemainingTime > 0) {
                 delay(1000L)
@@ -65,7 +61,7 @@ class WorkSessionViewModel @Inject constructor(
     override fun pauseSession() {
         job?.cancel()
         _state.update { it.copy(isRunning = false) }
-        DefaultServiceManager.cancelSessionService(application)
+        serviceManager.cancelSessionService()
         isBlockNotificationListenerActive = false
     }
 
@@ -79,13 +75,13 @@ class WorkSessionViewModel @Inject constructor(
                 isSessionInfoVisible = true
             )
         }
-        DefaultServiceManager.cancelSessionService(application)
+        serviceManager.cancelSessionService()
         isBlockNotificationListenerActive = false
     }
 
     override fun onCleared() {
         job = null
-        DefaultServiceManager.cancelSessionService(application)
+        serviceManager.cancelSessionService()
         isBlockNotificationListenerActive = false
         super.onCleared()
     }
