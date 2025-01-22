@@ -11,6 +11,7 @@ class WorkSessionService : Service() {
 
     private var countDownTimer: CountDownTimer? = null
     private val notificationTitle = "Session Timer"
+    private val defaultNotificationManager by lazy { DefaultNotificationManager(applicationContext) }
 
     override fun onBind(p0: Intent?) = null
 
@@ -24,10 +25,7 @@ class WorkSessionService : Service() {
                 )
                 startForeground(
                     DataConstants.SESSION_NOTIFICATION_ID,
-                    DefaultNotificationManager.createNotification(
-                        applicationContext,
-                        notificationArgs
-                    )
+                    defaultNotificationManager.createNotification(notificationArgs)
                 )
                 startTimer(duration)
             } else
@@ -53,15 +51,12 @@ class WorkSessionService : Service() {
                     text = notificationText,
                     isSilent = true
                 )
-                DefaultNotificationManager.showNotification(applicationContext, notificationArgs)
+                defaultNotificationManager.showNotification(notificationArgs)
 
             }
 
             override fun onFinish() {
-                DefaultNotificationManager.cancelNotification(
-                    applicationContext,
-                    DataConstants.SESSION_NOTIFICATION_ID
-                )
+                defaultNotificationManager.cancelNotification(DataConstants.SESSION_NOTIFICATION_ID)
                 stopSelf()
             }
 
