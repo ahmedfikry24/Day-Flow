@@ -19,6 +19,7 @@ accompanistPermissions = "0.35.2-beta"
 datastorePreferences = "1.1.2"
 junit = "4.13.2"
 kotlinxCoroutinesTest = "1.10.1"
+mockk = "1.13.16"
 
 
 [libraries]
@@ -50,6 +51,7 @@ android-lottie-compose = { module = "com.airbnb.android:lottie-compose", version
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 
 [plugins]
