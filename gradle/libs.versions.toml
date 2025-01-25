@@ -20,6 +20,7 @@ datastorePreferences = "1.1.2"
 junit = "4.13.2"
 kotlinxCoroutinesTest = "1.10.1"
 mockk = "1.13.16"
+turbine = "1.2.0"
 
 
 [libraries]
@@ -52,6 +53,7 @@ accompanist-permissions = { module = "com.google.accompanist:accompanist-permiss
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 
 [plugins]
