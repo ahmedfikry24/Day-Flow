@@ -7,31 +7,22 @@ import com.example.dayflow.data.usecase.AddDailyTaskUseCase
 import com.example.dayflow.data.usecase.DeleteDailyTaskUseCase
 import com.example.dayflow.data.usecase.GetAllDailyTasksUseCase
 import com.example.dayflow.data.usecase.UpdateDailyTaskStatusUseCase
-import com.example.dayflow.repository.FakeRepository
 import com.example.dayflow.ui.daily_tasks.vm.DailyTasksViewModel
 import com.example.dayflow.ui.utils.ContentStatus
 import com.example.dayflow.ui.utils.UiConstants
 import com.example.dayflow.ui.utils.ui_state.toUiState
-import com.example.dayflow.utils.MainDispatcherRule
+import com.example.dayflow.utils.BaseViewModelTester
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 
-class DailyTaskViewModelTest {
+class DailyTaskViewModelTest : BaseViewModelTester() {
 
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
-
-    private lateinit var repository: FakeRepository
-    private lateinit var spyRepository: FakeRepository
     private lateinit var getAllDailyTasksUseCase: GetAllDailyTasksUseCase
     private lateinit var defaultAlarmManager: DefaultAlarmManager
     private lateinit var addDailyTasksUseCase: AddDailyTaskUseCase
@@ -39,10 +30,8 @@ class DailyTaskViewModelTest {
     private lateinit var deleteDailyTaskUseCase: DeleteDailyTaskUseCase
     private lateinit var viewModel: DailyTasksViewModel
 
-    @Before
-    fun setUp() {
-        repository = FakeRepository()
-        spyRepository = spyk(repository)
+    override fun setUp() {
+        super.setUp()
         getAllDailyTasksUseCase = GetAllDailyTasksUseCase(spyRepository)
         defaultAlarmManager = mockk()
         addDailyTasksUseCase = AddDailyTaskUseCase(spyRepository, defaultAlarmManager)
