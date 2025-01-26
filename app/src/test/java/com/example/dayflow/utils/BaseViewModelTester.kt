@@ -6,13 +6,11 @@ import io.mockk.spyk
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
-import org.junit.rules.TestWatcher
 
-abstract class BaseViewModelTester : TestWatcher() {
+abstract class BaseViewModelTester {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
-
 
     protected lateinit var repository: FakeRepository
     protected lateinit var spyRepository: FakeRepository
@@ -26,7 +24,5 @@ abstract class BaseViewModelTester : TestWatcher() {
 
 
     @After
-    open fun terminate() {
-        clearAllMocks()
-    }
+    open fun terminate() = clearAllMocks()
 }
