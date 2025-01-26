@@ -19,6 +19,7 @@ import io.mockk.mockk
 import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -139,4 +140,131 @@ class DailyTaskViewModelTest {
         coVerify(atMost = 1) { spyRepository.getAllDailyTasks() }
     }
 
+    @Test
+    fun `control add task content visibility when add task pressed then update state`() = runTest {
+        viewModel.state.test {
+
+            val loadingState = awaitItem()
+            assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+            viewModel.controlAddTaskVisibility()
+            val openAddTaskState = awaitItem()
+            assertTrue(loadingState.isAddTaskVisible != openAddTaskState.isAddTaskVisible)
+
+            viewModel.controlAddTaskVisibility()
+            val closeAddTaskState = awaitItem()
+            assertTrue(openAddTaskState.isAddTaskVisible != closeAddTaskState.isAddTaskVisible)
+        }
+    }
+
+    @Test
+    fun `given string title when onTitleChange() then update add task state`() = runTest {
+        viewModel.state.test {
+            val loadingState = awaitItem()
+            assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+            val title = "ahmed"
+            viewModel.onTitleChange(title)
+
+            val state = awaitItem()
+            assertEquals(title, state.addTask.title)
+        }
+    }
+
+    @Test
+    fun `given string description when onDescriptionChange() then update add task state`() =
+        runTest {
+            viewModel.state.test {
+                val loadingState = awaitItem()
+                assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+                val description = "ahmed"
+                viewModel.onDescriptionChange(description)
+
+                val updatedState = awaitItem()
+                assertEquals(description, updatedState.addTask.description)
+            }
+        }
+
+    @Test
+    fun `given string date when onDateChange() then update add task state`() = runTest {
+        viewModel.state.test {
+            val loadingState = awaitItem()
+            assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+            val date = "2023-07-16"
+            viewModel.onDateChange(date)
+
+            val updatedState = awaitItem()
+            assertEquals(date, updatedState.addTask.date)
+        }
+    }
+
+    @Test
+    fun `given string time when onTimeChange() then update add task state`() = runTest {
+        viewModel.state.test {
+            val loadingState = awaitItem()
+            assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+            val time = "16:30"
+            viewModel.onTimeChange(time)
+
+            val updatedState = awaitItem()
+            assertEquals(time, updatedState.addTask.time)
+        }
+    }
+
+    @Test
+    fun `control alarm permission dialog visibility when change time or date then update state`() =
+        runTest {
+            viewModel.state.test {
+
+                val loadingState = awaitItem()
+                assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+                viewModel.controlScheduleAlarmDialogVisibility()
+                val openAlarmPermissionState = awaitItem()
+                assertTrue(loadingState.addTask.canScheduleAlarmDialogVisibility != openAlarmPermissionState.addTask.canScheduleAlarmDialogVisibility)
+
+                viewModel.controlScheduleAlarmDialogVisibility()
+                val closePermissionState = awaitItem()
+                assertTrue(openAlarmPermissionState.addTask.canScheduleAlarmDialogVisibility != closePermissionState.addTask.canScheduleAlarmDialogVisibility)
+            }
+        }
+
+    @Test
+    fun `control empty scheduling field dialog visibility when try add task then update state`() =
+        runTest {
+            viewModel.state.test {
+
+                val loadingState = awaitItem()
+                assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+                viewModel.controlEmptySchedulingDialogVisibility()
+                val openEmptySchedulingState = awaitItem()
+                assertTrue(loadingState.addTask.isSchedulingEmptyDialogVisibility != openEmptySchedulingState.addTask.isSchedulingEmptyDialogVisibility)
+
+                viewModel.controlEmptySchedulingDialogVisibility()
+                val closeEmptySchedulingState = awaitItem()
+                assertTrue(openEmptySchedulingState.addTask.isSchedulingEmptyDialogVisibility != closeEmptySchedulingState.addTask.isSchedulingEmptyDialogVisibility)
+            }
+        }
+
+    @Test
+    fun `control unValid scheduling dialog visibility when try add task then update state`() =
+        runTest {
+            viewModel.state.test {
+
+                val loadingState = awaitItem()
+                assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+                viewModel.controlUnValidScheduledDialogVisibility()
+                val openUnValidSchedulingState = awaitItem()
+                assertTrue(loadingState.addTask.isScheduledUnValid != openUnValidSchedulingState.addTask.isScheduledUnValid)
+
+                viewModel.controlUnValidScheduledDialogVisibility()
+                val closeEUnValidSchedulingState = awaitItem()
+                assertTrue(openUnValidSchedulingState.addTask.isScheduledUnValid != closeEUnValidSchedulingState.addTask.isScheduledUnValid)
+            }
+        }
 }
