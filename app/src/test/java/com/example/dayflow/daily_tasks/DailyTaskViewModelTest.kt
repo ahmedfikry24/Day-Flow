@@ -11,6 +11,8 @@ import com.example.dayflow.ui.daily_tasks.vm.DailyTasksViewModel
 import com.example.dayflow.ui.utils.ContentStatus
 import com.example.dayflow.ui.utils.UiConstants
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
+import com.example.dayflow.ui.utils.ui_state.TaskUiState
+import com.example.dayflow.ui.utils.ui_state.toDailyEntity
 import com.example.dayflow.ui.utils.ui_state.toUiState
 import com.example.dayflow.utils.BaseViewModelTester
 import io.mockk.coEvery
@@ -343,6 +345,7 @@ class DailyTaskViewModelTest : BaseViewModelTester() {
     fun `given valid task info when call addTask() then add task success`() = runTest {
         viewModel.state.test {
             assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+            assertEquals(ContentStatus.VISIBLE, awaitItem().contentStatus)
 
             val title = "ahmed"
             viewModel.onTitleChange(title)
@@ -361,6 +364,7 @@ class DailyTaskViewModelTest : BaseViewModelTester() {
             coEvery { defaultAlarmManager.setAlarm(any(), any(), any()) } returns Unit
 
             viewModel.addTask()
+            awaitItem()
 
             val successState = awaitItem()
             assertEquals(ContentStatus.VISIBLE, successState.contentStatus)
@@ -372,4 +376,79 @@ class DailyTaskViewModelTest : BaseViewModelTester() {
         }
         coVerify { spyRepository.addDailyTask(any()) }
     }
+
+    @Test
+    fun `given ui task when call onSwipeDoneTask() then update task status success`() = runTest {
+        val task = TaskUiState(
+            id = 1,
+            title = "ahmed",
+            description = "description",
+            date = "2023-01-16",
+            time = "16:30",
+        )
+        repository.addDailyTask(task.toDailyEntity())
+
+        viewModel.state.test {
+            assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+            assertEquals(ContentStatus.VISIBLE, awaitItem().contentStatus)
+
+            coEvery { defaultAlarmManager.cancelAlarm(task.id) } returns Unit
+
+            viewModel.onSwipeDoneTask(task)
+
+            val successState = awaitItem()
+            assertEquals(1, successState.doneTasks.size)
+            assertTrue(successState.inProgressTasks.isEmpty())
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { spyRepository.updateDailyTaskStatus(task.id, true) }
+    }
+
+    @Test
+    fun `given ui task when call onSwipeDeleteTask() then delete task success`() = runTest {
+        val task = TaskUiState(
+            id = 1,
+            title = "ahmed",
+            description = "description",
+            date = "2023-01-16",
+            time = "16:30",
+        )
+        repository.addDailyTask(task.toDailyEntity())
+
+        viewModel.state.test {
+            assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+            assertEquals(ContentStatus.VISIBLE, awaitItem().contentStatus)
+
+            coEvery { defaultAlarmManager.cancelAlarm(task.id) } returns Unit
+
+            viewModel.onSwipeDeleteTask(task)
+            assertEquals(task, awaitItem().selectedDeleteItem)
+
+            viewModel.deleteTask()
+            val successState = awaitItem()
+            assertTrue(successState.inProgressTasks.isEmpty())
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { spyRepository.deleteDailyTask(task.id) }
+    }
+
+    @Test
+    fun `control delete task dialog visibility when delete task pressed then update state`() =
+        runTest {
+            viewModel.state.test {
+                assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+
+                val visibleState = awaitItem()
+                assertEquals(ContentStatus.VISIBLE, visibleState.contentStatus)
+
+                viewModel.controlDeleteItemDialogVisibility()
+                val openDeleteTask = awaitItem()
+                assertTrue(visibleState.isDeleteTaskDialogVisible != openDeleteTask.isDeleteTaskDialogVisible)
+
+                viewModel.controlDeleteItemDialogVisibility()
+                assertTrue(openDeleteTask.isDeleteTaskDialogVisible != awaitItem().isDeleteTaskDialogVisible)
+            }
+        }
 }
