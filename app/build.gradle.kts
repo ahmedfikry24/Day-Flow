@@ -41,6 +41,13 @@ android {
     buildFeatures {
         compose = true
     }
+
+    tasks.withType<Test> {
+        jvmArgs("-XX:+EnableDynamicAgentLoading")
+    }
+    tasks.withType<Test> {
+        jvmArgs("-Djdk.instrument.traceUsage")
+    }
 }
 
 dependencies {
