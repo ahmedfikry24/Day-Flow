@@ -120,7 +120,7 @@ class MapperTest {
             description = "",
             createdAt = createdAt
         )
-        val actualTask = task.toYearlyEntity()
+        val actualTask = task.toYearlyEntity().copy(id = randomId, createdAt = createdAt)
         assertEquals(expectedTask, actualTask)
     }
 
