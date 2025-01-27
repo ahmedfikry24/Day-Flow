@@ -10,6 +10,7 @@ import com.example.dayflow.data.usecase.UpdateDailyTaskStatusUseCase
 import com.example.dayflow.ui.daily_tasks.vm.DailyTasksViewModel
 import com.example.dayflow.ui.utils.ContentStatus
 import com.example.dayflow.ui.utils.UiConstants
+import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
 import com.example.dayflow.ui.utils.ui_state.toUiState
 import com.example.dayflow.utils.BaseViewModelTester
 import io.mockk.coEvery
@@ -19,6 +20,8 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class DailyTaskViewModelTest : BaseViewModelTester() {
@@ -218,6 +221,7 @@ class DailyTaskViewModelTest : BaseViewModelTester() {
                 viewModel.controlScheduleAlarmDialogVisibility()
                 val closePermissionState = awaitItem()
                 assertTrue(openAlarmPermissionState.addTask.canScheduleAlarmDialogVisibility != closePermissionState.addTask.canScheduleAlarmDialogVisibility)
+                cancelAndIgnoreRemainingEvents()
             }
         }
 
@@ -236,6 +240,7 @@ class DailyTaskViewModelTest : BaseViewModelTester() {
                 viewModel.controlEmptySchedulingDialogVisibility()
                 val closeEmptySchedulingState = awaitItem()
                 assertTrue(openEmptySchedulingState.addTask.isSchedulingEmptyDialogVisibility != closeEmptySchedulingState.addTask.isSchedulingEmptyDialogVisibility)
+                cancelAndIgnoreRemainingEvents()
             }
         }
 
@@ -254,6 +259,117 @@ class DailyTaskViewModelTest : BaseViewModelTester() {
                 viewModel.controlUnValidScheduledDialogVisibility()
                 val closeEUnValidSchedulingState = awaitItem()
                 assertTrue(openUnValidSchedulingState.addTask.isScheduledUnValid != closeEUnValidSchedulingState.addTask.isScheduledUnValid)
+                cancelAndIgnoreRemainingEvents()
             }
         }
+
+    @Test
+    fun `given empty title when call addTask() then don't add task`() = runTest {
+        viewModel.state.test {
+            val loadingState = awaitItem()
+            assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+            val title = ""
+            viewModel.onTitleChange(title)
+            awaitItem()
+
+            viewModel.addTask()
+            assertTrue(awaitItem().addTask.titleError)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        coVerify(atMost = 0, atLeast = 0) { spyRepository.addDailyTask(any()) }
+    }
+
+    @Test
+    fun `given empty time with valid date when call addTask() then don't add task`() = runTest {
+        viewModel.state.test {
+            val loadingState = awaitItem()
+            assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+            val date = "2023-01-16"
+            viewModel.onDateChange(date)
+            awaitItem()
+
+            viewModel.addTask()
+            assertTrue(awaitItem().addTask.isSchedulingEmptyDialogVisibility)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        coVerify(atMost = 0, atLeast = 0) { spyRepository.addDailyTask(any()) }
+    }
+
+    @Test
+    fun `given empty date with valid time when call addTask() then don't add task`() = runTest {
+        viewModel.state.test {
+            val loadingState = awaitItem()
+            assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+            val time = "16:30"
+            viewModel.onTimeChange(time)
+            awaitItem()
+
+            viewModel.addTask()
+            assertTrue(awaitItem().addTask.isSchedulingEmptyDialogVisibility)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        coVerify(atMost = 0, atLeast = 0) { spyRepository.addDailyTask(any()) }
+    }
+
+    @Test
+    fun `given passed date when call addTask() then don't add task`() = runTest {
+        viewModel.state.test {
+            val loadingState = awaitItem()
+            assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+            val date = "2023-01-16"
+            viewModel.onDateChange(date)
+            awaitItem()
+
+            val time = "16:30"
+            viewModel.onTimeChange(time)
+            awaitItem()
+
+            viewModel.addTask()
+            assertTrue(awaitItem().addTask.isScheduledUnValid)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        coVerify(atMost = 0, atLeast = 0) { spyRepository.addDailyTask(any()) }
+    }
+
+    @Test
+    fun `given valid task info when call addTask() then add task success`() = runTest {
+        viewModel.state.test {
+            assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+
+            val title = "ahmed"
+            viewModel.onTitleChange(title)
+            awaitItem()
+
+            val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val date = LocalDateTime.now().format(dateFormatter)
+            viewModel.onDateChange(date)
+            awaitItem()
+
+            val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+            val time = LocalDateTime.now().plusHours(2).format(timeFormatter)
+            viewModel.onTimeChange(time)
+            awaitItem()
+
+            coEvery { defaultAlarmManager.setAlarm(any(), any(), any()) } returns Unit
+
+            viewModel.addTask()
+
+            val successState = awaitItem()
+            assertEquals(ContentStatus.VISIBLE, successState.contentStatus)
+            assertEquals(1, successState.inProgressTasks.size)
+            assertEquals(AddTaskUiState(), successState.addTask)
+            assertEquals(successState.inProgressTasks.last().id + 1, UiConstants.lastDailyTaskId)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { spyRepository.addDailyTask(any()) }
+    }
 }
