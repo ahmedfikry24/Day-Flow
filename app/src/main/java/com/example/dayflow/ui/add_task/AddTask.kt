@@ -32,6 +32,7 @@ import com.example.dayflow.ui.composable.PrimaryTextField
 import com.example.dayflow.ui.composable.TimePickerModal
 import com.example.dayflow.ui.theme.spacing
 import com.example.dayflow.ui.utils.checkScheduleAlarmPermission
+import com.example.dayflow.ui.utils.formatTimeDigits
 import com.example.dayflow.ui.utils.interaction.AddTaskInteraction
 import com.example.dayflow.ui.utils.requestScheduleAlarmPermission
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
@@ -141,7 +142,8 @@ fun AddTask(
     if (isTimeVisible)
         TimePickerModal(
             onConfirm = {
-                interaction.onTimeChange("${it.hour}:${it.minute}")
+                val time = "${it.hour}:${it.minute}"
+                interaction.onTimeChange(time.formatTimeDigits())
                 isTimeVisible = false
             },
             onDismiss = { isTimeVisible = false }
