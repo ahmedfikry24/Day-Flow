@@ -72,20 +72,31 @@ fun Activity.goToSettings() {
 }
 
 fun String.convertTimeToLong(): Long {
-    val timeFormat = SimpleDateFormat("H:m", Locale.getDefault())
-    val time = timeFormat.parse(this)
-    return time?.time ?: 0L
+    try {
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val time = timeFormat.parse(this)
+        return time?.time ?: 0L
+    } catch (e: Throwable) {
+        return 0L
+    }
 }
 
 fun Long.convertLongToTime(): String {
     val time = Instant.ofEpochMilli(this)
         .atZone(ZoneId.systemDefault())
         .toLocalTime()
-    return time.format(DateTimeFormatter.ofPattern("H:m"))
+    return time.format(DateTimeFormatter.ofPattern("HH:mm"))
+}
+
+fun String.formatTimeDigits(): String {
+    val parts = this.split(":")
+    val hours = parts[0].padStart(2, '0')
+    val minutes = parts[1].padStart(2, '0')
+    return "$hours:$minutes"
 }
 
 fun getAlarmTime(date: String, timeString: String): Long {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd H:m", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
     val parsedDate = dateFormat.parse("$date $timeString")
     val calendar = Calendar.getInstance()
     calendar.time = parsedDate
@@ -93,7 +104,7 @@ fun getAlarmTime(date: String, timeString: String): Long {
 }
 
 fun generateRandomId(): Int {
-    return (1..Int.MAX_VALUE).random()
+    return (UiConstants.lastDailyTaskId..Int.MAX_VALUE).random()
 }
 
 
