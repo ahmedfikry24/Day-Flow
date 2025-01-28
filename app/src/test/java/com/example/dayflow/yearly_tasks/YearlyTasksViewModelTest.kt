@@ -5,6 +5,8 @@ import com.example.dayflow.data.usecase.AddYearlyTaskUseCase
 import com.example.dayflow.data.usecase.DeleteYearlyTaskUseCase
 import com.example.dayflow.data.usecase.GetAllYearlyTasksUseCase
 import com.example.dayflow.ui.utils.ContentStatus
+import com.example.dayflow.ui.utils.UiConstants
+import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
 import com.example.dayflow.ui.utils.ui_state.toUiState
 import com.example.dayflow.ui.yearly_tasks.vm.YearlyTasksViewModel
 import com.example.dayflow.utils.BaseViewModelTester
@@ -121,5 +123,53 @@ class YearlyTasksViewModelTest : BaseViewModelTester() {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+
+    @Test
+    fun `given empty title when call addTask() then don't add task`() = runTest {
+        viewModel.state.test {
+            assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+            assertEquals(ContentStatus.VISIBLE, awaitItem().contentStatus)
+
+            val title = ""
+            viewModel.onTitleChange(title)
+
+            viewModel.addTask()
+            assertTrue(awaitItem().addTask.titleError)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        coVerify(atMost = 0, atLeast = 0) { spyRepository.addYearlyTask(any()) }
+    }
+
+    @Test
+    fun `given valid task info when call addTask() then add task success`() = runTest {
+        viewModel.state.test {
+            assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+            assertEquals(ContentStatus.VISIBLE, awaitItem().contentStatus)
+
+            val title = "ahmed"
+            viewModel.onTitleChange(title)
+            awaitItem()
+
+            val description = "ahmed"
+            viewModel.onDescriptionChange(description)
+            awaitItem()
+
+
+            viewModel.addTask()
+            awaitItem()
+
+            val successState = awaitItem()
+            assertEquals(ContentStatus.VISIBLE, successState.contentStatus)
+            assertEquals(1, successState.tasks.size)
+            assertEquals(AddTaskUiState(), successState.addTask)
+
+            val tasks = repository.getAllYearlyTasks().map { it.toUiState() }
+            assertEquals(tasks, successState.tasks)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { spyRepository.addYearlyTask(any()) }
+    }
 
 }
