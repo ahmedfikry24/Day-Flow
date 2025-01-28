@@ -91,4 +91,35 @@ class YearlyTasksViewModelTest : BaseViewModelTester() {
         }
     }
 
+    @Test
+    fun `given string title when onTitleChange() then update add task state`() = runTest {
+        viewModel.state.test {
+            val loadingState = awaitItem()
+            assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+            val title = "ahmed"
+            viewModel.onTitleChange(title)
+
+            val state = awaitItem()
+            assertEquals(title, state.addTask.title)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given string description when onDescriptionChange() then update add task state`() =
+        runTest {
+            viewModel.state.test {
+                val loadingState = awaitItem()
+                assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
+
+                val description = "ahmed"
+                viewModel.onDescriptionChange(description)
+
+                val updatedState = awaitItem()
+                assertEquals(description, updatedState.addTask.description)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
 }
