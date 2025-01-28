@@ -1,10 +1,18 @@
 package com.example.dayflow.yearly_tasks
 
+import app.cash.turbine.test
 import com.example.dayflow.data.usecase.AddYearlyTaskUseCase
 import com.example.dayflow.data.usecase.DeleteYearlyTaskUseCase
 import com.example.dayflow.data.usecase.GetAllYearlyTasksUseCase
+import com.example.dayflow.ui.utils.ContentStatus
+import com.example.dayflow.ui.utils.ui_state.toUiState
 import com.example.dayflow.ui.yearly_tasks.vm.YearlyTasksViewModel
 import com.example.dayflow.utils.BaseViewModelTester
+import io.mockk.coEvery
+import io.mockk.coVerify
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class YearlyTasksViewModelTest : BaseViewModelTester() {
 
@@ -25,4 +33,42 @@ class YearlyTasksViewModelTest : BaseViewModelTester() {
         )
     }
 
+
+    @Test
+    fun `given call initData() when start collect state then update status to visible`() = runTest {
+        viewModel.state.test {
+            assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+            assertEquals(ContentStatus.VISIBLE, awaitItem().contentStatus)
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { spyRepository.getAllYearlyTasks() }
+    }
+
+    @Test
+    fun `given get all tasks when call initData() then return valid list`() = runTest {
+        val expectedTasks = repository.getAllYearlyTasks().map { it.toUiState() }
+        viewModel.state.test {
+            assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+
+            val visibleState = awaitItem()
+            assertEquals(ContentStatus.VISIBLE, visibleState.contentStatus)
+            assertEquals(expectedTasks, visibleState.tasks)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { spyRepository.getAllYearlyTasks() }
+    }
+
+    @Test
+    fun `given exception when get all tasks then update status to failure`() = runTest {
+        coEvery { spyRepository.getAllYearlyTasks() } throws Exception("Error")
+        viewModel.state.test {
+            assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+
+            val failureState = awaitItem()
+            assertEquals(ContentStatus.FAILURE, failureState.contentStatus)
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { spyRepository.getAllYearlyTasks() }
+    }
 }
