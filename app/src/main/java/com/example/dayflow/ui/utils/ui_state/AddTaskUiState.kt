@@ -28,9 +28,9 @@ fun AddTaskUiState.toDailyEntity(): DailyTaskEntity {
     )
 }
 
-fun AddTaskUiState.toUiState(): TaskUiState {
+fun AddTaskUiState.toUiState(id: Int): TaskUiState {
     return TaskUiState(
-        id = UiConstants.lastDailyTaskId,
+        id = id,
         title = this.title,
         description = this.description,
         date = this.date,
@@ -41,6 +41,7 @@ fun AddTaskUiState.toUiState(): TaskUiState {
 
 fun AddTaskUiState.toYearlyEntity(): YearlyTaskEntity {
     return YearlyTaskEntity(
+        id = UiConstants.lastYearlyTaskId,
         title = this.title,
         description = this.description,
     )
