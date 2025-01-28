@@ -20,7 +20,7 @@ class FakeRepository : Repository {
     }
 
     override suspend fun deleteDailyTask(id: Int) {
-        dailyTasks.filter { it.id == id }
+        dailyTasks.removeIf { it.id == id }
     }
 
     override suspend fun updateDailyTaskStatus(id: Int, status: Boolean) {
@@ -37,7 +37,7 @@ class FakeRepository : Repository {
     }
 
     override suspend fun deleteYearlyTask(id: Int) {
-        yearlyTasks.filter { it.id == id }
+        yearlyTasks.removeIf { it.id == id }
     }
 
     override suspend fun getAllBlockedApps(): List<BlockAppInfoEntity> {
