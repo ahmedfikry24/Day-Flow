@@ -1,6 +1,7 @@
 package com.example.dayflow.yearly_tasks
 
 import app.cash.turbine.test
+import com.example.dayflow.data.local.entity.YearlyTaskEntity
 import com.example.dayflow.data.usecase.AddYearlyTaskUseCase
 import com.example.dayflow.data.usecase.DeleteYearlyTaskUseCase
 import com.example.dayflow.data.usecase.GetAllYearlyTasksUseCase
@@ -55,6 +56,28 @@ class YearlyTasksViewModelTest : BaseViewModelTester() {
             val visibleState = awaitItem()
             assertEquals(ContentStatus.VISIBLE, visibleState.contentStatus)
             assertEquals(expectedTasks, visibleState.tasks)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { spyRepository.getAllYearlyTasks() }
+    }
+
+    @Test
+    fun `given get all tasks when call initData() then update last task id`() = runTest {
+        val task = YearlyTaskEntity(
+            id = 1,
+            title = "ahmed",
+            description = "",
+        )
+        repository.addYearlyTask(task)
+
+        viewModel.state.test {
+            assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+
+            val visibleState = awaitItem()
+            assertEquals(ContentStatus.VISIBLE, visibleState.contentStatus)
+
+            assertEquals(task.id + 1, UiConstants.lastYearlyTaskId)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -166,6 +189,7 @@ class YearlyTasksViewModelTest : BaseViewModelTester() {
 
             val tasks = repository.getAllYearlyTasks().map { it.toUiState() }
             assertEquals(tasks, successState.tasks)
+            assertEquals(2, UiConstants.lastYearlyTaskId)
 
             cancelAndIgnoreRemainingEvents()
         }
