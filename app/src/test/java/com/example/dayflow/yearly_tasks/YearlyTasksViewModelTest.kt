@@ -11,7 +11,7 @@ import com.example.dayflow.utils.BaseViewModelTester
 import io.mockk.coEvery
 import io.mockk.coVerify
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
+import org.junit.Assert.*
 import org.junit.Test
 
 class YearlyTasksViewModelTest : BaseViewModelTester() {
@@ -71,4 +71,24 @@ class YearlyTasksViewModelTest : BaseViewModelTester() {
         }
         coVerify { spyRepository.getAllYearlyTasks() }
     }
+
+    @Test
+    fun `given control add task visibility when add task pressed then update state`() = runTest {
+        viewModel.state.test {
+
+            assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+            val visibleState = awaitItem()
+            assertEquals(ContentStatus.VISIBLE, visibleState.contentStatus)
+
+            viewModel.controlAddTaskVisibility()
+            val openAddTaskState = awaitItem()
+            assertTrue(visibleState.isAddTaskVisible != openAddTaskState.isAddTaskVisible)
+
+            viewModel.controlAddTaskVisibility()
+            val closeAddTaskState = awaitItem()
+            assertTrue(openAddTaskState.isAddTaskVisible != closeAddTaskState.isAddTaskVisible)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
 }
