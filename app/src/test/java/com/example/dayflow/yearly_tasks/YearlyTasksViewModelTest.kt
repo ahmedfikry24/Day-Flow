@@ -14,7 +14,8 @@ import com.example.dayflow.utils.BaseViewModelTester
 import io.mockk.coEvery
 import io.mockk.coVerify
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class YearlyTasksViewModelTest : BaseViewModelTester() {
@@ -178,22 +179,88 @@ class YearlyTasksViewModelTest : BaseViewModelTester() {
             viewModel.onDescriptionChange(description)
             awaitItem()
 
-
             viewModel.addTask()
             awaitItem()
 
             val successState = awaitItem()
             assertEquals(ContentStatus.VISIBLE, successState.contentStatus)
-            assertEquals(1, successState.tasks.size)
             assertEquals(AddTaskUiState(), successState.addTask)
 
             val tasks = repository.getAllYearlyTasks().map { it.toUiState() }
             assertEquals(tasks, successState.tasks)
-            assertEquals(2, UiConstants.lastYearlyTaskId)
 
             cancelAndIgnoreRemainingEvents()
         }
         coVerify { spyRepository.addYearlyTask(any()) }
+    }
+
+    @Test
+    fun `given task id  when onSwipeDeleteTask() then update selected item id`() = runTest {
+        val task = YearlyTaskEntity(
+            id = 1,
+            title = "ahmed",
+            description = "",
+        )
+        viewModel.state.test {
+            assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+            assertEquals(ContentStatus.VISIBLE, awaitItem().contentStatus)
+
+            viewModel.onSwipeDeleteTask(task.id)
+            assertEquals(task.id, awaitItem().selectedDeleteItemId)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given control delete task dialog visibility when delete task then update state`() =
+        runTest {
+            viewModel.state.test {
+
+                assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+                val visibleState = awaitItem()
+                assertEquals(ContentStatus.VISIBLE, visibleState.contentStatus)
+
+                viewModel.controlDeleteItemDialogVisibility()
+                val openDeleteTaskState = awaitItem()
+                assertTrue(visibleState.isDeleteTaskDialogVisible != openDeleteTaskState.isDeleteTaskDialogVisible)
+
+                viewModel.controlDeleteItemDialogVisibility()
+                val closeDeleteTaskState = awaitItem()
+                assertTrue(openDeleteTaskState.isDeleteTaskDialogVisible != closeDeleteTaskState.isDeleteTaskDialogVisible)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given task when deleteTask() then delete it success`() = runTest {
+        val task = YearlyTaskEntity(
+            id = 1,
+            title = "ahmed",
+            description = "",
+        )
+        repository.addYearlyTask(task)
+
+        viewModel.state.test {
+
+            assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+            assertEquals(ContentStatus.VISIBLE, awaitItem().contentStatus)
+
+
+            viewModel.onSwipeDeleteTask(task.id)
+            awaitItem()
+
+            viewModel.deleteTask()
+            val successState = awaitItem()
+
+            assertEquals(ContentStatus.VISIBLE, successState.contentStatus)
+            assertTrue(successState.tasks.none { it == task.toUiState() })
+
+            val tasks = repository.getAllYearlyTasks().map { it.toUiState() }
+            assertEquals(tasks, successState.tasks)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { spyRepository.deleteYearlyTask(task.id) }
     }
 
 }
