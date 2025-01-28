@@ -134,7 +134,7 @@ class DailyTasksViewModel @Inject constructor(
             it.copy(
                 contentStatus = ContentStatus.VISIBLE,
                 inProgressTasks = it.inProgressTasks.toMutableList().apply {
-                    add(it.addTask.toUiState())
+                    add(it.addTask.toUiState(UiConstants.lastDailyTaskId))
                 },
                 addTask = AddTaskUiState(),
                 isAddTaskVisible = !it.isAddTaskVisible
