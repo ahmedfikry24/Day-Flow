@@ -6,6 +6,7 @@ import com.example.dayflow.data.usecase.DeleteYearlyTaskUseCase
 import com.example.dayflow.data.usecase.GetAllYearlyTasksUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
+import com.example.dayflow.ui.utils.UiConstants
 import com.example.dayflow.ui.utils.generateRandomId
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
 import com.example.dayflow.ui.utils.ui_state.toUiState
@@ -33,12 +34,18 @@ class YearlyTasksViewModel @Inject constructor(
     }
 
     private fun allTasksSuccess(tasks: List<YearlyTaskEntity>) {
+        updateLastTaskId(tasks)
         _state.update { value ->
             value.copy(
                 contentStatus = ContentStatus.VISIBLE,
                 tasks = tasks.map { it.toUiState() }
             )
         }
+    }
+
+    private fun updateLastTaskId(tasks: List<YearlyTaskEntity>) {
+        if (tasks.isEmpty()) return
+        tasks.maxBy { it.id }.also { UiConstants.lastYearlyTaskId = it.id + 1 }
     }
 
     private fun setFailureContent() {
@@ -91,12 +98,13 @@ class YearlyTasksViewModel @Inject constructor(
             it.copy(
                 contentStatus = ContentStatus.VISIBLE,
                 tasks = it.tasks.toMutableList().apply {
-                    add(it.addTask.toUiState().copy(id = generateRandomId()))
+                    add(it.addTask.toUiState(UiConstants.lastYearlyTaskId))
                 },
                 addTask = AddTaskUiState(),
                 isAddTaskVisible = !it.isAddTaskVisible
             )
         }
+        UiConstants.lastYearlyTaskId++
     }
 
     override fun onSwipeDeleteTask(id: Int) {
