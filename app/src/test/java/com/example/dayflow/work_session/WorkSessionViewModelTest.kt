@@ -26,15 +26,14 @@ class WorkSessionViewModelTest : BaseViewModelTester() {
     fun `given control session info visibility when start session pressed then update state`() =
         runTest {
             viewModel.state.test {
-                val visibleState = awaitItem()
-                assertEquals(ContentStatus.VISIBLE, visibleState.contentStatus)
+                assertTrue(awaitItem().isSessionInfoVisible)
 
                 viewModel.controlSessionInfoVisibility()
-                val openSessionCountDown = awaitItem()
-                assertTrue(visibleState.isSessionInfoVisible != openSessionCountDown.isSessionInfoVisible)
+                assertFalse(awaitItem().isSessionInfoVisible)
 
                 viewModel.controlSessionInfoVisibility()
-                assertTrue(openSessionCountDown.isSessionInfoVisible != awaitItem().isSessionInfoVisible)
+                assertTrue(awaitItem().isSessionInfoVisible)
+
                 cancelAndIgnoreRemainingEvents()
             }
         }
