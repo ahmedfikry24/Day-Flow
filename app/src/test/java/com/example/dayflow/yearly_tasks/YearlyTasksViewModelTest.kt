@@ -180,14 +180,16 @@ class YearlyTasksViewModelTest : BaseViewModelTester() {
             awaitItem()
 
             viewModel.addTask()
-            awaitItem()
+            val loadingState = awaitItem()
 
             val successState = awaitItem()
             assertEquals(ContentStatus.VISIBLE, successState.contentStatus)
+            assertTrue(successState.tasks.contains(loadingState.addTask.toUiState(UiConstants.lastYearlyTaskId - 1)))
             assertEquals(AddTaskUiState(), successState.addTask)
 
             val tasks = repository.getAllYearlyTasks().map { it.toUiState() }
             assertEquals(tasks, successState.tasks)
+            assertTrue(tasks.maxBy { it.id }.id < UiConstants.lastYearlyTaskId)
 
             cancelAndIgnoreRemainingEvents()
         }
