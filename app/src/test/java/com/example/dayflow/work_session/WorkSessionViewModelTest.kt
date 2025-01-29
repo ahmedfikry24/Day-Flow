@@ -38,4 +38,30 @@ class WorkSessionViewModelTest : BaseViewModelTester() {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+
+    @Test
+    fun `given plus session duration when call plusSessionDurationMin() then update state`() =
+        runTest {
+            viewModel.state.test {
+                val visibleState = awaitItem()
+                assertEquals(ContentStatus.VISIBLE, visibleState.contentStatus)
+
+                viewModel.plusSessionDurationMin()
+                assertEquals(visibleState.sessionDurationMin + 5, awaitItem().sessionDurationMin)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given minus session duration when call minusSessionDurationMin() then update state`() =
+        runTest {
+            viewModel.state.test {
+                val visibleState = awaitItem()
+                assertEquals(ContentStatus.VISIBLE, visibleState.contentStatus)
+
+                viewModel.minusSessionDurationMin()
+                assertEquals(visibleState.sessionDurationMin - 5, awaitItem().sessionDurationMin)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
 }
