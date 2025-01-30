@@ -46,6 +46,10 @@ class WorkSessionViewModel @Inject constructor(
         resumeSession()
     }
 
+    override fun onChangeSessionRemainingTime() {
+        _state.update { it.copy(sessionRemainingTime = it.sessionRemainingTime - 1000L) }
+    }
+
     override fun resumeSession() {
         _state.update { it.copy(isRunning = true) }
         job = viewModelScope.launch {
