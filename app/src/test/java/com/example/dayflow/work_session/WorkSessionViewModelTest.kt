@@ -3,11 +3,14 @@ package com.example.dayflow.work_session
 import app.cash.turbine.test
 import com.example.dayflow.service.DefaultServiceManager
 import com.example.dayflow.ui.utils.ContentStatus
+import com.example.dayflow.ui.utils.convertSessionTimeToLong
 import com.example.dayflow.ui.work_session.vm.WorkSessionViewModel
 import com.example.dayflow.utils.BaseViewModelTester
+import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -63,4 +66,33 @@ class WorkSessionViewModelTest : BaseViewModelTester() {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+
+    @Test
+    fun `given start session when call startSession() then update state`() = runTest {
+        viewModel.state.test {
+            val initialState = awaitItem()
+            assertTrue(initialState.isSessionInfoVisible)
+            assertEquals(0L, initialState.sessionDuration)
+            assertEquals(0L, initialState.sessionRemainingTime)
+            assertFalse(initialState.isRunning)
+
+            coEvery { serviceManager.createSessionService(any()) } returns Unit
+
+            viewModel.startSession()
+
+            val startSessionState = awaitItem()
+            assertFalse(startSessionState.isSessionInfoVisible)
+            assertEquals(
+                initialState.sessionDurationMin.convertSessionTimeToLong(),
+                startSessionState.sessionDuration
+            )
+            assertEquals(
+                initialState.sessionDurationMin.convertSessionTimeToLong(),
+                startSessionState.sessionRemainingTime
+            )
+            assertTrue(startSessionState.isRunning)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 }
