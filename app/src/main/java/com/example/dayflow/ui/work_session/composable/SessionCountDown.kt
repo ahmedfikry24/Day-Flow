@@ -17,6 +17,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -28,6 +29,7 @@ import com.example.dayflow.ui.theme.spacing
 import com.example.dayflow.ui.utils.formatSessionTime
 import com.example.dayflow.ui.work_session.vm.WorkSessionInteractions
 import com.example.dayflow.ui.work_session.vm.WorkSessionUiState
+import kotlinx.coroutines.delay
 
 @Composable
 fun SessionCountDown(
@@ -74,7 +76,7 @@ fun SessionCountDown(
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 shape = CircleShape,
-                onClick = {if (state.isRunning) interactions.pauseSession() else interactions.resumeSession()}
+                onClick = { if (state.isRunning) interactions.pauseSession() else interactions.resumeSession() }
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(if (state.isRunning) R.drawable.ic_stop_watch_pause else R.drawable.ic_stop_watch_play),
@@ -97,5 +99,13 @@ fun SessionCountDown(
                 )
             }
         }
+    }
+
+    LaunchedEffect(key1 = state.sessionRemainingTime, key2 = state.isRunning) {
+        if (state.sessionRemainingTime > 0L && state.isRunning) {
+            delay(1000L)
+            interactions.onChangeSessionRemainingTime()
+        } else if (state.sessionRemainingTime == 0L && !state.isRunning)
+            interactions.finishSession()
     }
 }

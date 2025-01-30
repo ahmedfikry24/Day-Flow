@@ -6,6 +6,7 @@ interface WorkSessionInteractions {
     fun plusSessionDurationMin()
     fun minusSessionDurationMin()
     fun startSession()
+    fun onChangeSessionRemainingTime()
     fun pauseSession()
     fun resumeSession()
     fun finishSession()
