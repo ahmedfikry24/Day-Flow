@@ -105,7 +105,7 @@ fun SessionCountDown(
         if (state.sessionRemainingTime > 0L && state.isRunning) {
             delay(1000L)
             interactions.onChangeSessionRemainingTime()
-        } else if (state.sessionRemainingTime == 0L && !state.isRunning)
+        } else if (state.sessionRemainingTime == 0L && state.isRunning)
             interactions.finishSession()
     }
 }
