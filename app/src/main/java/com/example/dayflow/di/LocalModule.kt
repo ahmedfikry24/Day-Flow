@@ -5,10 +5,7 @@ import androidx.room.Room
 import com.example.dayflow.data.alarm.DefaultAlarmManager
 import com.example.dayflow.data.local.LocalDataBase
 import com.example.dayflow.data.local.data_store.DataStoreManager
-import com.example.dayflow.data.repository.Repository
-import com.example.dayflow.data.usecase.GetAllInstalledAppsUseCase
-import com.example.dayflow.data.utils.DefaultNotificationManager
-import com.example.dayflow.service.DefaultServiceManager
+import com.example.dayflow.data.utils.PackageAppsManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,8 +55,7 @@ object LocalModule {
 
     @Provides
     @Singleton
-    fun provideGetAllInstalledAppsUseCase(
-        repository: Repository,
-        @ApplicationContext context: Context,
-    ) = GetAllInstalledAppsUseCase(repository, context)
+    fun providePackageAppsManager(
+        @ApplicationContext context: Context
+    ) = PackageAppsManager(context)
 }
