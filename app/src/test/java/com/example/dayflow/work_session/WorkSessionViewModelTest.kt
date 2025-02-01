@@ -177,4 +177,36 @@ class WorkSessionViewModelTest : BaseViewModelTester() {
         }
         coVerify { serviceManager.cancelSessionService() }
     }
+
+    @Test
+    fun `given resume session time when call resumeSession() then session continue`() = runTest {
+        viewModel.state.test {
+            val initialState = awaitItem()
+            assertTrue(initialState.isSessionInfoVisible)
+            assertFalse(initialState.isRunning)
+
+            coEvery { serviceManager.createSessionService(any()) } returns Unit
+
+            viewModel.resumeSession()
+            assertTrue(awaitItem().isRunning)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given resume session time when call resumeSession() then start service`() = runTest {
+        viewModel.state.test {
+            assertFalse(awaitItem().isRunning)
+
+            coEvery { serviceManager.createSessionService(any()) } returns Unit
+
+            viewModel.resumeSession()
+
+            assertTrue(awaitItem().isRunning)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { serviceManager.createSessionService(any()) }
+    }
 }
