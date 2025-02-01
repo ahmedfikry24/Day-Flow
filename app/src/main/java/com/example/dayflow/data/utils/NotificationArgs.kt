@@ -13,5 +13,6 @@ data class NotificationArgs(
     val category: String? = null,
     val ringtone: Uri? = null,
     val isSilent: Boolean = false,
-    val priority: Int = NotificationCompat.PRIORITY_HIGH
+    val priority: Int = NotificationCompat.PRIORITY_HIGH,
+    val isClickable: Boolean = true,
 )

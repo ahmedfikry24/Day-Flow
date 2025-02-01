@@ -41,6 +41,13 @@ android {
     buildFeatures {
         compose = true
     }
+
+    tasks.withType<Test> {
+        jvmArgs("-XX:+EnableDynamicAgentLoading")
+    }
+    tasks.withType<Test> {
+        jvmArgs("-Djdk.instrument.traceUsage")
+    }
 }
 
 dependencies {
@@ -68,6 +75,10 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

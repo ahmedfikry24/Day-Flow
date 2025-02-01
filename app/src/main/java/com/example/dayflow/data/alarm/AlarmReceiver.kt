@@ -45,8 +45,8 @@ class AlarmReceiver : BroadcastReceiver() {
             stopIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        DefaultNotificationManager.showNotification(
-            context,
+        val notificationManager = DefaultNotificationManager(context)
+        notificationManager.showNotification(
             notificationArgs = NotificationArgs(
                 id = taskId,
                 title = title,
@@ -62,8 +62,10 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     private fun cancelScheduledAlarm(context: Context, id: Int) {
-        DefaultAlarmManager.cancelAlarm(context, id)
-        DefaultNotificationManager.cancelNotification(context, id)
+        val notificationManager = DefaultNotificationManager(context)
+        val alarmManager = DefaultAlarmManager(context)
+        alarmManager.cancelAlarm(id)
+        notificationManager.cancelNotification(id)
         MediaPlayerManager.stopAlarmRingtone()
     }
 }

@@ -13,10 +13,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.dayflow.MainActivity
 import com.example.dayflow.R
+import javax.inject.Inject
 
-object DefaultNotificationManager {
+class DefaultNotificationManager @Inject constructor(private val context: Context) {
 
-    fun showNotification(context: Context, notificationArgs: NotificationArgs) {
+    fun showNotification(notificationArgs: NotificationArgs) {
         if (
             ContextCompat.checkSelfPermission(
                 context,
@@ -31,26 +32,16 @@ object DefaultNotificationManager {
 
             notificationManager.notify(
                 notificationArgs.id,
-                createNotification(context, notificationArgs)
+                createNotification(notificationArgs)
             )
         }
     }
 
-    fun createNotification(context: Context, notificationArgs: NotificationArgs): Notification {
-
-        val activity = Intent(context, MainActivity::class.java)
-        val activityPendingIntent = PendingIntent.getActivity(
-            context,
-            DataConstants.ACTIVITY_PENDING_ID,
-            activity,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
+    fun createNotification(notificationArgs: NotificationArgs): Notification {
         val notificationBuilder =
             NotificationCompat.Builder(context, DataConstants.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.logo)
                 .setContentTitle(notificationArgs.title)
-                .setContentIntent(activityPendingIntent)
                 .setPriority(notificationArgs.priority)
                 .setAutoCancel(notificationArgs.actionPendingIntent == null)
                 .setOngoing(true)
@@ -67,6 +58,19 @@ object DefaultNotificationManager {
             )
         }
         notificationArgs.category?.let { notificationBuilder.setCategory(it) }
+
+        if (notificationArgs.isClickable) {
+            val activity = Intent(context, MainActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            }
+            val activityPendingIntent = PendingIntent.getActivity(
+                context,
+                DataConstants.ACTIVITY_PENDING_ID,
+                activity,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            notificationBuilder.setContentIntent(activityPendingIntent)
+        }
 
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -87,7 +91,7 @@ object DefaultNotificationManager {
         }
     }
 
-    fun cancelNotification(context: Context, id: Int) {
+    fun cancelNotification(id: Int) {
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(id)

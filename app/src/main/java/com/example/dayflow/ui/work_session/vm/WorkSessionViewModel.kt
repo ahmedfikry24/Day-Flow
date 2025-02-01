@@ -1,6 +1,6 @@
 package com.example.dayflow.ui.work_session.vm
 
-import android.app.Application
+import androidx.lifecycle.viewModelScope
 import com.example.dayflow.service.DefaultServiceManager
 import com.example.dayflow.service.isBlockNotificationListenerActive
 import com.example.dayflow.ui.base.BaseViewModel
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WorkSessionViewModel @Inject constructor(
-    private val application: Application
+    private val serviceManager: DefaultServiceManager,
 ) : BaseViewModel<WorkSessionUiState, WorkSessionEvents>(WorkSessionUiState()),
     WorkSessionInteractions {
 
@@ -38,10 +38,7 @@ class WorkSessionViewModel @Inject constructor(
                 isRunning = true
             )
         }
-        DefaultServiceManager.createSessionService(
-            application,
-            state.value.sessionRemainingTime
-        )
+        serviceManager.createSessionService(state.value.sessionRemainingTime)
         isBlockNotificationListenerActive = true
     }
 
@@ -51,15 +48,13 @@ class WorkSessionViewModel @Inject constructor(
 
     override fun resumeSession() {
         _state.update { it.copy(isRunning = true) }
-        DefaultServiceManager.createSessionService(
-            application,
-            state.value.sessionRemainingTime
-        )
+        serviceManager.createSessionService(state.value.sessionRemainingTime)
+        isBlockNotificationListenerActive = true
     }
 
     override fun pauseSession() {
         _state.update { it.copy(isRunning = false) }
-        DefaultServiceManager.cancelSessionService(application)
+        serviceManager.cancelSessionService()
         isBlockNotificationListenerActive = false
     }
 
@@ -72,12 +67,12 @@ class WorkSessionViewModel @Inject constructor(
                 isSessionInfoVisible = true
             )
         }
-        DefaultServiceManager.cancelSessionService(application)
+        serviceManager.cancelSessionService()
         isBlockNotificationListenerActive = false
     }
 
     override fun onCleared() {
-        DefaultServiceManager.cancelSessionService(application)
+        serviceManager.cancelSessionService()
         isBlockNotificationListenerActive = false
         super.onCleared()
     }
