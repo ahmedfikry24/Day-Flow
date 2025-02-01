@@ -7,6 +7,7 @@ import com.example.dayflow.ui.utils.convertSessionTimeToLong
 import com.example.dayflow.ui.work_session.vm.WorkSessionViewModel
 import com.example.dayflow.utils.BaseViewModelTester
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -95,4 +96,46 @@ class WorkSessionViewModelTest : BaseViewModelTester() {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    @Test
+    fun `given start session when call startSession() then verify service started`() = runTest {
+        viewModel.state.test {
+            assertTrue(awaitItem().isSessionInfoVisible)
+
+            coEvery { serviceManager.createSessionService(any()) } returns Unit
+
+            viewModel.startSession()
+
+            val startSessionState = awaitItem()
+            assertFalse(startSessionState.isSessionInfoVisible)
+            assertTrue(startSessionState.isRunning)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { serviceManager.createSessionService(any()) }
+    }
+
+    @Test
+    fun `given remaining time when call onChangeSessionRemainingTime() then return right time`() =
+        runTest {
+            viewModel.state.test {
+                assertTrue(awaitItem().isSessionInfoVisible)
+
+                coEvery { serviceManager.createSessionService(any()) } returns Unit
+
+                viewModel.startSession()
+                val startSessionState = awaitItem()
+                assertFalse(startSessionState.isSessionInfoVisible)
+
+                viewModel.onChangeSessionRemainingTime()
+                val updatedState = awaitItem()
+
+                val expectedTime =
+                    startSessionState.sessionDurationMin.convertSessionTimeToLong() - 1000L
+
+                assertEquals(expectedTime, updatedState.sessionRemainingTime)
+
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
 }
