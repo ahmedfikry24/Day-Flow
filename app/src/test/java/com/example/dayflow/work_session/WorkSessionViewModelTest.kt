@@ -138,4 +138,43 @@ class WorkSessionViewModelTest : BaseViewModelTester() {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+
+    @Test
+    fun `given pause session time when call pauseSession() then stop session`() = runTest {
+        viewModel.state.test {
+            assertTrue(awaitItem().isSessionInfoVisible)
+
+            coEvery { serviceManager.createSessionService(any()) } returns Unit
+
+            viewModel.startSession()
+            assertTrue(awaitItem().isRunning)
+
+            coEvery { serviceManager.cancelSessionService() } returns Unit
+
+            viewModel.pauseSession()
+
+            assertFalse(awaitItem().isRunning)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given pause session time when call pauseSession() then stop service`() = runTest {
+        viewModel.state.test {
+            assertTrue(awaitItem().isSessionInfoVisible)
+
+            coEvery { serviceManager.createSessionService(any()) } returns Unit
+
+            viewModel.startSession()
+            assertTrue(awaitItem().isRunning)
+
+            coEvery { serviceManager.cancelSessionService() } returns Unit
+
+            viewModel.pauseSession()
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { serviceManager.cancelSessionService() }
+    }
 }
