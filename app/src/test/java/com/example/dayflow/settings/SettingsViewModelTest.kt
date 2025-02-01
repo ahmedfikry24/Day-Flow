@@ -2,6 +2,7 @@ package com.example.dayflow.settings
 
 import app.cash.turbine.test
 import com.example.dayflow.data.local.data_store.DataStoreManager
+import com.example.dayflow.ui.settings.vm.SettingsEvents
 import com.example.dayflow.ui.settings.vm.SettingsViewModel
 import com.example.dayflow.ui.utils.ContentStatus
 import com.example.dayflow.utils.BaseViewModelTester
@@ -47,6 +48,20 @@ class SettingsViewModelTest : BaseViewModelTester() {
             val visibleState = awaitItem()
             assertEquals(visibleState.contentStatus, ContentStatus.VISIBLE)
             assertTrue(visibleState.isLightTheme)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+
+    @Test
+    fun `given navigation event when call onClickBlockApps() then send event`() = runTest {
+        viewModel.events.test {
+
+            viewModel.onClickBlockApps()
+
+            val event = awaitItem()
+            assertTrue(event is SettingsEvents.NavigateToBlockApps)
 
             cancelAndIgnoreRemainingEvents()
         }
