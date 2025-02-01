@@ -1,8 +1,6 @@
 package com.example.dayflow.data.usecase
 
-import android.content.Context
 import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.AdaptiveIconDrawable
@@ -11,17 +9,15 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.VectorDrawable
 import com.example.dayflow.data.local.entity.BlockAppInfoEntity
 import com.example.dayflow.data.repository.Repository
+import com.example.dayflow.data.utils.PackageAppsManager
 import javax.inject.Inject
 
 class GetAllInstalledAppsUseCase @Inject constructor(
     private val repository: Repository,
-    private val context: Context
+    private val packageAppsManager: PackageAppsManager,
 ) {
-    private val packageManager = context.packageManager
-
     suspend operator fun invoke(): List<BlockAppInfoEntity> {
-        val installedApps = getAllInstalledApps()
-            .filterNot { it.packageName == context.packageName }
+        val installedApps = packageAppsManager.getAllInstalledApps()
             .map { it.toEntity() }
             .toMutableList()
 
@@ -36,21 +32,15 @@ class GetAllInstalledAppsUseCase @Inject constructor(
         return installedApps
     }
 
-    private fun getAllInstalledApps(): List<ApplicationInfo> {
-        return packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-            .filter { app -> (app.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
-    }
-
     private fun ApplicationInfo.toEntity(): BlockAppInfoEntity {
         return BlockAppInfoEntity(
             id = this.uid,
-            name = this.loadLabel(packageManager).toString(),
+            name = this.loadLabel(packageAppsManager.packageManager).toString(),
             packageName = this.packageName,
-            icon = this.loadIcon(packageManager).convertToBitmap(),
+            icon = this.loadIcon(packageAppsManager.packageManager).convertToBitmap(),
             isBlock = false
         )
     }
-
 
     private fun Drawable.convertToBitmap(): Bitmap {
         return when (val drawable = this) {
