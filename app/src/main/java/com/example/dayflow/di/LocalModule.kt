@@ -5,7 +5,9 @@ import androidx.room.Room
 import com.example.dayflow.data.alarm.DefaultAlarmManager
 import com.example.dayflow.data.local.LocalDataBase
 import com.example.dayflow.data.local.data_store.DataStoreManager
+import com.example.dayflow.data.utils.DefaultNotificationManager
 import com.example.dayflow.data.utils.PackageAppsManager
+import com.example.dayflow.service.DefaultServiceManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
