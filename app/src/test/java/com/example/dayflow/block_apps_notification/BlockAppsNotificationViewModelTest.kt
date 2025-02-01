@@ -168,4 +168,59 @@ class BlockAppsNotificationViewModelTest : BaseViewModelTester() {
         }
         coVerify { spyRepository.addBlockedApp(any()) }
     }
+
+    @Test
+    fun `given app info ui state when call onRemoveBlockedApp() then update app state`() = runTest {
+        val spyGetAppsUseCase = spyk(getAllInstalledAppsUseCase)
+        viewModel = BlockAppsNotificationViewModel(spyGetAppsUseCase, spyRepository)
+        viewModel.state.test {
+            assertEquals(awaitItem().contentStatus, ContentStatus.LOADING)
+
+            coEvery { packageAppsManager.packageManager } returns mockk()
+            coEvery { packageAppsManager.getAllInstalledApps() } returns emptyList()
+            coEvery { spyGetAppsUseCase.invoke() } returns listOf(
+                BlockAppInfoEntity(
+                    id = 1,
+                    name = "app name",
+                    packageName = "com.app.package",
+                    icon = null,
+                    isBlock = true
+                )
+            )
+
+            val visibleState = awaitItem()
+            assertEquals(visibleState.contentStatus, ContentStatus.VISIBLE)
+            assertTrue(visibleState.appsInfo.isNotEmpty())
+
+
+            viewModel.onRemoveBlockedApp(visibleState.appsInfo.first())
+
+            assertFalse(awaitItem().appsInfo.first().isBlock)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given app info ui state when call onRemoveBlockedApp() then verify app added`() = runTest {
+        viewModel.state.test {
+            assertEquals(awaitItem().contentStatus, ContentStatus.LOADING)
+
+            coEvery { packageAppsManager.packageManager } returns mockk()
+            coEvery { packageAppsManager.getAllInstalledApps() } returns emptyList()
+
+            assertEquals(awaitItem().contentStatus, ContentStatus.VISIBLE)
+
+            val appInfo = BlockAppsNotificationUiState.BlockAppInfoUiState(
+                id = 1,
+                name = "app name",
+                packageName = "com.app.package",
+                icon = null
+            )
+            viewModel.onRemoveBlockedApp(appInfo)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { spyRepository.removeBlockedApp(any()) }
+    }
 }
