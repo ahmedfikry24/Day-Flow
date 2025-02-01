@@ -209,4 +209,53 @@ class WorkSessionViewModelTest : BaseViewModelTester() {
         }
         coVerify { serviceManager.createSessionService(any()) }
     }
+
+    @Test
+    fun `given finish session time when call finishSession() then stop session`() = runTest {
+        viewModel.state.test {
+            assertTrue(awaitItem().isSessionInfoVisible)
+
+            coEvery { serviceManager.createSessionService(any()) } returns Unit
+
+            viewModel.startSession()
+            val startSessionState = awaitItem()
+            assertFalse(startSessionState.isSessionInfoVisible)
+            assertTrue(startSessionState.isRunning)
+            assertTrue(startSessionState.sessionDuration > 0L)
+            assertTrue(startSessionState.sessionRemainingTime > 0L)
+
+            coEvery { serviceManager.cancelSessionService() } returns Unit
+
+            viewModel.finishSession()
+            val finishSessionState = awaitItem()
+            assertTrue(finishSessionState.isSessionInfoVisible)
+            assertFalse(finishSessionState.isRunning)
+            assertTrue(finishSessionState.sessionDuration == 0L)
+            assertTrue(finishSessionState.sessionRemainingTime == 0L)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given finish session time when call finishSession() then verify stop service`() = runTest {
+        viewModel.state.test {
+            assertTrue(awaitItem().isSessionInfoVisible)
+
+            coEvery { serviceManager.createSessionService(any()) } returns Unit
+
+            viewModel.startSession()
+            assertTrue(awaitItem().isRunning)
+
+            coEvery { serviceManager.cancelSessionService() } returns Unit
+
+            viewModel.finishSession()
+            val finishSessionState = awaitItem()
+            assertTrue(finishSessionState.isSessionInfoVisible)
+            assertFalse(finishSessionState.isRunning)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { serviceManager.cancelSessionService() }
+    }
 }
