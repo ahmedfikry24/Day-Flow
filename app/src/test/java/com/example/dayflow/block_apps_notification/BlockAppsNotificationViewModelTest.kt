@@ -12,6 +12,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -86,4 +87,27 @@ class BlockAppsNotificationViewModelTest : BaseViewModelTester() {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    @Test
+    fun `given permission dialog visibility when call controlNotificationAccessDialogVisibility() then update state`() =
+        runTest {
+            viewModel.state.test {
+                assertEquals(ContentStatus.LOADING, awaitItem().contentStatus)
+
+                coEvery { packageAppsManager.packageManager } returns mockk()
+                coEvery { packageAppsManager.getAllInstalledApps() } returns emptyList()
+
+                val visibleState = awaitItem()
+                assertEquals(visibleState.contentStatus, ContentStatus.VISIBLE)
+                assertFalse(visibleState.isNotificationAccessDialogVisible)
+
+                viewModel.controlNotificationAccessDialogVisibility()
+                assertTrue(awaitItem().isNotificationAccessDialogVisible)
+
+                viewModel.controlNotificationAccessDialogVisibility()
+                assertFalse(awaitItem().isNotificationAccessDialogVisible)
+
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
 }
