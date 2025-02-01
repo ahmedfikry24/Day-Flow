@@ -1,15 +1,18 @@
 package com.example.dayflow.block_apps_notification
 
 import app.cash.turbine.test
+import com.example.dayflow.data.local.entity.BlockAppInfoEntity
 import com.example.dayflow.data.usecase.GetAllInstalledAppsUseCase
 import com.example.dayflow.data.utils.PackageAppsManager
 import com.example.dayflow.ui.block_apps_notification.vm.BlockAppsNotificationEvents
+import com.example.dayflow.ui.block_apps_notification.vm.BlockAppsNotificationUiState
 import com.example.dayflow.ui.block_apps_notification.vm.BlockAppsNotificationViewModel
 import com.example.dayflow.ui.utils.ContentStatus
 import com.example.dayflow.utils.BaseViewModelTester
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -26,7 +29,7 @@ class BlockAppsNotificationViewModelTest : BaseViewModelTester() {
         super.setUp()
         packageAppsManager = mockk()
         getAllInstalledAppsUseCase = GetAllInstalledAppsUseCase(spyRepository, packageAppsManager)
-        viewModel = BlockAppsNotificationViewModel(getAllInstalledAppsUseCase, repository)
+        viewModel = BlockAppsNotificationViewModel(getAllInstalledAppsUseCase, spyRepository)
     }
 
     @Test
@@ -110,4 +113,59 @@ class BlockAppsNotificationViewModelTest : BaseViewModelTester() {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+
+    @Test
+    fun `given app info ui state when call onBlockApp() then update app state`() = runTest {
+        val spyGetAppsUseCase = spyk(getAllInstalledAppsUseCase)
+        viewModel = BlockAppsNotificationViewModel(spyGetAppsUseCase, spyRepository)
+        viewModel.state.test {
+            assertEquals(awaitItem().contentStatus, ContentStatus.LOADING)
+
+            coEvery { packageAppsManager.packageManager } returns mockk()
+            coEvery { packageAppsManager.getAllInstalledApps() } returns emptyList()
+            coEvery { spyGetAppsUseCase.invoke() } returns listOf(
+                BlockAppInfoEntity(
+                    id = 1,
+                    name = "app name",
+                    packageName = "com.app.package",
+                    icon = null,
+                    isBlock = false
+                )
+            )
+
+            val visibleState = awaitItem()
+            assertEquals(visibleState.contentStatus, ContentStatus.VISIBLE)
+            assertTrue(visibleState.appsInfo.isNotEmpty())
+
+
+            viewModel.onBlockApp(visibleState.appsInfo.first())
+
+            assertTrue(awaitItem().appsInfo.first().isBlock)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given app info ui state when call onBlockApp() then verify app added`() = runTest {
+        viewModel.state.test {
+            assertEquals(awaitItem().contentStatus, ContentStatus.LOADING)
+
+            coEvery { packageAppsManager.packageManager } returns mockk()
+            coEvery { packageAppsManager.getAllInstalledApps() } returns emptyList()
+
+            assertEquals(awaitItem().contentStatus, ContentStatus.VISIBLE)
+
+            val appInfo = BlockAppsNotificationUiState.BlockAppInfoUiState(
+                id = 1,
+                name = "app name",
+                packageName = "com.app.package",
+                icon = null
+            )
+            viewModel.onBlockApp(appInfo)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { spyRepository.addBlockedApp(any()) }
+    }
 }
