@@ -7,6 +7,7 @@ import com.example.dayflow.ui.settings.vm.SettingsViewModel
 import com.example.dayflow.ui.utils.ContentStatus
 import com.example.dayflow.utils.BaseViewModelTester
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
@@ -65,5 +66,26 @@ class SettingsViewModelTest : BaseViewModelTester() {
 
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun `given toggle theme when call onToggleTheme() then update theme state`() = runTest {
+        viewModel.state.test {
+            assertEquals(awaitItem().contentStatus, ContentStatus.LOADING)
+
+            coEvery { dataStoreManager.isLightTheme } returns flow { emit(false) }
+
+            assertTrue(awaitItem().contentStatus == ContentStatus.VISIBLE)
+
+            coEvery { dataStoreManager.toggleThemeStatus() } returns Unit
+
+            viewModel.onToggleTheme()
+
+            val toggleState = awaitItem()
+            assertTrue(toggleState.isLightTheme)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { dataStoreManager.toggleThemeStatus() }
     }
 }
