@@ -1,34 +1,27 @@
 package com.example.dayflow.data.local
 
-import com.example.dayflow.data.local.dao.DailyTaskDao
 import com.example.dayflow.data.local.entity.DailyTaskEntity
 import com.example.dayflow.utils.BaseAndroidTester
+import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-
+@HiltAndroidTest
 class DailyTasksDao : BaseAndroidTester() {
-
-    private lateinit var dailyTaskDao: DailyTaskDao
-
-    override fun setUp() {
-        super.setUp()
-        dailyTaskDao = roomDatabase.dailyTaskDao()
-    }
 
     @Test
     fun given_EmptyDatabase_when_getAllTasks_then_returnEmptyList() = runTest {
 
-        val tasks = dailyTaskDao.getAllTasks()
+        val tasks = repository.getAllDailyTasks()
 
         assertTrue(tasks.isEmpty())
     }
 
     @Test
     fun given_taskEntity_when_addTask_then_addTaskSuccess() = runTest {
-        val olderTasks = dailyTaskDao.getAllTasks()
+        val olderTasks = repository.getAllDailyTasks()
 
         assertTrue(olderTasks.isEmpty())
 
@@ -38,9 +31,9 @@ class DailyTasksDao : BaseAndroidTester() {
             status = false
         )
 
-        dailyTaskDao.addTask(task)
+        repository.addDailyTask(task)
 
-        val newerTasks = dailyTaskDao.getAllTasks()
+        val newerTasks = repository.getAllDailyTasks()
 
         assertEquals(1, newerTasks.size)
     }
@@ -53,14 +46,14 @@ class DailyTasksDao : BaseAndroidTester() {
             description = "description",
             status = false
         )
-        dailyTaskDao.addTask(task)
+        repository.addDailyTask(task)
 
-        val olderTasks = dailyTaskDao.getAllTasks()
+        val olderTasks = repository.getAllDailyTasks()
         assertTrue(olderTasks.isNotEmpty())
 
-        dailyTaskDao.deleteTask(task.id)
+        repository.deleteDailyTask(task.id)
 
-        val currentTasks = dailyTaskDao.getAllTasks()
+        val currentTasks = repository.getAllDailyTasks()
         assertTrue(currentTasks.isEmpty())
     }
 
@@ -73,15 +66,15 @@ class DailyTasksDao : BaseAndroidTester() {
             description = "description",
             status = false
         )
-        dailyTaskDao.addTask(task)
+        repository.addDailyTask(task)
 
-        val olderTasks = dailyTaskDao.getAllTasks()
+        val olderTasks = repository.getAllDailyTasks()
         assertTrue(olderTasks.isNotEmpty())
 
 
-        dailyTaskDao.updateTaskStatus(task.id, true)
+        repository.updateDailyTaskStatus(task.id, true)
 
-        val currentTasks = dailyTaskDao.getAllTasks()
+        val currentTasks = repository.getAllDailyTasks()
         assertTrue(currentTasks.last().status)
     }
 }

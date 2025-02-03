@@ -1,35 +1,28 @@
 package com.example.dayflow.data.local
 
-import com.example.dayflow.data.local.dao.YearlyTaskDao
 import com.example.dayflow.data.local.entity.YearlyTaskEntity
 import com.example.dayflow.utils.BaseAndroidTester
+import dagger.hilt.android.testing.HiltAndroidTest
+import io.mockk.coVerify
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-
+@HiltAndroidTest
 class YearlyTasksDao : BaseAndroidTester() {
-
-    private lateinit var yearlyTaskDao: YearlyTaskDao
-
-    override fun setUp() {
-        super.setUp()
-        yearlyTaskDao = roomDatabase.yearlyTaskDao()
-    }
 
     @Test
     fun given_EmptyDatabase_when_getAllTasks_then_returnEmptyList() = runTest {
 
-        val tasks = yearlyTaskDao.getAllTasks()
+        val tasks = repository.getAllYearlyTasks()
 
         assertTrue(tasks.isEmpty())
     }
 
     @Test
     fun given_taskEntity_when_addTask_then_addTaskSuccess() = runTest {
-        val olderTasks = yearlyTaskDao.getAllTasks()
-
+        val olderTasks = repository.getAllYearlyTasks()
         assertTrue(olderTasks.isEmpty())
 
         val task = YearlyTaskEntity(
@@ -37,9 +30,9 @@ class YearlyTasksDao : BaseAndroidTester() {
             description = "description",
         )
 
-        yearlyTaskDao.addTask(task)
+        repository.addYearlyTask(task)
 
-        val newerTasks = yearlyTaskDao.getAllTasks()
+        val newerTasks = repository.getAllYearlyTasks()
 
         assertEquals(1, newerTasks.size)
     }
@@ -51,14 +44,14 @@ class YearlyTasksDao : BaseAndroidTester() {
             title = "task 1",
             description = "description",
         )
-        yearlyTaskDao.addTask(task)
+        repository.addYearlyTask(task)
 
-        val olderTasks = yearlyTaskDao.getAllTasks()
+        val olderTasks = repository.getAllYearlyTasks()
         assertTrue(olderTasks.isNotEmpty())
 
-        yearlyTaskDao.deleteTask(task.id)
+        repository.deleteYearlyTask(task.id)
 
-        val currentTasks = yearlyTaskDao.getAllTasks()
+        val currentTasks = repository.getAllYearlyTasks()
         assertTrue(currentTasks.isEmpty())
     }
 }
