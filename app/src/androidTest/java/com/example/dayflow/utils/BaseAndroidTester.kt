@@ -16,10 +16,7 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 abstract class BaseAndroidTester {
 
-    @get:Rule
-    val mainDispatcher = MainDispatcherRule()
-
-    @get:Rule
+    @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
 
     protected lateinit var context: Context
