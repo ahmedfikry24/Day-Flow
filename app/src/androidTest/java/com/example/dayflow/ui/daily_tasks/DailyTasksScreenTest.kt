@@ -2,8 +2,11 @@ package com.example.dayflow.ui.daily_tasks
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import androidx.test.rule.GrantPermissionRule
 import com.example.dayflow.MainActivity
@@ -48,5 +51,22 @@ class DailyTasksScreenTest : BaseAndroidTester() {
         denyNotificationPermission()
 
         composeRule.onNodeWithTag(UiTestTags.VISIBLE_CONTENT).assertIsDisplayed()
+    }
+
+    @Test
+    fun pressTabs_then_toggleBetweenContent() {
+        grantNotificationPermission()
+        composeRule.onNodeWithTag(UiTestTags.VISIBLE_CONTENT).assertIsDisplayed()
+
+        composeRule.onNodeWithText("In Progress").performClick()
+
+        composeRule.onNodeWithTag(UiTestTags.IN_PROGRESS_DAILY_TASKS_CONTENT).assertIsDisplayed()
+        composeRule.onNodeWithTag(UiTestTags.DONE_DAILY_TASKS_CONTENT).assertIsNotDisplayed()
+
+
+        composeRule.onNodeWithText("Done").performClick()
+
+        composeRule.onNodeWithTag(UiTestTags.DONE_DAILY_TASKS_CONTENT).assertIsDisplayed()
+        composeRule.onNodeWithTag(UiTestTags.IN_PROGRESS_DAILY_TASKS_CONTENT).assertIsNotDisplayed()
     }
 }
