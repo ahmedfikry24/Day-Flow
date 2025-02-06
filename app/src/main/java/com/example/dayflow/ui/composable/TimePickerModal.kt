@@ -23,7 +23,6 @@ fun TimePickerModal(
     )
 
     TimePickerDialog(
-        modifier = modifier,
         onConfirm = { onConfirm(timePickerState) },
         onDismiss = onDismiss
     ) {
