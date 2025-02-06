@@ -10,6 +10,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeLeft
+import androidx.compose.ui.test.swipeRight
 import androidx.navigation.compose.rememberNavController
 import androidx.test.rule.GrantPermissionRule
 import com.example.dayflow.MainActivity
@@ -216,6 +219,85 @@ class DailyTasksScreenTest : BaseAndroidTester() {
 
                 onNodeWithText(context.getString(R.string.not_complete)).assertIsDisplayed()
             }
+        }
+    }
+
+
+    @Test
+    fun addTaskWithFullSchedule_then_taskAddedSuccess() {
+        if (!context.checkScheduleAlarmPermission()) {
+            insertTaskWithScheduling_then_grantScheduleAlarmPermission()
+            with(composeRule) {
+                waitForIdle()
+
+                onNodeWithText(UiConstants.INITIAL_DATE).performClick()
+                onNodeWithTag(UiTestTags.DATE_PICKER_MODAL).assertIsDisplayed()
+                onNodeWithText(context.getString(R.string.ok)).performClick()
+                waitForIdle()
+
+                onNodeWithText(UiConstants.INITIAL_TIME).performClick()
+                onNodeWithTag(UiTestTags.TIME_PICKER_MODAL).assertIsDisplayed()
+                onNodeWithText(context.getString(R.string.ok)).performClick()
+                waitForIdle()
+
+                onNodeWithText(context.getString(R.string.add_task)).performClick()
+                waitForIdle()
+            }
+        } else {
+            grantNotificationPermission()
+
+            with(composeRule) {
+                waitForIdle()
+
+                onNodeWithText(UiConstants.INITIAL_DATE).performClick()
+                onNodeWithTag(UiTestTags.DATE_PICKER_MODAL).assertIsDisplayed()
+                onNodeWithText(context.getString(R.string.ok)).performClick()
+                waitForIdle()
+
+                onNodeWithText(UiConstants.INITIAL_TIME).performClick()
+                onNodeWithTag(UiTestTags.TIME_PICKER_MODAL).assertIsDisplayed()
+                onNodeWithText(context.getString(R.string.ok)).performClick()
+                waitForIdle()
+
+                onNodeWithText(context.getString(R.string.add_task)).performClick()
+                waitForIdle()
+            }
+        }
+
+    }
+
+    @Test
+    fun swipeToDeleteTask_then_deleteTaskSuccess() {
+        insertTaskWithoutScheduling_then_TaskAddedSuccess()
+        val taskTitle = "title"
+        with(composeRule) {
+            waitForIdle()
+
+            onNodeWithText(taskTitle).assertIsDisplayed()
+            onNodeWithTag(UiTestTags.TASK_CONTENT).performTouchInput {
+                swipeLeft()
+            }
+            onNodeWithText(context.getString(R.string.delete)).performClick()
+            onNodeWithText(taskTitle).assertIsNotDisplayed()
+        }
+    }
+
+    @Test
+    fun swipeToDoneTask_then_addedTaskInDoneSuccess() {
+        insertTaskWithoutScheduling_then_TaskAddedSuccess()
+        val taskTitle = "title"
+        with(composeRule) {
+            waitForIdle()
+
+            onNodeWithText(taskTitle).assertIsDisplayed()
+            onNodeWithTag(UiTestTags.TASK_CONTENT).performTouchInput {
+                swipeRight()
+            }
+            onNodeWithText(taskTitle).assertIsNotDisplayed()
+            waitForIdle()
+
+            composeRule.onNodeWithText(context.getString(R.string.done)).performClick()
+            onNodeWithText(taskTitle).assertIsDisplayed()
         }
     }
 }
