@@ -16,6 +16,7 @@ import com.example.dayflow.MainActivity
 import com.example.dayflow.R
 import com.example.dayflow.ui.utils.UiConstants
 import com.example.dayflow.ui.utils.UiTestTags
+import com.example.dayflow.ui.utils.checkScheduleAlarmPermission
 import com.example.dayflow.utils.BaseAndroidTester
 import com.example.dayflow.utils.denyNotificationPermission
 import com.example.dayflow.utils.grantNotificationPermission
@@ -23,9 +24,6 @@ import com.example.dayflow.utils.grantScheduleAlarmPermission
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 
 @HiltAndroidTest
@@ -92,7 +90,7 @@ class DailyTasksScreenTest : BaseAndroidTester() {
     }
 
     @Test
-    fun insertTaskWithoutScheduling_then_noteAddedSuccess() {
+    fun insertTaskWithoutScheduling_then_TaskAddedSuccess() {
         grantNotificationPermission()
         composeRule.onNodeWithTag(UiTestTags.VISIBLE_CONTENT).assertIsDisplayed()
 
@@ -111,37 +109,113 @@ class DailyTasksScreenTest : BaseAndroidTester() {
     @Test
     fun insertTaskWithScheduling_then_grantScheduleAlarmPermission() {
         grantNotificationPermission()
-        composeRule.onNodeWithTag(UiTestTags.VISIBLE_CONTENT).assertIsDisplayed()
 
-        composeRule.onNodeWithTag(UiTestTags.ADD_TASK_FAB).performClick()
+        with(composeRule) {
+            waitForIdle()
+            onNodeWithTag(UiTestTags.VISIBLE_CONTENT).assertIsDisplayed()
 
-        composeRule.onNodeWithText(context.getString(R.string.headline)).performTextInput("title")
-        composeRule.onNodeWithText(context.getString(R.string.description))
-            .performTextInput("description")
-        composeRule.onNodeWithText(UiConstants.INITIAL_DATE).performClick()
-        composeRule.onNodeWithText(context.getString(R.string.ok)).performClick()
+            onNodeWithTag(UiTestTags.ADD_TASK_FAB).performClick()
+            onNodeWithText(context.getString(R.string.headline)).performTextInput("title")
+            onNodeWithText(context.getString(R.string.description)).performTextInput("description")
+            onNodeWithText(UiConstants.INITIAL_DATE).performClick()
+            onNodeWithText(context.getString(R.string.ok)).performClick()
+            waitForIdle()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            grantScheduleAlarmPermission()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !context.checkScheduleAlarmPermission())
+                grantScheduleAlarmPermission()
+
+            onNodeWithTag(UiTestTags.ADD_TASK_CONTENT).isDisplayed()
         }
     }
 
 
     @Test
-    fun insertTaskWithSchedule_then_taskAddedSuccess() {
+    fun addTaskWithTimeOnly_then_showEmptyScheduleDialog() {
+        if (!context.checkScheduleAlarmPermission()) {
+            insertTaskWithScheduling_then_grantScheduleAlarmPermission()
 
-        insertTaskWithScheduling_then_grantScheduleAlarmPermission()
+            with(composeRule) {
+                waitForIdle()
 
-        composeRule.onNodeWithText(UiConstants.INITIAL_DATE).performClick()
-        composeRule.onNodeWithText(context.getString(R.string.ok)).performClick()
-        val currentDay = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        composeRule.onNodeWithText(currentDay).isDisplayed()
+                onNodeWithText(UiConstants.INITIAL_TIME).performClick()
+                onNodeWithTag(UiTestTags.TIME_PICKER_MODAL).assertIsDisplayed()
+                onNodeWithText(context.getString(R.string.ok)).performClick()
+                waitForIdle()
 
-        composeRule.onNodeWithText(UiConstants.INITIAL_TIME).performClick()
-        composeRule.onNodeWithText(context.getString(R.string.ok)).performClick()
-        val currentTime = SimpleDateFormat("HH:mm").format(System.currentTimeMillis())
-        composeRule.onNodeWithText(currentTime).isDisplayed()
+                onNodeWithText(context.getString(R.string.add_task)).performClick()
+                waitForIdle()
 
-        composeRule.onNodeWithText(context.getString(R.string.add_task)).performClick()
+                onNodeWithText(context.getString(R.string.not_complete)).assertIsDisplayed()
+            }
+
+        } else {
+            grantNotificationPermission()
+
+            with(composeRule) {
+                waitForIdle()
+                onNodeWithTag(UiTestTags.VISIBLE_CONTENT).assertIsDisplayed()
+
+                onNodeWithTag(UiTestTags.ADD_TASK_FAB).performClick()
+                onNodeWithTag(UiTestTags.ADD_TASK_CONTENT).isDisplayed()
+                onNodeWithText(context.getString(R.string.headline)).performTextInput("title")
+                onNodeWithText(context.getString(R.string.description)).performTextInput("description")
+                waitForIdle()
+
+                onNodeWithText(UiConstants.INITIAL_TIME).performClick()
+                onNodeWithTag(UiTestTags.TIME_PICKER_MODAL).assertIsDisplayed()
+                onNodeWithText(context.getString(R.string.ok)).performClick()
+                waitForIdle()
+
+                onNodeWithText(context.getString(R.string.add_task)).performClick()
+                waitForIdle()
+
+                onNodeWithText(context.getString(R.string.not_complete)).assertIsDisplayed()
+            }
+        }
+    }
+
+    @Test
+    fun addTaskWithDateOnly_then_showEmptyScheduleDialog() {
+        if (!context.checkScheduleAlarmPermission()) {
+            insertTaskWithScheduling_then_grantScheduleAlarmPermission()
+
+            with(composeRule) {
+                waitForIdle()
+
+                onNodeWithText(UiConstants.INITIAL_DATE).performClick()
+                onNodeWithTag(UiTestTags.DATE_PICKER_MODAL).assertIsDisplayed()
+                onNodeWithText(context.getString(R.string.ok)).performClick()
+                waitForIdle()
+
+                onNodeWithText(context.getString(R.string.add_task)).performClick()
+                waitForIdle()
+
+                onNodeWithText(context.getString(R.string.not_complete)).assertIsDisplayed()
+            }
+
+        } else {
+            grantNotificationPermission()
+
+            with(composeRule) {
+                waitForIdle()
+                onNodeWithTag(UiTestTags.VISIBLE_CONTENT).assertIsDisplayed()
+
+                onNodeWithTag(UiTestTags.ADD_TASK_FAB).performClick()
+                onNodeWithTag(UiTestTags.ADD_TASK_CONTENT).isDisplayed()
+                onNodeWithText(context.getString(R.string.headline)).performTextInput("title")
+                onNodeWithText(context.getString(R.string.description)).performTextInput("description")
+                waitForIdle()
+
+                onNodeWithText(UiConstants.INITIAL_DATE).performClick()
+                onNodeWithTag(UiTestTags.DATE_PICKER_MODAL).assertIsDisplayed()
+                onNodeWithText(context.getString(R.string.ok)).performClick()
+                waitForIdle()
+
+                onNodeWithText(context.getString(R.string.add_task)).performClick()
+                waitForIdle()
+
+                onNodeWithText(context.getString(R.string.not_complete)).assertIsDisplayed()
+            }
+        }
     }
 }
