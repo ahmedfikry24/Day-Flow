@@ -35,4 +35,9 @@
     <string name="apps_notification">Apps Notification</string>
     <string name="block_app_notification_until_session">block app notification until session</string>
     <string name="app_need_a_permission_to_access_your_notification_to_control_your_notification_until_focus_sessions">app need a permission to access your notification to control your notification until focus sessions.</string>
+    <string name="plus_session_duration_icon">plus session duration icon</string>
+    <string name="minus_session_duration_icon">minus session duration icon</string>
+    <string name="pause_and_resume_icon">pause and resume icon</string>
+    <string name="finish_session_icon">finish session icon</string>
+    <string name="plant_icon">plant icon</string>
 </resources>

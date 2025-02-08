@@ -15,4 +15,7 @@ object UiTestTags {
     const val TIME_PICKER_MODAL = "TIME_PICKER_MODAL"
 
     const val TASK_CONTENT = "TASK_CONTENT"
+
+    const val SESSION_INFO = "SESSION_INFO"
+    const val SESSION_COUNT_DOWN = "SESSION_COUNT_DOWN"
 }

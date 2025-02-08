@@ -94,7 +94,7 @@ fun SessionInfo(
                         Icon(
                             modifier = Modifier.rotate(90f),
                             imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowLeft,
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.plus_session_duration_icon)
                         )
                     }
                     IconButton(
@@ -105,7 +105,7 @@ fun SessionInfo(
                         Icon(
                             modifier = Modifier.rotate(270f),
                             imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowLeft,
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.minus_session_duration_icon)
                         )
                     }
                 }
