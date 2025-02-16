@@ -37,6 +37,7 @@ import com.example.dayflow.ui.theme.spacing
 
 @Composable
 fun ErrorContent(
+    modifier: Modifier=Modifier,
     isVisible: Boolean,
     enterTransition: EnterTransition = fadeIn(tween(500)) + scaleIn(tween(500)),
     exitTransition: ExitTransition = fadeOut(tween(500)) + scaleOut(tween(500)),
@@ -44,7 +45,7 @@ fun ErrorContent(
 ) {
     val size = (LocalConfiguration.current.screenWidthDp / 2).dp
     AnimatedVisibility(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         visible = isVisible,
         enter = enterTransition,
         exit = exitTransition,

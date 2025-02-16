@@ -4,16 +4,16 @@ import android.content.Context
 import android.content.Intent
 import com.example.dayflow.data.utils.DataConstants
 
-object DefaultServiceManager {
+class DefaultServiceManager(private val context: Context) {
 
-    fun createSessionService(context: Context, duration: Long) {
+    fun createSessionService(duration: Long) {
         val intent = Intent(context, WorkSessionService::class.java).apply {
             putExtra(DataConstants.SESSION_DURATION_KEY, duration)
         }
         context.startForegroundService(intent)
     }
 
-    fun cancelSessionService(context: Context) {
+    fun cancelSessionService() {
         val intent = Intent(context, WorkSessionService::class.java)
         context.stopService(intent)
     }

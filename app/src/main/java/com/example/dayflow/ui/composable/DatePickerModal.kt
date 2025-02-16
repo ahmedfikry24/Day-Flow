@@ -20,7 +20,9 @@ fun DatePickerModal(
     onDateSelected: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = System.currentTimeMillis()
+    )
 
     DatePickerDialog(
         modifier = modifier,

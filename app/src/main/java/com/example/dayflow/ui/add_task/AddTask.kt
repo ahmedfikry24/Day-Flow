@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -31,7 +32,9 @@ import com.example.dayflow.ui.composable.PrimaryTextButton
 import com.example.dayflow.ui.composable.PrimaryTextField
 import com.example.dayflow.ui.composable.TimePickerModal
 import com.example.dayflow.ui.theme.spacing
+import com.example.dayflow.ui.utils.UiTestTags
 import com.example.dayflow.ui.utils.checkScheduleAlarmPermission
+import com.example.dayflow.ui.utils.formatTimeDigits
 import com.example.dayflow.ui.utils.interaction.AddTaskInteraction
 import com.example.dayflow.ui.utils.requestScheduleAlarmPermission
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
@@ -135,13 +138,16 @@ fun AddTask(
 
     if (isDateVisible)
         DatePickerModal(
+            modifier = Modifier.testTag(UiTestTags.DATE_PICKER_MODAL),
             onDismiss = { isDateVisible = false },
             onDateSelected = interaction::onDateChange
         )
     if (isTimeVisible)
         TimePickerModal(
+            modifier = Modifier.testTag(UiTestTags.TIME_PICKER_MODAL),
             onConfirm = {
-                interaction.onTimeChange("${it.hour}:${it.minute}")
+                val time = "${it.hour}:${it.minute}"
+                interaction.onTimeChange(time.formatTimeDigits())
                 isTimeVisible = false
             },
             onDismiss = { isTimeVisible = false }

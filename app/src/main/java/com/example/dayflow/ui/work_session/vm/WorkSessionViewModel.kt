@@ -1,25 +1,19 @@
 package com.example.dayflow.ui.work_session.vm
 
-import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.example.dayflow.service.DefaultServiceManager
 import com.example.dayflow.service.isBlockNotificationListenerActive
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.convertSessionTimeToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class WorkSessionViewModel @Inject constructor(
-    private val application: Application
+    private val serviceManager: DefaultServiceManager,
 ) : BaseViewModel<WorkSessionUiState, WorkSessionEvents>(WorkSessionUiState()),
     WorkSessionInteractions {
-
-    private var job: Job? = null
 
     override fun initData() {}
 
@@ -36,41 +30,35 @@ class WorkSessionViewModel @Inject constructor(
     }
 
     override fun startSession() {
-        controlSessionInfoVisibility()
         _state.update {
             it.copy(
+                isSessionInfoVisible = false,
                 sessionDuration = it.sessionDurationMin.convertSessionTimeToLong(),
                 sessionRemainingTime = it.sessionDurationMin.convertSessionTimeToLong(),
+                isRunning = true
             )
         }
-        resumeSession()
+        serviceManager.createSessionService(state.value.sessionRemainingTime)
+        isBlockNotificationListenerActive = true
+    }
+
+    override fun onChangeSessionRemainingTime() {
+        _state.update { it.copy(sessionRemainingTime = it.sessionRemainingTime - 1000L) }
     }
 
     override fun resumeSession() {
         _state.update { it.copy(isRunning = true) }
-        job = viewModelScope.launch {
-            DefaultServiceManager.createSessionService(
-                application,
-                state.value.sessionRemainingTime
-            )
-            isBlockNotificationListenerActive = true
-            while (state.value.sessionRemainingTime > 0) {
-                delay(1000L)
-                _state.update { it.copy(sessionRemainingTime = it.sessionRemainingTime - 1000L) }
-            }
-            finishSession()
-        }
+        serviceManager.createSessionService(state.value.sessionRemainingTime)
+        isBlockNotificationListenerActive = true
     }
 
     override fun pauseSession() {
-        job?.cancel()
         _state.update { it.copy(isRunning = false) }
-        DefaultServiceManager.cancelSessionService(application)
+        serviceManager.cancelSessionService()
         isBlockNotificationListenerActive = false
     }
 
     override fun finishSession() {
-        job?.cancel()
         _state.update {
             it.copy(
                 isRunning = false,
@@ -79,13 +67,12 @@ class WorkSessionViewModel @Inject constructor(
                 isSessionInfoVisible = true
             )
         }
-        DefaultServiceManager.cancelSessionService(application)
+        serviceManager.cancelSessionService()
         isBlockNotificationListenerActive = false
     }
 
     override fun onCleared() {
-        job = null
-        DefaultServiceManager.cancelSessionService(application)
+        serviceManager.cancelSessionService()
         isBlockNotificationListenerActive = false
         super.onCleared()
     }
