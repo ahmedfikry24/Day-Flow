@@ -12,6 +12,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -29,6 +30,7 @@ import com.example.dayflow.ui.settings.vm.SettingsViewModel
 import com.example.dayflow.ui.theme.spacing
 import com.example.dayflow.ui.utils.ContentStatus
 import com.example.dayflow.ui.utils.EventHandler
+import com.example.dayflow.ui.utils.UiTestTags
 
 @Composable
 fun SettingsScreen(
@@ -58,6 +60,7 @@ private fun SettingsContent(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space16)
         ) {
             SettingMenuItem(
+                modifier = Modifier.testTag(UiTestTags.BLOCK_APPS_NOTIFICATION_BUTTON),
                 title = stringResource(R.string.block_apps_notifications),
                 onClick = interactions::onClickBlockApps
             ) {
@@ -69,6 +72,7 @@ private fun SettingsContent(
             }
 
             SettingMenuItem(
+                modifier = Modifier.testTag(UiTestTags.SWITCH_THEME_BUTTON),
                 title = stringResource(R.string.dark_theme),
                 isClickEnable = false,
                 onClick = {}
