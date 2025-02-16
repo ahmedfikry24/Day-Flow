@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="BlockAppsDao">
+      <SelectionState runConfigName="addTaskWithTimeOnly_then_showEmptyScheduleDialog()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="DailyTasksScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="setUp()">
+      <SelectionState runConfigName="initScreen_then_grantNotificationPermission()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="initViewModel_then_showContentLoading()">
+      <SelectionState runConfigName="YearlyTasksScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="pressInProgressTab_then_hideDoneContentAndDoneTabs()">
+      <SelectionState runConfigName="WorkSessionScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
