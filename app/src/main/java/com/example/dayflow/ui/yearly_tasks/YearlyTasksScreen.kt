@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,6 +27,7 @@ import com.example.dayflow.ui.composable.VisibleContent
 import com.example.dayflow.ui.theme.spacing
 import com.example.dayflow.ui.utils.ContentStatus
 import com.example.dayflow.ui.utils.EventHandler
+import com.example.dayflow.ui.utils.UiTestTags
 import com.example.dayflow.ui.yearly_tasks.composable.AddYearlyTask
 import com.example.dayflow.ui.yearly_tasks.composable.SwipeYearlyTask
 import com.example.dayflow.ui.yearly_tasks.vm.YearlyTasksInteractions
@@ -49,8 +51,14 @@ private fun YearlyTasksContent(
     state: YearlyTasksUiState,
     interactions: YearlyTasksInteractions
 ) {
-    LoadingContent(isVisible = state.contentStatus == ContentStatus.LOADING)
-    VisibleContent(isVisible = state.contentStatus == ContentStatus.VISIBLE) {
+    LoadingContent(
+        modifier = Modifier.testTag(UiTestTags.LOADING_CONTENT),
+        isVisible = state.contentStatus == ContentStatus.LOADING
+    )
+    VisibleContent(
+        modifier = Modifier.testTag(UiTestTags.VISIBLE_CONTENT),
+        isVisible = state.contentStatus == ContentStatus.VISIBLE
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -103,6 +111,7 @@ private fun YearlyTasksContent(
             )
     }
     ErrorContent(
+        modifier = Modifier.testTag(UiTestTags.FAILURE_CONTENT),
         isVisible = state.contentStatus == ContentStatus.FAILURE,
         onTryAgain = interactions::initData
     )

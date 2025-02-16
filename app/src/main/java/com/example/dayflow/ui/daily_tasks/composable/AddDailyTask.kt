@@ -12,12 +12,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.vectorResource
 import com.example.dayflow.R
 import com.example.dayflow.ui.add_task.AddTask
 import com.example.dayflow.ui.daily_tasks.vm.DailyTasksInteractions
 import com.example.dayflow.ui.daily_tasks.vm.DailyTasksUiState
 import com.example.dayflow.ui.theme.spacing
+import com.example.dayflow.ui.utils.UiTestTags
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -39,7 +41,8 @@ fun AddDailyTask(
                             animatedVisibilityScope = this@AnimatedContent,
                             resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
                         )
-                        .background(MaterialTheme.colorScheme.background),
+                        .background(MaterialTheme.colorScheme.background)
+                        .testTag(UiTestTags.ADD_TASK_CONTENT),
                     state = state.addTask,
                     interaction = interaction,
                     onCancel = interaction::controlAddTaskVisibility
@@ -52,7 +55,8 @@ fun AddDailyTask(
                                 rememberSharedContentState(key = "bounds"),
                                 animatedVisibilityScope = this@AnimatedContent,
                                 resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
-                            ),
+                            )
+                            .testTag(UiTestTags.ADD_TASK_FAB),
                         shape = RoundedCornerShape(MaterialTheme.spacing.space8),
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,

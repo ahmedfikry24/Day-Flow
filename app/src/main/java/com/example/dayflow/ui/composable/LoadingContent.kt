@@ -24,13 +24,14 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun LoadingContent(
+    modifier: Modifier = Modifier,
     isVisible: Boolean,
     enterTransition: EnterTransition = fadeIn(tween(500)) + scaleIn(tween(500)),
     exitTransition: ExitTransition = fadeOut(tween(500)) + scaleOut(tween(500)),
 ) {
     val size = (LocalConfiguration.current.screenWidthDp * 0.2).dp
     AnimatedVisibility(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         visible = isVisible,
         enter = enterTransition,
         exit = exitTransition,

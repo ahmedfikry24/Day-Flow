@@ -12,10 +12,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.vectorResource
 import com.example.dayflow.R
 import com.example.dayflow.ui.add_task.AddTask
 import com.example.dayflow.ui.theme.spacing
+import com.example.dayflow.ui.utils.UiTestTags
 import com.example.dayflow.ui.yearly_tasks.vm.YearlyTasksInteractions
 import com.example.dayflow.ui.yearly_tasks.vm.YearlyTasksUiState
 
@@ -39,7 +41,8 @@ fun AddYearlyTask(
                             animatedVisibilityScope = this@AnimatedContent,
                             resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
                         )
-                        .background(MaterialTheme.colorScheme.background),
+                        .background(MaterialTheme.colorScheme.background)
+                        .testTag(UiTestTags.ADD_TASK_CONTENT),
                     state = state.addTask,
                     isScheduleRequire = false,
                     interaction = interaction,
@@ -53,7 +56,8 @@ fun AddYearlyTask(
                                 rememberSharedContentState(key = "bounds"),
                                 animatedVisibilityScope = this@AnimatedContent,
                                 resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
-                            ),
+                            )
+                            .testTag(UiTestTags.ADD_TASK_FAB),
                         shape = RoundedCornerShape(MaterialTheme.spacing.space8),
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,

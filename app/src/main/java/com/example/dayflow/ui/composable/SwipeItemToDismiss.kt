@@ -18,7 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.example.dayflow.ui.utils.UiTestTags
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -107,7 +109,8 @@ fun SwipeItemToDismiss(
                                 }
                             }
                         )
-                },
+                }
+                .testTag(UiTestTags.TASK_CONTENT),
             content = content
         )
     }
