@@ -16,13 +16,14 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun VisibleContent(
+    modifier: Modifier = Modifier,
     isVisible: Boolean,
     enterTransition: EnterTransition = fadeIn(tween(500)) + scaleIn(tween(500)),
     exitTransition: ExitTransition = fadeOut(tween(500)) + scaleOut(tween(500)),
     content: @Composable AnimatedVisibilityScope.() -> Unit,
 ) {
     AnimatedVisibility(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         visible = isVisible,
         enter = enterTransition,
         exit = exitTransition,

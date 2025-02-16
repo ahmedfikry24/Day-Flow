@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.example.dayflow.R
@@ -54,7 +55,7 @@ fun SessionCountDown(
 
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_plant),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.plant_icon),
                 tint = MaterialTheme.colorScheme.onTertiaryContainer
             )
         }
@@ -80,7 +81,7 @@ fun SessionCountDown(
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(if (state.isRunning) R.drawable.ic_stop_watch_pause else R.drawable.ic_stop_watch_play),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.pause_and_resume_icon),
                 )
             }
 
@@ -95,7 +96,7 @@ fun SessionCountDown(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Refresh,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.finish_session_icon),
                 )
             }
         }
