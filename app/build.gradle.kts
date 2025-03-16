@@ -79,7 +79,9 @@ dependencies {
     implementation(libs.android.lottie.compose)
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.datastore.preferences)
-
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
+    kapt(libs.androidx.hilt.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
