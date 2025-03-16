@@ -59,6 +59,11 @@
             android:name=".data.alarm.ReBootReceiver"
             android:enabled="true"
             android:exported="false" />
+        <service
+            android:name=".data.alarm.AlarmRescheduleService"
+            android:foregroundServiceType="specialUse"
+            android:exported="false">
+        </service>
 
     </application>
 
