@@ -42,5 +42,5 @@
     <string name="plant_icon">plant icon</string>
     <string name="battery_optimization">Battery Optimization</string>
     <string name="open_settings">Open Settings</string>
-    <string name="to_ensure_the_app_works_correctly_please_disable_battery_optimization_for_this_app_go_to_settings_battery_battery_optimization"><![CDATA[To ensure the app works correctly, please disable battery optimization for this app. Go to Settings > Battery > Battery Optimization.]]></string>
+    <string name="to_make_app_works_correctly_please_disable_battery_optimization_for_this_app"><![CDATA[To make app works correctly, please disable battery optimization for this app.]]></string>
 </resources>

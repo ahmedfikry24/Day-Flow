@@ -1,6 +1,7 @@
 package com.example.dayflow.ui.add_task
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,7 +40,6 @@ import com.example.dayflow.ui.utils.formatTimeDigits
 import com.example.dayflow.ui.utils.interaction.AddTaskInteraction
 import com.example.dayflow.ui.utils.requestScheduleAlarmPermission
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
-import com.example.dayflow.utils.DefaultDeviceInfoManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -179,8 +179,11 @@ private fun checkRequireAlarmPermissions(
     onSchedulePermissionGranted: () -> Unit,
 ) {
     if (context.checkScheduleAlarmPermission()) {
-        val deviceManufacture = DefaultDeviceInfoManager(context)
-        if (deviceManufacture.isBatteryOptimizationEnabled())
-            deviceManufacture.showDefaultBatteryOptimizationDialog(onSchedulePermissionGranted)
+        Toast.makeText(
+            context,
+            context.getString(R.string.to_make_app_works_correctly_please_disable_battery_optimization_for_this_app),
+            Toast.LENGTH_LONG
+        ).show()
+        onSchedulePermissionGranted()
     } else requestSchedulePermission()
 }
