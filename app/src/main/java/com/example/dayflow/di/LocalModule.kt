@@ -6,8 +6,8 @@ import com.example.dayflow.broadcasts.DefaultAlarmManager
 import com.example.dayflow.data.local.LocalDataBase
 import com.example.dayflow.data.local.data_store.DataStoreManager
 import com.example.dayflow.notifications.DefaultNotificationManager
-import com.example.dayflow.data.utils.PackageAppsManager
 import com.example.dayflow.service.DefaultServiceManager
+import com.example.dayflow.utils.DefaultDeviceInfoManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -57,7 +57,7 @@ object LocalModule {
 
     @Provides
     @Singleton
-    fun providePackageAppsManager(
+    fun provideDeviceInfoManager(
         @ApplicationContext context: Context
-    ) = PackageAppsManager(context)
+    ) = DefaultDeviceInfoManager(context)
 }

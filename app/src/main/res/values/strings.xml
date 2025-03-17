@@ -40,4 +40,9 @@
     <string name="pause_and_resume_icon">pause and resume icon</string>
     <string name="finish_session_icon">finish session icon</string>
     <string name="plant_icon">plant icon</string>
+    <string name="battery_optimization">Battery Optimization</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="to_ensure_the_app_works_correctly_please_disable_battery_optimization_for_this_app_go_to_settings_battery_app_launch_and_set_the_app_to_manage_manually"><![CDATA[To ensure the app works correctly, please disable battery optimization for this app. Go to Settings > Battery > App Launch and set the app to \'Manage manually\'.]]></string>
+    <string name="to_ensure_the_app_works_correctly_please_disable_battery_optimization_for_this_app_go_to_settings_battery_battery_optimization_and_set_the_app_to_no_restrictions"><![CDATA[To ensure the app works correctly, please disable battery optimization for this app. Go to Settings > Battery > Battery Optimization and set the app to \'No restrictions\'.]]></string>
+    <string name="to_ensure_the_app_works_correctly_please_disable_battery_optimization_for_this_app_go_to_settings_battery_battery_optimization"><![CDATA[To ensure the app works correctly, please disable battery optimization for this app. Go to Settings > Battery > Battery Optimization.]]></string>
 </resources>

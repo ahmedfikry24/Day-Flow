@@ -1,5 +1,6 @@
 package com.example.dayflow.ui.add_task
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,6 +39,7 @@ import com.example.dayflow.ui.utils.formatTimeDigits
 import com.example.dayflow.ui.utils.interaction.AddTaskInteraction
 import com.example.dayflow.ui.utils.requestScheduleAlarmPermission
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
+import com.example.dayflow.utils.DefaultDeviceInfoManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,14 +105,18 @@ fun AddTask(
                     date = state.date,
                     time = state.time,
                     onClickDate = {
-                        if (context.checkScheduleAlarmPermission()) {
-                            isDateVisible = true
-                        } else interaction.controlScheduleAlarmDialogVisibility()
+                        checkRequireAlarmPermissions(
+                            context = context,
+                            requestSchedulePermission = interaction::controlScheduleAlarmDialogVisibility,
+                            onSchedulePermissionGranted = { isDateVisible = true }
+                        )
                     },
                     onClickTime = {
-                        if (context.checkScheduleAlarmPermission()) {
-                            isTimeVisible = true
-                        } else interaction.controlScheduleAlarmDialogVisibility()
+                        checkRequireAlarmPermissions(
+                            context = context,
+                            requestSchedulePermission = interaction::controlScheduleAlarmDialogVisibility,
+                            onSchedulePermissionGranted = { isTimeVisible = true }
+                        )
                     }
                 )
         }
@@ -167,4 +173,17 @@ fun AddTask(
             onConfirm = interaction::controlUnValidScheduledDialogVisibility,
             onDismiss = interaction::controlUnValidScheduledDialogVisibility,
         )
+}
+
+private fun checkRequireAlarmPermissions(
+    context: Context,
+    requestSchedulePermission: () -> Unit,
+    onSchedulePermissionGranted: () -> Unit,
+) {
+    if (context.checkScheduleAlarmPermission()) {
+        val deviceManufacture = DefaultDeviceInfoManager(context)
+        if (deviceManufacture.isBatteryOptimizationEnabled()) {
+            deviceManufacture.showDefaultBatteryOptimizationDialog()
+        } else onSchedulePermissionGranted()
+    } else requestSchedulePermission()
 }
