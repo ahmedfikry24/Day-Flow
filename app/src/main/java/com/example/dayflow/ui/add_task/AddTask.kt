@@ -112,11 +112,9 @@ fun AddTask(
                         )
                     },
                     onClickTime = {
-                        checkRequireAlarmPermissions(
-                            context = context,
-                            requestSchedulePermission = interaction::controlScheduleAlarmDialogVisibility,
-                            onSchedulePermissionGranted = { isTimeVisible = true }
-                        )
+                        if (context.checkScheduleAlarmPermission())
+                            isTimeVisible = true
+                        else interaction.controlScheduleAlarmDialogVisibility()
                     }
                 )
         }
@@ -182,8 +180,7 @@ private fun checkRequireAlarmPermissions(
 ) {
     if (context.checkScheduleAlarmPermission()) {
         val deviceManufacture = DefaultDeviceInfoManager(context)
-        if (deviceManufacture.isBatteryOptimizationEnabled()) {
-            deviceManufacture.showDefaultBatteryOptimizationDialog()
-        } else onSchedulePermissionGranted()
+        if (deviceManufacture.isBatteryOptimizationEnabled())
+            deviceManufacture.showDefaultBatteryOptimizationDialog(onSchedulePermissionGranted)
     } else requestSchedulePermission()
 }
