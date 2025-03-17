@@ -36,17 +36,17 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".data.alarm.AlarmReceiver" />
-        <service android:name=".data.alarm.AlarmService" />
+        <receiver android:name=".broadcasts.AlarmReceiver" />
+        <service android:name=".service.alarm.AlarmService" />
 
         <service
-            android:name=".service.WorkSessionService"
+            android:name=".service.work_session.WorkSessionService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="specialUse" />
 
         <service
-            android:name=".service.BlockNotificationService"
+            android:name=".service.block_notification.BlockNotificationService"
             android:exported="false"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
@@ -55,7 +55,7 @@
         </service>
 
         <receiver
-            android:name=".data.alarm.ReBootReceiver"
+            android:name=".broadcasts.ReBootReceiver"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">

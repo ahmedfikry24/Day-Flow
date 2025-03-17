@@ -1,8 +1,7 @@
 package com.example.dayflow.ui.work_session.vm
 
-import androidx.lifecycle.viewModelScope
 import com.example.dayflow.service.DefaultServiceManager
-import com.example.dayflow.service.isBlockNotificationListenerActive
+import com.example.dayflow.service.block_notification.isBlockNotificationListenerActive
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.convertSessionTimeToLong
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,4 +1,4 @@
-package com.example.dayflow.data.alarm
+package com.example.dayflow.broadcasts
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -7,9 +7,9 @@ import android.content.Intent
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.example.dayflow.data.utils.DataConstants
-import com.example.dayflow.data.utils.DefaultNotificationManager
+import com.example.dayflow.notifications.DefaultNotificationManager
 import com.example.dayflow.data.utils.MediaPlayerManager
-import com.example.dayflow.data.utils.NotificationArgs
+import com.example.dayflow.notifications.NotificationArgs
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -69,4 +69,3 @@ class AlarmReceiver : BroadcastReceiver() {
         MediaPlayerManager.stopAlarmRingtone()
     }
 }
-

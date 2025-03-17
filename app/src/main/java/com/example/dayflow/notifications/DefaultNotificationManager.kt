@@ -1,4 +1,4 @@
-package com.example.dayflow.data.utils
+package com.example.dayflow.notifications
 
 import android.Manifest
 import android.app.Notification
@@ -13,6 +13,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.dayflow.MainActivity
 import com.example.dayflow.R
+import com.example.dayflow.data.utils.DataConstants
 import javax.inject.Inject
 
 class DefaultNotificationManager @Inject constructor(private val context: Context) {

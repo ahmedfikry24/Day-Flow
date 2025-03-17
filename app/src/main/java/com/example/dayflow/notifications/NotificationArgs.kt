@@ -1,4 +1,4 @@
-package com.example.dayflow.data.utils
+package com.example.dayflow.notifications
 
 import android.app.PendingIntent
 import android.net.Uri

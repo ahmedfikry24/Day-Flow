@@ -1,4 +1,4 @@
-package com.example.dayflow.data.alarm
+package com.example.dayflow.broadcasts
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -13,7 +13,7 @@ class ReBootReceiver : BroadcastReceiver() {
         inten?.let { intent ->
             if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
                 con?.let { context ->
-                    WorkManager.getInstance(context).enqueueUniqueWork(
+                    WorkManager.Companion.getInstance(context).enqueueUniqueWork(
                         "RescheduleAlarms",
                         ExistingWorkPolicy.REPLACE,
                         OneTimeWorkRequestBuilder<AlarmRescheduleWorker>().build()
