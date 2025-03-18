@@ -44,9 +44,11 @@ class DefaultNotificationManager @Inject constructor(private val context: Contex
                 .setSmallIcon(R.drawable.logo)
                 .setContentTitle(notificationArgs.title)
                 .setPriority(notificationArgs.priority)
-                .setAutoCancel(notificationArgs.actionPendingIntent == null)
-                .setOngoing(true)
+                .setAutoCancel(notificationArgs.autoCancel)
+                .setOngoing(notificationArgs.onGoing)
                 .setSilent(notificationArgs.isSilent)
+                .setVisibility(notificationArgs.visibility)
+                .setCategory(notificationArgs.category)
 
         notificationArgs.text?.let {
             notificationBuilder.setContentText(it)
@@ -55,7 +57,7 @@ class DefaultNotificationManager @Inject constructor(private val context: Contex
             notificationBuilder.addAction(
                 R.drawable.ic_check_false,
                 notificationArgs.actionText,
-                notificationArgs.actionPendingIntent
+                it
             )
         }
         notificationArgs.category?.let { notificationBuilder.setCategory(it) }

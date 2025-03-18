@@ -13,6 +13,9 @@ data class NotificationArgs(
     val category: String? = null,
     val ringtone: Uri? = null,
     val isSilent: Boolean = false,
-    val priority: Int = NotificationCompat.PRIORITY_HIGH,
     val isClickable: Boolean = true,
+    val onGoing: Boolean = true,
+    val autoCancel: Boolean = false,
+    val priority: Int = NotificationCompat.PRIORITY_HIGH,
+    val visibility: Int = NotificationCompat.VISIBILITY_PUBLIC
 )
