@@ -1,5 +1,7 @@
 package com.example.dayflow.ui.add_task
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -103,14 +105,16 @@ fun AddTask(
                     date = state.date,
                     time = state.time,
                     onClickDate = {
-                        if (context.checkScheduleAlarmPermission()) {
-                            isDateVisible = true
-                        } else interaction.controlScheduleAlarmDialogVisibility()
+                        checkRequireAlarmPermissions(
+                            context = context,
+                            requestSchedulePermission = interaction::controlScheduleAlarmDialogVisibility,
+                            onSchedulePermissionGranted = { isDateVisible = true }
+                        )
                     },
                     onClickTime = {
-                        if (context.checkScheduleAlarmPermission()) {
+                        if (context.checkScheduleAlarmPermission())
                             isTimeVisible = true
-                        } else interaction.controlScheduleAlarmDialogVisibility()
+                        else interaction.controlScheduleAlarmDialogVisibility()
                     }
                 )
         }
@@ -167,4 +171,19 @@ fun AddTask(
             onConfirm = interaction::controlUnValidScheduledDialogVisibility,
             onDismiss = interaction::controlUnValidScheduledDialogVisibility,
         )
+}
+
+private fun checkRequireAlarmPermissions(
+    context: Context,
+    requestSchedulePermission: () -> Unit,
+    onSchedulePermissionGranted: () -> Unit,
+) {
+    if (context.checkScheduleAlarmPermission()) {
+        Toast.makeText(
+            context,
+            context.getString(R.string.to_make_app_works_correctly_please_disable_battery_optimization_for_this_app),
+            Toast.LENGTH_LONG
+        ).show()
+        onSchedulePermissionGranted()
+    } else requestSchedulePermission()
 }

@@ -7,14 +7,15 @@ import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.VectorDrawable
+import androidx.core.graphics.createBitmap
 import com.example.dayflow.data.local.entity.BlockAppInfoEntity
 import com.example.dayflow.data.repository.Repository
-import com.example.dayflow.data.utils.PackageAppsManager
+import com.example.dayflow.utils.DefaultDeviceInfoManager
 import javax.inject.Inject
 
 class GetAllInstalledAppsUseCase @Inject constructor(
     private val repository: Repository,
-    private val packageAppsManager: PackageAppsManager,
+    private val packageAppsManager: DefaultDeviceInfoManager,
 ) {
     suspend operator fun invoke(): List<BlockAppInfoEntity> {
         val installedApps = packageAppsManager.getAllInstalledApps()
@@ -48,7 +49,7 @@ class GetAllInstalledAppsUseCase @Inject constructor(
                 if (drawable.background == null && drawable.foreground == null) {
                     val width = drawable.intrinsicWidth
                     val height = drawable.intrinsicHeight
-                    Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
+                    createBitmap(width, height).apply {
                         val canvas = Canvas(this)
                         drawable.setBounds(0, 0, width, height)
                         drawable.draw(canvas)
@@ -56,7 +57,7 @@ class GetAllInstalledAppsUseCase @Inject constructor(
                 } else {
                     val width = drawable.intrinsicWidth
                     val height = drawable.intrinsicHeight
-                    Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
+                    createBitmap(width, height).apply {
                         val canvas = Canvas(this)
                         drawable.background?.setBounds(0, 0, width, height)
                         drawable.background?.draw(canvas)
@@ -69,7 +70,7 @@ class GetAllInstalledAppsUseCase @Inject constructor(
             is VectorDrawable -> {
                 val width = drawable.intrinsicWidth
                 val height = drawable.intrinsicHeight
-                Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
+                createBitmap(width, height).apply {
                     val canvas = Canvas(this)
                     drawable.setBounds(0, 0, width, height)
                     drawable.draw(canvas)
@@ -78,7 +79,7 @@ class GetAllInstalledAppsUseCase @Inject constructor(
 
             is BitmapDrawable -> drawable.bitmap
 
-            else -> Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+            else -> createBitmap(1, 1)
         }
     }
 }

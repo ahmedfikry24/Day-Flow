@@ -1,7 +1,7 @@
 package com.example.dayflow.daily_tasks
 
 import app.cash.turbine.test
-import com.example.dayflow.data.alarm.DefaultAlarmManager
+import com.example.dayflow.broadcasts.DefaultAlarmManager
 import com.example.dayflow.data.local.entity.DailyTaskEntity
 import com.example.dayflow.data.usecase.AddDailyTaskUseCase
 import com.example.dayflow.data.usecase.DeleteDailyTaskUseCase

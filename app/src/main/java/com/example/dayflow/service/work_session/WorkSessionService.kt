@@ -1,11 +1,11 @@
-package com.example.dayflow.service
+package com.example.dayflow.service.work_session
 
 import android.app.Service
 import android.content.Intent
 import android.os.CountDownTimer
 import com.example.dayflow.data.utils.DataConstants
-import com.example.dayflow.data.utils.DefaultNotificationManager
-import com.example.dayflow.data.utils.NotificationArgs
+import com.example.dayflow.notifications.DefaultNotificationManager
+import com.example.dayflow.notifications.NotificationArgs
 
 class WorkSessionService : Service() {
 

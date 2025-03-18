@@ -1,4 +1,4 @@
-package com.example.dayflow.data.alarm
+package com.example.dayflow.broadcasts
 
 import android.app.AlarmManager
 import android.app.PendingIntent
