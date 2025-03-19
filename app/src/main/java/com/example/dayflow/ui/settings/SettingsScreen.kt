@@ -22,6 +22,7 @@ import com.example.dayflow.navigation.AppDestination
 import com.example.dayflow.ui.composable.ErrorContent
 import com.example.dayflow.ui.composable.LoadingContent
 import com.example.dayflow.ui.composable.VisibleContent
+import com.example.dayflow.ui.settings.composable.PickAlarmRingtone
 import com.example.dayflow.ui.settings.composable.SettingMenuItem
 import com.example.dayflow.ui.settings.vm.SettingsEvents
 import com.example.dayflow.ui.settings.vm.SettingsInteractions
@@ -82,6 +83,7 @@ private fun SettingsContent(
                     onCheckedChange = { interactions.onToggleTheme() }
                 )
             }
+            PickAlarmRingtone(onSaveRingtone = interactions::saveRingtoneUri)
         }
     }
     ErrorContent(
