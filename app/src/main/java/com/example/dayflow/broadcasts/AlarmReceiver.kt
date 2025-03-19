@@ -4,12 +4,16 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
+import androidx.core.net.toUri
+import com.example.dayflow.data.local.data_store.DataStoreManager
 import com.example.dayflow.data.utils.DataConstants
 import com.example.dayflow.notifications.DefaultNotificationManager
-import com.example.dayflow.data.utils.MediaPlayerManager
 import com.example.dayflow.notifications.NotificationArgs
+import com.example.dayflow.utils.MediaPlayerManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -54,11 +58,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 category = NotificationCompat.CATEGORY_ALARM
             )
         )
-
-        MediaPlayerManager.startAlarmRingtone(
-            context,
-            RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-        )
+        playRingtone(context)
     }
 
     private fun cancelScheduledAlarm(context: Context, id: Int) {
@@ -67,5 +67,16 @@ class AlarmReceiver : BroadcastReceiver() {
         alarmManager.cancelAlarm(id)
         notificationManager.cancelNotification(id)
         MediaPlayerManager.stopAlarmRingtone()
+    }
+
+
+    private fun playRingtone(context: Context) {
+        val dataStoreManager = DataStoreManager(context)
+        CoroutineScope(Dispatchers.Default).launch {
+            dataStoreManager.alarmRingtone.collect {
+                val uri = it?.toUri()
+                MediaPlayerManager.startAlarmRingtone(context, uri)
+            }
+        }
     }
 }
