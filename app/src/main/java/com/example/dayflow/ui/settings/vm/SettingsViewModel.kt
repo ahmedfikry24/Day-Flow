@@ -1,5 +1,7 @@
 package com.example.dayflow.ui.settings.vm
 
+import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.example.dayflow.data.local.data_store.DataStoreManager
 import com.example.dayflow.ui.base.BaseViewModel
@@ -11,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val dataStoreManager: DataStoreManager
+    private val dataStoreManager: DataStoreManager,
+    val application: Application
 ) : BaseViewModel<SettingsUiState, SettingsEvents>(SettingsUiState()), SettingsInteractions {
 
     override fun initData() {
@@ -36,5 +39,9 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             dataStoreManager.toggleThemeStatus()
         }
+    }
+
+    override fun saveRingtoneUri(uri: Uri) {
+        viewModelScope.launch { dataStoreManager.saveAlarmRingtone(uri.toString()) }
     }
 }

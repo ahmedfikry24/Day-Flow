@@ -12,4 +12,5 @@ object DataConstants {
     const val SESSION_NOTIFICATION_ID = 15
     const val DATA_STORE_NAME = "dataStoreName"
     const val THEME_STATUS_KEY = "themeStatusKey"
+    const val ALARM_RINGTONE_KEY = "alarmRingtoneKey"
 }

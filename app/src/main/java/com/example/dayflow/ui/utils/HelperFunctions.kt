@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION.SDK_INT
+import android.os.Parcelable
 import android.provider.Settings
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import androidx.core.content.getSystemService
@@ -117,4 +119,9 @@ fun Long.formatSessionTime(): String {
     val minutes = (this / 1000) / 60
     val hours = (this / 1000) / 60 / 60
     return String.format(Locale("en", "us"), "%02d:%02d:%02d", hours, minutes, seconds)
+}
+
+inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
+    SDK_INT >= 33 -> getParcelableExtra(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
 }
