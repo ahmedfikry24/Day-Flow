@@ -117,7 +117,9 @@ fun PickAlarmRingtone(
         onClick = { isOpen = !isOpen },
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(backgroundColor),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.space8)
         ) {
             Row(
