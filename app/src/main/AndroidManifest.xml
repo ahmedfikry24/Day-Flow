@@ -13,6 +13,10 @@
     <uses-permission
         android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
         tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
     <application
         android:name=".di.DayFlowApplication"
@@ -37,6 +41,7 @@
         </activity>
 
         <receiver android:name=".broadcasts.AlarmReceiver" />
+
         <service android:name=".service.alarm.AlarmService" />
 
         <service

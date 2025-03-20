@@ -46,4 +46,8 @@
     <string name="change_alarm_ringtone">Change Alarm ringtone</string>
     <string name="from_defaults">from defaults</string>
     <string name="from_device">from device</string>
+    <string name="media_permission">Media Permission</string>
+    <string name="to_change_alarm_ringtone_you_must_give_us_media_permission_to_help_you_pick_audio_file">to change alarm ringtone you must give us media permission to help you pick audio file.</string>
+    <string name="media_permission_needed">Media Permission Needed</string>
+    <string name="the_app_needs_media_permission_to_change_your_alarm_ringtone_please_grant_it_in_the_app_settings">The app needs media permission to change your alarm ringtone. Please grant it in the app settings.</string>
 </resources>
