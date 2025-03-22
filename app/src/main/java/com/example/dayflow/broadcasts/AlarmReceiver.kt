@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import com.example.dayflow.data.local.data_store.DataStoreManager
@@ -17,11 +18,18 @@ import kotlinx.coroutines.launch
 
 class AlarmReceiver : BroadcastReceiver() {
 
+    private var wakeLock: PowerManager.WakeLock? = null
+
     override fun onReceive(con: Context?, p1: Intent?) {
         p1?.let { intent ->
             con?.let { context ->
                 val taskTitle = intent.getStringExtra(DataConstants.TASK_TITLE)
                 val taskId = intent.getIntExtra(DataConstants.TASK_ID, -1)
+                wakeLock =
+                    (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(
+                        PowerManager.PARTIAL_WAKE_LOCK,
+                        "MyClassName::MyWakelockTag"
+                    )
 
                 when (intent.action) {
                     DataConstants.TRIGGER_NOTIFICATION_ACTION -> showAlarmNotification(
@@ -39,6 +47,8 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     private fun showAlarmNotification(context: Context, title: String, taskId: Int) {
+        wakeLock?.acquire(10 * 60 * 1000L)
+
         val stopIntent = Intent(context, AlarmReceiver::class.java).apply {
             action = DataConstants.ALARM_STOP_ACTION
             putExtra(DataConstants.TASK_ID, taskId)
@@ -61,15 +71,6 @@ class AlarmReceiver : BroadcastReceiver() {
         playRingtone(context)
     }
 
-    private fun cancelScheduledAlarm(context: Context, id: Int) {
-        val notificationManager = DefaultNotificationManager(context)
-        val alarmManager = DefaultAlarmManager(context)
-        alarmManager.cancelAlarm(id)
-        notificationManager.cancelNotification(id)
-        MediaPlayerManager.stopAlarmRingtone()
-    }
-
-
     private fun playRingtone(context: Context) {
         val dataStoreManager = DataStoreManager(context)
         CoroutineScope(Dispatchers.Default).launch {
@@ -78,5 +79,14 @@ class AlarmReceiver : BroadcastReceiver() {
                 MediaPlayerManager.startAlarmRingtone(context, uri)
             }
         }
+    }
+
+    private fun cancelScheduledAlarm(context: Context, id: Int) {
+        val notificationManager = DefaultNotificationManager(context)
+        val alarmManager = DefaultAlarmManager(context)
+        alarmManager.cancelAlarm(id)
+        notificationManager.cancelNotification(id)
+        MediaPlayerManager.stopAlarmRingtone()
+        wakeLock?.release()
     }
 }
