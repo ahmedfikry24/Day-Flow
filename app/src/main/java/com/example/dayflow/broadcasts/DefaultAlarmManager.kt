@@ -12,7 +12,7 @@ class DefaultAlarmManager(private val context: Context) {
     fun setAlarm(id: Int, title: String, time: Long) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java).apply {
-            action = DataConstants.TRIGGER_NOTIFICATION_ACTION
+            action = DataConstants.START_ALARM
             putExtra(DataConstants.TASK_ID, id)
             putExtra(DataConstants.TASK_TITLE, title)
         }
@@ -45,7 +45,7 @@ class DefaultAlarmManager(private val context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val intent = Intent(context, AlarmReceiver::class.java).apply {
-            action = DataConstants.TRIGGER_NOTIFICATION_ACTION
+            action = DataConstants.START_ALARM
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
