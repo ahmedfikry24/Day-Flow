@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -58,6 +60,12 @@ fun AddTask(
     val context = LocalContext.current
     var isDateVisible by remember { mutableStateOf(false) }
     var isTimeVisible by remember { mutableStateOf(false) }
+    val overlayPermission = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (Settings.canDrawOverlays(context))
+            isDateVisible = true
+    }
 
     Column(modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
         Column(
@@ -113,7 +121,15 @@ fun AddTask(
                         checkRequireAlarmPermissions(
                             context = context,
                             requestSchedulePermission = interaction::controlScheduleAlarmDialogVisibility,
-                            onSchedulePermissionGranted = { isDateVisible = true }
+                            onPermissionsGranted = {
+                                if (!Settings.canDrawOverlays(context)) {
+                                    val intent = Intent(
+                                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                        "package:${context.packageName}".toUri()
+                                    )
+                                    overlayPermission.launch(intent)
+                                } else isDateVisible = true
+                            }
                         )
                     },
                     onClickTime = {
@@ -181,7 +197,7 @@ fun AddTask(
 private fun checkRequireAlarmPermissions(
     context: Context,
     requestSchedulePermission: () -> Unit,
-    onSchedulePermissionGranted: () -> Unit
+    onPermissionsGranted: () -> Unit
 ) {
     if (context.checkScheduleAlarmPermission()) {
         if (isBatteryOptimizationEnabled(context)) {
@@ -192,7 +208,7 @@ private fun checkRequireAlarmPermissions(
                     requestIgnoreBatteryOptimizations(context)
                 }
                 .show()
-        } else onSchedulePermissionGranted()
+        } else onPermissionsGranted()
     } else requestSchedulePermission()
 }
 
