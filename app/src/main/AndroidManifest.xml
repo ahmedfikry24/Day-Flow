@@ -43,9 +43,16 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".broadcasts.AlarmReceiver" />
+        <receiver
+            android:name=".broadcasts.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false" />
 
-        <service android:name=".service.alarm.AlarmService" />
+        <service
+            android:name=".service.alarm.AlarmService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
 
         <service
             android:name=".service.work_session.WorkSessionService"
