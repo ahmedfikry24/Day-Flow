@@ -1,6 +1,5 @@
 package com.example.dayflow.broadcasts
 
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,6 +9,7 @@ import com.example.dayflow.data.local.data_store.DataStoreManager
 import com.example.dayflow.data.utils.DataConstants
 import com.example.dayflow.notifications.DefaultNotificationManager
 import com.example.dayflow.notifications.NotificationArgs
+import com.example.dayflow.service.alarm.AlarmService
 import com.example.dayflow.utils.MediaPlayerManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,13 +24,13 @@ class AlarmReceiver : BroadcastReceiver() {
                 val taskId = intent.getIntExtra(DataConstants.TASK_ID, -1)
 
                 when (intent.action) {
-                    DataConstants.TRIGGER_NOTIFICATION_ACTION -> showAlarmNotification(
+                    DataConstants.START_ALARM -> startAlarm(
                         context,
                         taskTitle ?: "Task Scheduled",
                         taskId
                     )
 
-                    DataConstants.ALARM_STOP_ACTION -> cancelScheduledAlarm(context, taskId)
+                    DataConstants.ALARM_STOP_ACTION -> cancelAlarm(context, taskId)
 
                     else -> Unit
                 }
@@ -38,37 +38,29 @@ class AlarmReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun showAlarmNotification(context: Context, title: String, taskId: Int) {
-        val stopIntent = Intent(context, AlarmReceiver::class.java).apply {
-            action = DataConstants.ALARM_STOP_ACTION
+    private fun startAlarm(context: Context, title: String, taskId: Int) {
+        val receiverIntent = Intent(context, AlarmService::class.java).apply {
+            action = DataConstants.SHOW_ALARM_OVERLAY_LAYOUT
             putExtra(DataConstants.TASK_ID, taskId)
+            putExtra(DataConstants.TASK_TITLE, title)
         }
-        val stopPendingIntent = PendingIntent.getBroadcast(
-            context,
-            taskId + 1000,
-            stopIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+        context.startService(receiverIntent)
+        showAlarmNotification(context, title, taskId)
+        playRingtone(context)
+    }
+
+    private fun showAlarmNotification(context: Context, title: String, taskId: Int) {
         val notificationManager = DefaultNotificationManager(context)
         notificationManager.showNotification(
             notificationArgs = NotificationArgs(
                 id = taskId,
                 title = title,
-                actionPendingIntent = stopPendingIntent,
-                category = NotificationCompat.CATEGORY_ALARM
+                category = NotificationCompat.CATEGORY_ALARM,
+                onGoing = true,
+                autoCancel = true
             )
         )
-        playRingtone(context)
     }
-
-    private fun cancelScheduledAlarm(context: Context, id: Int) {
-        val notificationManager = DefaultNotificationManager(context)
-        val alarmManager = DefaultAlarmManager(context)
-        alarmManager.cancelAlarm(id)
-        notificationManager.cancelNotification(id)
-        MediaPlayerManager.stopAlarmRingtone()
-    }
-
 
     private fun playRingtone(context: Context) {
         val dataStoreManager = DataStoreManager(context)
@@ -78,5 +70,11 @@ class AlarmReceiver : BroadcastReceiver() {
                 MediaPlayerManager.startAlarmRingtone(context, uri)
             }
         }
+    }
+
+    private fun cancelAlarm(context: Context, id: Int) {
+        val notificationManager = DefaultNotificationManager(context)
+        notificationManager.cancelNotification(id)
+        MediaPlayerManager.stopAlarmRingtone()
     }
 }

@@ -1,7 +1,13 @@
 package com.example.dayflow.ui.add_task
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
-import android.widget.Toast
+import android.content.Intent
+import android.os.PowerManager
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +33,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import com.example.dayflow.R
 import com.example.dayflow.ui.composable.DatePickerModal
 import com.example.dayflow.ui.composable.PrimaryDialog
@@ -53,6 +60,12 @@ fun AddTask(
     val context = LocalContext.current
     var isDateVisible by remember { mutableStateOf(false) }
     var isTimeVisible by remember { mutableStateOf(false) }
+    val overlayPermission = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (Settings.canDrawOverlays(context))
+            isDateVisible = true
+    }
 
     Column(modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
         Column(
@@ -108,7 +121,15 @@ fun AddTask(
                         checkRequireAlarmPermissions(
                             context = context,
                             requestSchedulePermission = interaction::controlScheduleAlarmDialogVisibility,
-                            onSchedulePermissionGranted = { isDateVisible = true }
+                            onPermissionsGranted = {
+                                if (!Settings.canDrawOverlays(context)) {
+                                    val intent = Intent(
+                                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                        "package:${context.packageName}".toUri()
+                                    )
+                                    overlayPermission.launch(intent)
+                                } else isDateVisible = true
+                            }
                         )
                     },
                     onClickTime = {
@@ -176,14 +197,30 @@ fun AddTask(
 private fun checkRequireAlarmPermissions(
     context: Context,
     requestSchedulePermission: () -> Unit,
-    onSchedulePermissionGranted: () -> Unit,
+    onPermissionsGranted: () -> Unit
 ) {
     if (context.checkScheduleAlarmPermission()) {
-        Toast.makeText(
-            context,
-            context.getString(R.string.to_make_app_works_correctly_please_disable_battery_optimization_for_this_app),
-            Toast.LENGTH_LONG
-        ).show()
-        onSchedulePermissionGranted()
+        if (isBatteryOptimizationEnabled(context)) {
+            AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.battery_optimization))
+                .setMessage(context.getString(R.string.to_make_app_works_correctly_please_disable_battery_optimization_for_this_app))
+                .setPositiveButton(context.getString(R.string.ok)) { _, _ ->
+                    requestIgnoreBatteryOptimizations(context)
+                }
+                .show()
+        } else onPermissionsGranted()
     } else requestSchedulePermission()
+}
+
+fun isBatteryOptimizationEnabled(context: Context): Boolean {
+    val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+    val packageName = context.packageName
+    return !powerManager.isIgnoringBatteryOptimizations(packageName)
+}
+
+@SuppressLint("BatteryLife")
+private fun requestIgnoreBatteryOptimizations(context: Context) {
+    val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+    intent.data = "package:${context.packageName}".toUri()
+    context.startActivity(intent)
 }
