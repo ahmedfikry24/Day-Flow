@@ -14,4 +14,12 @@
         <item name="android:windowBackground">@drawable/splash_launcher</item>
     </style>
 
+    <style name="alarmOverlayButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@color/primary</item>
+        <item name="android:textColor">@color/background</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/lato_meduim</item>
+        <item name="android:shape">@drawable/alarm_overlay_button_shape</item>
+    </style>
+
 </resources>

@@ -51,4 +51,6 @@
     <string name="media_permission_needed">Media Permission Needed</string>
     <string name="the_app_needs_media_permission_to_change_your_alarm_ringtone_please_grant_it_in_the_app_settings">The app needs media permission to change your alarm ringtone. Please grant it in the app settings.</string>
     <string name="block">Block</string>
+    <string name="stop">Stop</string>
+    <string name="snooze">Snooze</string>
 </resources>
