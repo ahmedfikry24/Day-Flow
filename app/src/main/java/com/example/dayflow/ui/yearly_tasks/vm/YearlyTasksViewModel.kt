@@ -7,7 +7,6 @@ import com.example.dayflow.data.usecase.GetAllYearlyTasksUseCase
 import com.example.dayflow.ui.base.BaseViewModel
 import com.example.dayflow.ui.utils.ContentStatus
 import com.example.dayflow.ui.utils.UiConstants
-import com.example.dayflow.ui.utils.generateRandomId
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
 import com.example.dayflow.ui.utils.ui_state.toUiState
 import com.example.dayflow.ui.utils.ui_state.toYearlyEntity
@@ -68,8 +67,6 @@ class YearlyTasksViewModel @Inject constructor(
     override fun onDateChange(date: String) {}
 
     override fun onTimeChange(time: String) {}
-
-    override fun controlScheduleAlarmDialogVisibility() {}
 
     override fun controlEmptySchedulingDialogVisibility() {}
 
