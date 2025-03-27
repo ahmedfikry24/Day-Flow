@@ -35,7 +35,7 @@ class AlarmService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
-            if (it.action == DataConstants.ALARM_STOP_ACTION)
+            if (it.action == DataConstants.SHOW_ALARM_OVERLAY_LAYOUT)
                 setupOverlay(it)
         }
         return START_STICKY
