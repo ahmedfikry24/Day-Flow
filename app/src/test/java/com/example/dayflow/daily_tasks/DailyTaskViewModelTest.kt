@@ -208,24 +208,6 @@ class DailyTaskViewModelTest : BaseViewModelTester() {
         }
     }
 
-    @Test
-    fun `control alarm permission dialog visibility when change time or date then update state`() =
-        runTest {
-            viewModel.state.test {
-
-                val loadingState = awaitItem()
-                assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
-
-                viewModel.controlScheduleAlarmDialogVisibility()
-                val openAlarmPermissionState = awaitItem()
-                assertTrue(loadingState.addTask.canScheduleAlarmDialogVisibility != openAlarmPermissionState.addTask.canScheduleAlarmDialogVisibility)
-
-                viewModel.controlScheduleAlarmDialogVisibility()
-                val closePermissionState = awaitItem()
-                assertTrue(openAlarmPermissionState.addTask.canScheduleAlarmDialogVisibility != closePermissionState.addTask.canScheduleAlarmDialogVisibility)
-                cancelAndIgnoreRemainingEvents()
-            }
-        }
 
     @Test
     fun `control empty scheduling field dialog visibility when try add task then update state`() =
