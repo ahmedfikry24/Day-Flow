@@ -32,3 +32,7 @@ Before you begin, ensure you have met the following requirements:
 
  ## Usage
 - To test the APPs, there is an APKs build  [here](https://github.com/ahmedfikry24/Day-Flow/blob/main/app/release/app-release.apk)  that you can directly download and install.
+
+ ## License
+    Copyright (c) 2024 Ahmed Fikry Elshimi
+- This project is licensed under the MIT License - see the [LICENSE](https://github.com/ahmedfikry24/Day-Flow/blob/main/LICENSE) file for details. 
