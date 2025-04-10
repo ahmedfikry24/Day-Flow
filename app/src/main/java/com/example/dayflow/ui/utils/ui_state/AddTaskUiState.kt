@@ -12,7 +12,6 @@ data class AddTaskUiState(
     val description: String = "",
     val date: String = UiConstants.INITIAL_DATE,
     val time: String = UiConstants.INITIAL_TIME,
-    val canScheduleAlarmDialogVisibility: Boolean = false,
     val isSchedulingEmptyDialogVisibility: Boolean = false,
     val isScheduledUnValid: Boolean = false
 )

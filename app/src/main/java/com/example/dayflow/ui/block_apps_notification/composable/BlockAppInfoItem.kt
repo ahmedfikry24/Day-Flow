@@ -18,6 +18,7 @@ import com.example.dayflow.ui.theme.spacing
 fun BlockAppInfoItem(
     modifier: Modifier = Modifier,
     state: BlockAppsNotificationUiState.BlockAppInfoUiState,
+    isMultiSelectionOff: Boolean,
     onChangeState: (Boolean) -> Unit
 ) {
     Row(
@@ -43,10 +44,10 @@ fun BlockAppInfoItem(
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
-
-        Switch(
-            checked = state.isBlock,
-            onCheckedChange = onChangeState
-        )
+        if (isMultiSelectionOff)
+            Switch(
+                checked = state.isBlock,
+                onCheckedChange = onChangeState
+            )
     }
 }

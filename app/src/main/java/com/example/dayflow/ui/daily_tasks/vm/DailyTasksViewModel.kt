@@ -77,10 +77,6 @@ class DailyTasksViewModel @Inject constructor(
         _state.update { it.copy(addTask = it.addTask.copy(time = time)) }
     }
 
-    override fun controlScheduleAlarmDialogVisibility() {
-        _state.update { it.copy(addTask = it.addTask.copy(canScheduleAlarmDialogVisibility = !it.addTask.canScheduleAlarmDialogVisibility)) }
-    }
-
     override fun controlEmptySchedulingDialogVisibility() {
         _state.update { it.copy(addTask = it.addTask.copy(isSchedulingEmptyDialogVisibility = !it.addTask.isSchedulingEmptyDialogVisibility)) }
     }

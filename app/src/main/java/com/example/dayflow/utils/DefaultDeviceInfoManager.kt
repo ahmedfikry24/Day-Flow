@@ -1,10 +1,10 @@
-package com.example.dayflow.data.utils
+package com.example.dayflow.utils
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 
-class PackageAppsManager(private val context: Context) {
+class DefaultDeviceInfoManager(private val context: Context) {
 
     val packageManager: PackageManager = context.packageManager
 

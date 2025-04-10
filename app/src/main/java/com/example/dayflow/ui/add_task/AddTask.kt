@@ -1,5 +1,6 @@
 package com.example.dayflow.ui.add_task
 
+import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,10 +34,9 @@ import com.example.dayflow.ui.composable.PrimaryTextField
 import com.example.dayflow.ui.composable.TimePickerModal
 import com.example.dayflow.ui.theme.spacing
 import com.example.dayflow.ui.utils.UiTestTags
-import com.example.dayflow.ui.utils.checkScheduleAlarmPermission
 import com.example.dayflow.ui.utils.formatTimeDigits
 import com.example.dayflow.ui.utils.interaction.AddTaskInteraction
-import com.example.dayflow.ui.utils.requestScheduleAlarmPermission
+import com.example.dayflow.ui.utils.isScheduleAlarmPermissionGranted
 import com.example.dayflow.ui.utils.ui_state.AddTaskUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +51,7 @@ fun AddTask(
     val context = LocalContext.current
     var isDateVisible by remember { mutableStateOf(false) }
     var isTimeVisible by remember { mutableStateOf(false) }
+    var isAlarmPermissionVisible by remember { mutableStateOf(false) }
 
     Column(modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
         Column(
@@ -103,14 +104,18 @@ fun AddTask(
                     date = state.date,
                     time = state.time,
                     onClickDate = {
-                        if (context.checkScheduleAlarmPermission()) {
+                        if (context.isScheduleAlarmPermissionGranted() &&
+                            Settings.canDrawOverlays(context)
+                        )
                             isDateVisible = true
-                        } else interaction.controlScheduleAlarmDialogVisibility()
+                        else isAlarmPermissionVisible = true
                     },
                     onClickTime = {
-                        if (context.checkScheduleAlarmPermission()) {
+                        if (context.isScheduleAlarmPermissionGranted() &&
+                            Settings.canDrawOverlays(context)
+                        )
                             isTimeVisible = true
-                        } else interaction.controlScheduleAlarmDialogVisibility()
+                        else isAlarmPermissionVisible = true
                     }
                 )
         }
@@ -123,18 +128,6 @@ fun AddTask(
             onClick = interaction::addTask
         )
     }
-
-    if (state.canScheduleAlarmDialogVisibility)
-        PrimaryDialog(
-            title = stringResource(R.string.permission),
-            text = stringResource(R.string.app_you_must_give_app_a_permission_to_schedule_your_tasks_to_give_you_full_app_functionality_go_to_settings_and_give_us_the_permission),
-            onConfirm = {
-                interaction.controlScheduleAlarmDialogVisibility()
-                context.requestScheduleAlarmPermission()
-            },
-            onCancel = interaction::controlScheduleAlarmDialogVisibility,
-            onDismiss = interaction::controlScheduleAlarmDialogVisibility
-        )
 
     if (isDateVisible)
         DatePickerModal(
@@ -167,4 +160,14 @@ fun AddTask(
             onConfirm = interaction::controlUnValidScheduledDialogVisibility,
             onDismiss = interaction::controlUnValidScheduledDialogVisibility,
         )
+
+    if (isAlarmPermissionVisible)
+        ScheduleAlarmPermissionsDialog(
+            onPermissionsGranted = {
+                isAlarmPermissionVisible = false
+                isDateVisible = true
+            },
+            onDismiss = { isAlarmPermissionVisible = false }
+        )
 }
+

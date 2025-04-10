@@ -13,7 +13,6 @@
     <string name="add_task">Add Task</string>
     <string name="done">Done</string>
     <string name="permission">Permission</string>
-    <string name="app_you_must_give_app_a_permission_to_schedule_your_tasks_to_give_you_full_app_functionality_go_to_settings_and_give_us_the_permission">app you must give app a permission to schedule your tasks to give you full app functionality \n go to settings and give us the permission.</string>
     <string name="this_app_require_to_receive_tasks_notification_please_grant_the_permission">This app require to receive tasks notification, Please grant the permission.</string>
     <string name="this_app_require_to_receive_tasks_notification_please_allow_access_in_the_settings">This app require to receive tasks notification, Please allow access in the settings.</string>
     <string name="not_complete">Not Complete</string>
@@ -40,4 +39,24 @@
     <string name="pause_and_resume_icon">pause and resume icon</string>
     <string name="finish_session_icon">finish session icon</string>
     <string name="plant_icon">plant icon</string>
+    <string name="battery_optimization">Battery Optimization</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="to_make_app_works_correctly_please_disable_battery_optimization_for_this_app"><![CDATA[To make app works correctly, please disable battery optimization for this app.]]></string>
+    <string name="change_alarm_ringtone">Change Alarm ringtone</string>
+    <string name="from_defaults">from defaults</string>
+    <string name="from_device">from device</string>
+    <string name="media_permission">Media Permission</string>
+    <string name="to_change_alarm_ringtone_you_must_give_us_media_permission_to_help_you_pick_audio_file">to change alarm ringtone you must give us media permission to help you pick audio file.</string>
+    <string name="media_permission_needed">Media Permission Needed</string>
+    <string name="the_app_needs_media_permission_to_change_your_alarm_ringtone_please_grant_it_in_the_app_settings">The app needs media permission to change your alarm ringtone. Please grant it in the app settings.</string>
+    <string name="block">Block</string>
+    <string name="stop">Stop</string>
+    <string name="snooze">Snooze</string>
+    <string name="permissionicon">permissionIcon</string>
+    <string name="allow">Allow</string>
+    <string name="schedule_alarm">Schedule Alarm</string>
+    <string name="draw_over_apps">Draw Over Apps</string>
+    <string name="to_ring_alarm_in_exact_time">to ring alarm in exact time.</string>
+    <string name="to_make_alerting_works_correctly">to make alerting works correctly.</string>
+    <string name="deny">Deny</string>
 </resources>

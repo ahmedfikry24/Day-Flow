@@ -1,7 +1,7 @@
 package com.example.dayflow.daily_tasks
 
 import app.cash.turbine.test
-import com.example.dayflow.data.alarm.DefaultAlarmManager
+import com.example.dayflow.broadcasts.DefaultAlarmManager
 import com.example.dayflow.data.local.entity.DailyTaskEntity
 import com.example.dayflow.data.usecase.AddDailyTaskUseCase
 import com.example.dayflow.data.usecase.DeleteDailyTaskUseCase
@@ -208,24 +208,6 @@ class DailyTaskViewModelTest : BaseViewModelTester() {
         }
     }
 
-    @Test
-    fun `control alarm permission dialog visibility when change time or date then update state`() =
-        runTest {
-            viewModel.state.test {
-
-                val loadingState = awaitItem()
-                assertEquals(ContentStatus.LOADING, loadingState.contentStatus)
-
-                viewModel.controlScheduleAlarmDialogVisibility()
-                val openAlarmPermissionState = awaitItem()
-                assertTrue(loadingState.addTask.canScheduleAlarmDialogVisibility != openAlarmPermissionState.addTask.canScheduleAlarmDialogVisibility)
-
-                viewModel.controlScheduleAlarmDialogVisibility()
-                val closePermissionState = awaitItem()
-                assertTrue(openAlarmPermissionState.addTask.canScheduleAlarmDialogVisibility != closePermissionState.addTask.canScheduleAlarmDialogVisibility)
-                cancelAndIgnoreRemainingEvents()
-            }
-        }
 
     @Test
     fun `control empty scheduling field dialog visibility when try add task then update state`() =
