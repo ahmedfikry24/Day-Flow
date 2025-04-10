@@ -1,14 +1,8 @@
 package com.example.dayflow.ui.utils
 
-import android.app.Activity
-import android.app.AlarmManager
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
-import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-import androidx.core.content.getSystemService
+import android.os.Build.VERSION.SDK_INT
+import android.os.Parcelable
 import com.example.dayflow.data.utils.TaskPriority
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
@@ -48,27 +42,6 @@ fun Long.convertLongToDate(): String {
     val instant = Instant.ofEpochMilli(this)
     val localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate()
     return localDate.toString()
-}
-
-
-fun Context.checkScheduleAlarmPermission(): Boolean {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        val alarmManager = this.getSystemService<AlarmManager>() as AlarmManager
-        return alarmManager.canScheduleExactAlarms()
-    } else true
-}
-
-fun Context.requestScheduleAlarmPermission() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-        this.startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-}
-
-
-fun Activity.goToSettings() {
-    Intent(
-        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-        Uri.fromParts("package", this.packageName, null)
-    ).also(::startActivity)
 }
 
 fun String.convertTimeToLong(): Long {
@@ -117,4 +90,9 @@ fun Long.formatSessionTime(): String {
     val minutes = (this / 1000) / 60
     val hours = (this / 1000) / 60 / 60
     return String.format(Locale("en", "us"), "%02d:%02d:%02d", hours, minutes, seconds)
+}
+
+inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
+    SDK_INT >= 33 -> getParcelableExtra(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
 }

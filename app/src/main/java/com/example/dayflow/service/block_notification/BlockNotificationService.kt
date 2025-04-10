@@ -1,4 +1,4 @@
-package com.example.dayflow.service
+package com.example.dayflow.service.block_notification
 
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification

@@ -2,13 +2,13 @@ package com.example.dayflow.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.dayflow.data.alarm.DefaultAlarmManager
+import com.example.dayflow.broadcasts.DefaultAlarmManager
 
 import com.example.dayflow.data.local.LocalDataBase
 import com.example.dayflow.data.local.data_store.DataStoreManager
-import com.example.dayflow.data.utils.DefaultNotificationManager
-import com.example.dayflow.data.utils.PackageAppsManager
+import com.example.dayflow.notifications.DefaultNotificationManager
 import com.example.dayflow.service.DefaultServiceManager
+import com.example.dayflow.utils.DefaultDeviceInfoManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -50,9 +50,9 @@ object FakeLocalModuleTest {
 
     @Provides
     @Singleton
-    fun providePackageAppsManager(
+    fun provideDeviceInfoManager(
         @ApplicationContext context: Context
-    ) = PackageAppsManager(context)
+    ) = DefaultDeviceInfoManager(context)
 
     @Provides
     @Singleton

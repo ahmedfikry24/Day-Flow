@@ -1,4 +1,4 @@
-package com.example.dayflow.data.utils
+package com.example.dayflow.notifications
 
 import android.Manifest
 import android.app.Notification
@@ -13,6 +13,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.dayflow.MainActivity
 import com.example.dayflow.R
+import com.example.dayflow.data.utils.DataConstants
 import javax.inject.Inject
 
 class DefaultNotificationManager @Inject constructor(private val context: Context) {
@@ -43,9 +44,11 @@ class DefaultNotificationManager @Inject constructor(private val context: Contex
                 .setSmallIcon(R.drawable.logo)
                 .setContentTitle(notificationArgs.title)
                 .setPriority(notificationArgs.priority)
-                .setAutoCancel(notificationArgs.actionPendingIntent == null)
-                .setOngoing(true)
+                .setAutoCancel(notificationArgs.autoCancel)
+                .setOngoing(notificationArgs.onGoing)
                 .setSilent(notificationArgs.isSilent)
+                .setVisibility(notificationArgs.visibility)
+                .setCategory(notificationArgs.category)
 
         notificationArgs.text?.let {
             notificationBuilder.setContentText(it)
@@ -54,7 +57,7 @@ class DefaultNotificationManager @Inject constructor(private val context: Contex
             notificationBuilder.addAction(
                 R.drawable.ic_check_false,
                 notificationArgs.actionText,
-                notificationArgs.actionPendingIntent
+                it
             )
         }
         notificationArgs.category?.let { notificationBuilder.setCategory(it) }

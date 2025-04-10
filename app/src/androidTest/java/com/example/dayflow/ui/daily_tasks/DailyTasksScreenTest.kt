@@ -19,7 +19,7 @@ import com.example.dayflow.MainActivity
 import com.example.dayflow.R
 import com.example.dayflow.ui.utils.UiConstants
 import com.example.dayflow.ui.utils.UiTestTags
-import com.example.dayflow.ui.utils.checkScheduleAlarmPermission
+import com.example.dayflow.ui.utils.isScheduleAlarmPermissionGranted
 import com.example.dayflow.utils.BaseAndroidTester
 import com.example.dayflow.utils.denyNotificationPermission
 import com.example.dayflow.utils.grantNotificationPermission
@@ -124,7 +124,7 @@ class DailyTasksScreenTest : BaseAndroidTester() {
             onNodeWithText(context.getString(R.string.ok)).performClick()
             waitForIdle()
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !context.checkScheduleAlarmPermission())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !context.isScheduleAlarmPermissionGranted())
                 grantScheduleAlarmPermission()
 
             onNodeWithTag(UiTestTags.ADD_TASK_CONTENT).isDisplayed()
@@ -134,7 +134,7 @@ class DailyTasksScreenTest : BaseAndroidTester() {
 
     @Test
     fun addTaskWithTimeOnly_then_showEmptyScheduleDialog() {
-        if (!context.checkScheduleAlarmPermission()) {
+        if (!context.isScheduleAlarmPermissionGranted()) {
             insertTaskWithScheduling_then_grantScheduleAlarmPermission()
 
             with(composeRule) {
@@ -179,7 +179,7 @@ class DailyTasksScreenTest : BaseAndroidTester() {
 
     @Test
     fun addTaskWithDateOnly_then_showEmptyScheduleDialog() {
-        if (!context.checkScheduleAlarmPermission()) {
+        if (!context.isScheduleAlarmPermissionGranted()) {
             insertTaskWithScheduling_then_grantScheduleAlarmPermission()
 
             with(composeRule) {
@@ -225,7 +225,7 @@ class DailyTasksScreenTest : BaseAndroidTester() {
 
     @Test
     fun addTaskWithFullSchedule_then_taskAddedSuccess() {
-        if (!context.checkScheduleAlarmPermission()) {
+        if (!context.isScheduleAlarmPermissionGranted()) {
             insertTaskWithScheduling_then_grantScheduleAlarmPermission()
             with(composeRule) {
                 waitForIdle()
